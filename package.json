@@ -1,0 +1,33 @@
+{
+  "name": "appAcademyJSProject",
+  "version": "1.0.0",
+  "description": "## Background and Overview * This game allows you to equip a creature with various equipment, augmenting its abilities, before it fights another creature.  The battles are automated, and the creatures act based on equipment and personality.",
+  "private": true,
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "start": "webpack --mode=development --watch",
+    "postinstall": "webpack -p",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mesona/appAcademyJSProject.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Mesona/appAcademyJSProject/issues"
+  },
+  "homepage": "https://github.com/Mesona/appAcademyJSProject#readme",
+  "devDependencies": {
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.2.3"
+  },
+  "dependencies": {
+    "babel-loader": "^8.0.5",
+    "lodash": "^4.17.11"
+  }
+}

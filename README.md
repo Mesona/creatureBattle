@@ -35,7 +35,7 @@
 * Webpack: Resource bundling
 
 ## Implementation Timeline
-* Thursday
+### Thursday
 * [] Set up webpack
 * [] Create skeleton for class Creature
 * [] Create skeleton for class Equipment
@@ -43,15 +43,15 @@
 * [] Create skeleton for Battle
 * [] Create skeleton for Preparation
 
-* Friday
+### Friday
 * [] Build out Creature
 * [] Begin on building out Battle
 
-* Saturday
+### Saturday
 * [] Finish building out Battle
 * [] Basic animations
 
-* Sunday
+### Sunday
 * [] Build out Preparation
 * [] Build out Armors
 * [] Build out Weapons
