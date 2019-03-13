@@ -6,6 +6,9 @@
 * This game was inspired by the old PS1 era Monster Rancher series, which had many unique systems I have not seen replicated since.
 
 ## Wireframes
+![battle page](https://github.com/Mesona/creatureBattle/blob/master/docs/design/creatureBattle.jpg "Battle Page")
+
+![preparation page](https://github.com/Mesona/creatureBattle/blob/master/docs/design/creaturePrep.jpg "Preparation Page")
 
 
 ## Functionality and MVPs
