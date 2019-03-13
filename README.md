@@ -16,18 +16,18 @@
 * Users will be able to change their creature's armor to augment its stats
 
 ### MVPs
-[] Basic page setup and UI
-[] Creature preparation page
-[] Creature battle page
-[] Creature weapons and armor
+* [] Basic page setup and UI
+* [] Creature preparation page
+* [] Creature battle page
+* [] Creature weapons and armor
 
 ### Bonus MVPs
-[] Music and audio
-[] Creature personality
-[] Equipment visuals
-[] Currency and shop menu
-[] User login and persistent creature data
-[] Different leagues for increased difficulty
+* [] Music and audio
+* [] Creature personality
+* [] Equipment visuals
+* [] Currency and shop menu
+* [] User login and persistent creature data
+* [] Different leagues for increased difficulty
 
 ## Architecture and Technologies
 * Vanilla JavaScript: Game logic
@@ -36,22 +36,22 @@
 
 ## Implementation Timeline
 * Thursday
-[] Set up webpack
-[] Create skeleton for class Creature
-[] Create skeleton for class Equipment
-[] Create skeleton for subclasses Armors and Weapons
-[] Create skeleton for Battle
-[] Create skeleton for Preparation
+* [] Set up webpack
+* [] Create skeleton for class Creature
+* [] Create skeleton for class Equipment
+* [] Create skeleton for subclasses Armors and Weapons
+* [] Create skeleton for Battle
+* [] Create skeleton for Preparation
 
 * Friday
-[] Build out Creature
-[] Begin on building out Battle
+* [] Build out Creature
+* [] Begin on building out Battle
 
 * Saturday
-[] Finish building out Battle
-[] Basic animations
+* [] Finish building out Battle
+* [] Basic animations
 
 * Sunday
-[] Build out Preparation
-[] Build out Armors
-[] Build out Weapons
+* [] Build out Preparation
+* [] Build out Armors
+* [] Build out Weapons
