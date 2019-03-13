@@ -1,1 +1,54 @@
-# appAcademyJSProject
+# Creature Battle
+
+## Background and Overview
+* This game allows you to equip a creature with various equipment, augmenting its abilities, before it fights another creature.  The battles are automated, and the creatures act based on equipment and personality.
+
+* This game was inspired by the old PS1 era Monster Rancher series, which had many unique systems I have not seen replicated since.
+
+## Wireframes
+
+
+## Functionality and MVPs
+* Users will be able to change their creature's weapons to augment its attacks
+* Users will be able to change their creature's armor to augment its stats
+
+### MVPs
+[] Basic page setup and UI
+[] Creature preparation page
+[] Creature battle page
+[] Creature weapons and armor
+
+### Bonus MVPs
+[] Music and audio
+[] Creature personality
+[] Equipment visuals
+[] Currency and shop menu
+[] User login and persistent creature data
+[] Different leagues for increased difficulty
+
+## Architecture and Technologies
+* Vanilla JavaScript: Game logic
+* HTML5 Canvas: Visual rendering
+* Webpack: Resource bundling
+
+## Implementation Timeline
+* Thursday
+[] Set up webpack
+[] Create skeleton for class Creature
+[] Create skeleton for class Equipment
+[] Create skeleton for subclasses Armors and Weapons
+[] Create skeleton for Battle
+[] Create skeleton for Preparation
+
+* Friday
+[] Build out Creature
+[] Begin on building out Battle
+
+* Saturday
+[] Finish building out Battle
+[] Basic animations
+
+* Sunday
+[] Build out Preparation
+[] Build out Armors
+[] Build out Weapons
