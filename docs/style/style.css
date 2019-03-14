@@ -1,0 +1,34 @@
+
+@font-face {
+  font-family: 'Overpass', sans-serif;
+  font-family: 'Work Sans', sans-serif;
+}
+
+body {
+  justify-content: center;
+  flex-wrap: nowrap;
+  background-color: #DADCE0
+}
+
+.creature-battle {
+  display: block;
+  text-align: center;
+  font-family: 'Overpass', sans-serif;
+  font-size: 40px;
+}
+
+body canvas {
+  margin: 0 auto;
+  display: block;
+  /* justify-self: center; */
+}
+
+.game-space {
+  display: flex;
+  justify-content: center;
+}
+
+footer {
+  border-top: 10px solid cyan;
+  margin-top: 20px;
+}
