@@ -3,11 +3,17 @@
   font-family: 'Overpass', sans-serif;
   font-family: 'Work Sans', sans-serif;
 }
-
+/* Color pallette: */
+/* https://coolors.co/2a4d14-a62639-db324d-56494e-a29c9b */
+/* color: #2A4D14;
+color: #8AB0AB;
+color: #3E505B;
+color: #03120E;
+color: #A29C9B; */
 body {
   justify-content: center;
   flex-wrap: nowrap;
-  background-color: #DADCE0
+  background-color: #A29C9B;
 }
 
 .creature-battle {
@@ -15,12 +21,12 @@ body {
   text-align: center;
   font-family: 'Overpass', sans-serif;
   font-size: 40px;
+  color: #03120E;
 }
 
 body canvas {
   margin: 0 auto;
   display: block;
-  /* justify-self: center; */
 }
 
 .game-space {
@@ -29,6 +35,16 @@ body canvas {
 }
 
 footer {
-  border-top: 10px solid cyan;
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+footer img {
+  height: 40px;
+  width: 40px;
+  cursor: pointer;
+  margin-left: 40px;
+  margin-right: 40px;
   margin-top: 20px;
 }
