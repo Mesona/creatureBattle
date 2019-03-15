@@ -96,6 +96,7 @@
 const HealthBar = __webpack_require__(/*! ./healthBar */ "./src/battleView/healthBar.js");
 const DistanceBar = __webpack_require__(/*! ./distanceBar */ "./src/battleView/distanceBar.js");
 const MoveCreatures = __webpack_require__(/*! ./moveCreature */ "./src/battleView/moveCreature.js");
+const Combat= __webpack_require__(/*! ./combat */ "./src/battleView/combat.js");
 
 function BattleView(game, ctx, canvas) {
   this.ctx = ctx;
@@ -122,12 +123,48 @@ BattleView.prototype.animate = function animate(time) {
 
 BattleView.prototype.step = function step(timeDelta) {
   DistanceBar(this.game, this.ctx, this.canvas);
-  HealthBar(this.game, this.ctx);
+  HealthBar(this.game, this.ctx, this.canvas);
   MoveCreatures(this.game, this.ctx, this.canvas, timeDelta);
+  Combat(this.game);
 }
 
 
 module.exports = BattleView;
+
+/***/ }),
+
+/***/ "./src/battleView/combat.js":
+/*!**********************************!*\
+  !*** ./src/battleView/combat.js ***!
+  \**********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function Combat(game) {
+  let playerCreature = game.playerCreature();
+  let aiCreature = game.aiCreature()
+
+  // Calculates distance between the two
+  creatureDistance = aiCreature.pos - playerCreature.pos - 100;
+  // console.log(creatureDistance)
+  if (creatureDistance < 151) {
+    aiCreature.currentHP -= playerCreature.attack('close');
+    playerCreature.currentHP -= aiCreature.attack('close');
+  } else if (creatureDistance < 401) {
+    aiCreature.currentHP -= playerCreature.attack('mid');
+    playerCreature.currentHP -= aiCreature.attack('mid');
+  } else {
+    aiCreature.currentHP -= playerCreature.attack('far');
+    playerCreature.currentHP -= aiCreature.attack('far');
+  }
+
+  playerCreature.currentHP = Math.min(Math.max(playerCreature.currentHP, 0));
+  aiCreature.currentHP = Math.min(Math.max(aiCreature.currentHP, 0));
+}
+
+
+
+module.exports = Combat;
 
 /***/ }),
 
@@ -171,16 +208,18 @@ module.exports = DistanceBar;
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-function HealthBar(game, ctx) {
+function HealthBar(game, ctx, canvas) {
   let playerCreature = game.playerCreature();
   let aiCreature = game.aiCreature();
 
+  let playerPercentHealth = playerCreature.currentHP / playerCreature.maxHP;
+  let aiPercentHealth = aiCreature.currentHP / aiCreature.maxHP;
 
-  let playerPercentHealth = playerCreature.maxHP / playerCreature.currentHP;
-  let aiPercentHealth = aiCreature.maxHP / aiCreature.currentHP;
+  ctx.clearRect(0,70,canvas.width,30);
 
   // Player creature's health 
   pos = 20 + (250 - (250 * playerPercentHealth));
+  // pos = 20 + (250 - (250 * 0.5));
   ctx.strokeStyle = "red";
   ctx.strokeRect(20, 70, 250, 30);
   ctx.fillStyle = "red";
@@ -190,7 +229,12 @@ function HealthBar(game, ctx) {
   ctx.strokeStyle = "red";
   ctx.strokeRect(530, 70, 250, 30);
   ctx.fillStyle = "red";
-  ctx.fillRect(530, 70, (250 / aiPercentHealth), 30);
+  // ctx.fillRect(530, 70, (250 / aiPercentHealth), 30);
+  ctx.fillRect(530, 70, (250 * aiPercentHealth), 30);
+  
+
+  console.log('aihealth')
+  console.log(aiPercentHealth)
 }
 
 module.exports = HealthBar;
@@ -267,7 +311,15 @@ function Creature(
   defense = 10,
   healthPoints = 100,
   weapon = null,
-  armor = null
+  armor = null,
+  attacks = [
+    // {rangeMin: 0, rangeMax: 150, damage: 10},
+    // {rangeMin: 151, rangeMax: 400, damage: 10},
+    // {rangeMid: 401, rangeMax: 700, damage: 5},
+    {damage: 1},
+    {damage: 1},
+    {damage: 5},
+    ]
   ) {
   
   this.pos = position;
@@ -278,9 +330,49 @@ function Creature(
   this.currentHP = healthPoints;
   this.weapon = weapon;
   this.armor = armor;
-  
+  this.attacks = attacks;
 
+  Creature.prototype.attack = (range) => {
+    // console.log(this.attacks)
+    if (range === "close") {
+      return this.attacks[0].damage;
+    } else if (range === "mid") {
+      // console.log('here')
+      return this.attacks[1].damage;
+    } else {
+      return this.attacks[2].damage;
+    }
+  }
 }
+
+
+  // switch(range) {
+  //   case 'close':
+  //     // console.log("Smash");
+  //     return this.attacks[0].damage;
+  //   case 'mid':
+  //     // console.log("Smack");
+  //     return this.attacks;
+  //   case 'far':
+  //     // console.log("pew pew");
+  //     return this.attacks[2].damage;
+  //   default:
+  //     return null;
+  // }
+// }
+
+// Creature.prototype.attack = (range) => {
+// // attack = range => {
+//   if (range === "close") {
+//     console.log("Smash");
+//     console.log(this.pos)
+// } else if (range === "mid") {
+//     console.log("boom");
+//     console.log(this.pos)
+//   } else {
+//     console.log("pew pew");
+//   }
+// }
 
 module.exports  = Creature;
 
@@ -299,9 +391,6 @@ function Game() {
   let playerCreature = new Creature();
   let aiCreature = new Creature(pos = 500);
 
-  localStorage.setItem('playerCreature', JSON.stringify(playerCreature));
-  localStorage.setItem('aiCreature', JSON.stringify(aiCreature));
-  
   Game.prototype.playerCreature = () => {
       return playerCreature;
     }
@@ -336,6 +425,7 @@ document.addEventListener("DOMContentLoaded", function(){
 });
 
 // MISC TODO LIST
+// Damage ranges (8-10, 7-13 eg. instead of static)
 
 /***/ })
 

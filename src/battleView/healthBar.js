@@ -1,13 +1,15 @@
-function HealthBar(game, ctx) {
+function HealthBar(game, ctx, canvas) {
   let playerCreature = game.playerCreature();
   let aiCreature = game.aiCreature();
 
+  let playerPercentHealth = playerCreature.currentHP / playerCreature.maxHP;
+  let aiPercentHealth = aiCreature.currentHP / aiCreature.maxHP;
 
-  let playerPercentHealth = playerCreature.maxHP / playerCreature.currentHP;
-  let aiPercentHealth = aiCreature.maxHP / aiCreature.currentHP;
+  ctx.clearRect(0,70,canvas.width,30);
 
   // Player creature's health 
   pos = 20 + (250 - (250 * playerPercentHealth));
+  // pos = 20 + (250 - (250 * 0.5));
   ctx.strokeStyle = "red";
   ctx.strokeRect(20, 70, 250, 30);
   ctx.fillStyle = "red";
@@ -17,7 +19,12 @@ function HealthBar(game, ctx) {
   ctx.strokeStyle = "red";
   ctx.strokeRect(530, 70, 250, 30);
   ctx.fillStyle = "red";
-  ctx.fillRect(530, 70, (250 / aiPercentHealth), 30);
+  // ctx.fillRect(530, 70, (250 / aiPercentHealth), 30);
+  ctx.fillRect(530, 70, (250 * aiPercentHealth), 30);
+  
+
+  console.log('aihealth')
+  console.log(aiPercentHealth)
 }
 
 module.exports = HealthBar;
