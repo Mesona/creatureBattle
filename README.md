@@ -36,20 +36,20 @@
 
 ## Implementation Timeline
 ### Thursday
-* [] Set up webpack
-* [] Create skeleton for class Creature
+* [x] Set up webpack
+* [x] Create skeleton for class Creature
 * [] Create skeleton for class Equipment
 * [] Create skeleton for subclasses Armors and Weapons
-* [] Create skeleton for Battle
+* [x] Create skeleton for Battle
 * [] Create skeleton for Preparation
 
 ### Friday
-* [] Build out Creature
-* [] Begin on building out Battle
+* [x] Build out Creature
+* [x] Begin on building out Battle
 
 ### Saturday
 * [] Finish building out Battle
-* [] Basic animations
+* [x] Basic animations
 
 ### Sunday
 * [] Build out Preparation
