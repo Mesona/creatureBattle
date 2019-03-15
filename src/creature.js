@@ -1,5 +1,6 @@
 function Creature(
   position = 200,
+  nextPosition = position,
   strength = 10,
   speed = 5,
   defense = 10,
@@ -17,6 +18,7 @@ function Creature(
   ) {
   
   this.pos = position;
+  this.nextPosition = nextPosition;
   this.str = strength;
   this.spd = speed;
   this.def = defense;

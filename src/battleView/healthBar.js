@@ -21,10 +21,6 @@ function HealthBar(game, ctx, canvas) {
   ctx.fillStyle = "red";
   // ctx.fillRect(530, 70, (250 / aiPercentHealth), 30);
   ctx.fillRect(530, 70, (250 * aiPercentHealth), 30);
-  
-
-  console.log('aihealth')
-  console.log(aiPercentHealth)
 }
 
 module.exports = HealthBar;
