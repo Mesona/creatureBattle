@@ -13,6 +13,7 @@ function MoveCreatures(ctx, canvas, timeDelta) {
     playerCreature.pos+=(Math.floor((Math.random() * 10) -10) * timeScale); 
   } else {
     playerCreature.pos+=(Math.floor((Math.random() * 10) -4) * timeScale); 
+    playerCreature.pos = Math.min(Math.max(playerCreature.pos, 0));
   }
 
   // Draw opposing creature
@@ -20,6 +21,7 @@ function MoveCreatures(ctx, canvas, timeDelta) {
   ctx.fillRect(aiCreature.pos, 250, 100, 200);
   if (aiCreature.pos <= playerCreature.pos + 100) {
     aiCreature.pos-=(Math.floor((Math.random() * 10) -10) * timeScale);
+    aiCreature.pos = Math.min(Math.max(aiCreature.pos, 0), 700);
   } else {
     aiCreature.pos-=(Math.floor((Math.random() * 10) -4) * timeScale);
   }
