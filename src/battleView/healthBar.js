@@ -1,31 +1,23 @@
+function HealthBar(game, ctx) {
+  let playerCreature = game.playerCreature();
+  let aiCreature = game.aiCreature();
 
-function HealthBar(ctx) {
 
-  // draw(ctx) {
-    // if (creature.owner === "AI") {
-    //   this.ctx.strokeStyle = "red";
-    //   this.ctx.strokeRect(530, 70, 250, 30);
-    //   this.ctx.fillStyle = "red";
-    //   this.ctx.fillRect(530, 70, (250 - (250 * this.percentHealth)), 30);
-    // } else {
-    //   pos = 20 + (250 - (250 * this.percentHealth));
-    //   this.ctx.strokeStyle = "red";
-    //   this.ctx.strokeRect(20, 70, 250, 30);
-    //   this.ctx.fillStyle = "red";
-    //   this.ctx.fillRect(pos, 70, (270 - pos), 30);
-    // }
-  // }
+  let playerPercentHealth = playerCreature.maxHP / playerCreature.currentHP;
+  let aiPercentHealth = aiCreature.maxHP / aiCreature.currentHP;
 
+  // Player creature's health 
+  pos = 20 + (250 - (250 * playerPercentHealth));
   ctx.strokeStyle = "red";
   ctx.strokeRect(20, 70, 250, 30);
   ctx.fillStyle = "red";
-  ctx.fillRect(20, 70, 250, 30);
-
-  // opposing creature's health
+  ctx.fillRect(pos, 70, (270 - pos), 30);
+  
+  // AI creature's health
   ctx.strokeStyle = "red";
   ctx.strokeRect(530, 70, 250, 30);
   ctx.fillStyle = "red";
-  ctx.fillRect(530, 70, 250, 30);
+  ctx.fillRect(530, 70, (250 / aiPercentHealth), 30);
 }
 
 module.exports = HealthBar;

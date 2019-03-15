@@ -1,7 +1,6 @@
-
-function DistanceBar(ctx, canvas) {
-  let playerCreature = JSON.parse(localStorage.getItem('playerCreature'));
-  let aiCreature = JSON.parse(localStorage.getItem('aiCreature'));
+function DistanceBar(game, ctx, canvas) {
+  let playerCreature = game.playerCreature();
+  let aiCreature = game.aiCreature();
 
   // distance bar
   ctx.clearRect(0, 0, canvas.width, 50);
@@ -19,10 +18,6 @@ function DistanceBar(ctx, canvas) {
   ctx.beginPath();
   ctx.arc(aiCreature.pos + 20, 20, 10, 0, 2*Math.PI, true);
   ctx.fill();
-
-  // Save creature state
-  localStorage.setItem('playerCreature', JSON.stringify(playerCreature));
-  localStorage.setItem('aiCreature', JSON.stringify(aiCreature));
 }
 
 module.exports = DistanceBar;

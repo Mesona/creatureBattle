@@ -1,19 +1,19 @@
-const BattleView = require("./battleView/battleView");
 const Creature = require('./creature');
 
-function Game(ctx, canvas) {
-    this.creature = [];
-    this.weapon = [];
-    this.armor = [];
-    this.ctx = ctx;
+function Game() {
+  let playerCreature = new Creature();
+  let aiCreature = new Creature(pos = 500);
 
-    new BattleView(ctx, canvas).start();
-    let playerCreature = new Creature();
-    console.log("PLAYER CREATURE")
-    console.log(playerCreature)
-    let aiCreature = new Creature(pos = 700);
-    localStorage.setItem('playerCreature', JSON.stringify(playerCreature));
-    localStorage.setItem('aiCreature', JSON.stringify(aiCreature));
+  localStorage.setItem('playerCreature', JSON.stringify(playerCreature));
+  localStorage.setItem('aiCreature', JSON.stringify(aiCreature));
+  
+  Game.prototype.playerCreature = () => {
+      return playerCreature;
+    }
+    
+  Game.prototype.aiCreature= () => {
+    return aiCreature;
   }
+}
 
 module.exports = Game;

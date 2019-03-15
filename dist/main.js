@@ -97,20 +97,16 @@ const HealthBar = __webpack_require__(/*! ./healthBar */ "./src/battleView/healt
 const DistanceBar = __webpack_require__(/*! ./distanceBar */ "./src/battleView/distanceBar.js");
 const MoveCreatures = __webpack_require__(/*! ./moveCreature */ "./src/battleView/moveCreature.js");
 
-function BattleView(ctx, canvas) {
-  // function BattleView(game, ctx, playerCreature, enemyCreature) {
+function BattleView(game, ctx, canvas) {
   this.ctx = ctx;
-  this.canvas = canvas
-  // this.game = game;
-  // this.playerCreature = playerCreature;
-  // this.enemyCreature = enemyCreature;
-  // this.drawHealth(this.ctx);
-  this.animationId = '';
+  this.canvas = canvas;
+  // this.animationId = '';
+  this.game = game;
 }
 
 BattleView.prototype.start = function start() {
   this.lastTime = 0;
-  console.log("STARTED")
+  console.log(this.game.playerCreature().pos)
   requestAnimationFrame(this.animate.bind(this));
 };
 
@@ -121,22 +117,13 @@ BattleView.prototype.animate = function animate(time) {
   this.step(timeDelta);
   this.lastTime = time;
 
-  // console.log("ANIMATE")
-  // console.log(timeDelta)
-  // console.log(time)
-
   this.animationId = requestAnimationFrame(this.animate.bind(this));
 };
 
-// const body = document.getElementsByClassName('body');
-// body.addEventListener('click', () => {
-//   cancelAnimationFrame(this.animationId);
-// });
-
 BattleView.prototype.step = function step(timeDelta) {
-  DistanceBar(this.ctx, this.canvas);
-  HealthBar(this.ctx, this.canvas, timeDelta);
-  MoveCreatures(this.ctx, this.canvas, timeDelta);
+  DistanceBar(this.game, this.ctx, this.canvas);
+  HealthBar(this.game, this.ctx);
+  MoveCreatures(this.game, this.ctx, this.canvas, timeDelta);
 }
 
 
@@ -151,10 +138,9 @@ module.exports = BattleView;
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-
-function DistanceBar(ctx, canvas) {
-  let playerCreature = JSON.parse(localStorage.getItem('playerCreature'));
-  let aiCreature = JSON.parse(localStorage.getItem('aiCreature'));
+function DistanceBar(game, ctx, canvas) {
+  let playerCreature = game.playerCreature();
+  let aiCreature = game.aiCreature();
 
   // distance bar
   ctx.clearRect(0, 0, canvas.width, 50);
@@ -172,10 +158,6 @@ function DistanceBar(ctx, canvas) {
   ctx.beginPath();
   ctx.arc(aiCreature.pos + 20, 20, 10, 0, 2*Math.PI, true);
   ctx.fill();
-
-  // Save creature state
-  localStorage.setItem('playerCreature', JSON.stringify(playerCreature));
-  localStorage.setItem('aiCreature', JSON.stringify(aiCreature));
 }
 
 module.exports = DistanceBar;
@@ -189,34 +171,26 @@ module.exports = DistanceBar;
 /*! no static exports found */
 /***/ (function(module, exports) {
 
+function HealthBar(game, ctx) {
+  let playerCreature = game.playerCreature();
+  let aiCreature = game.aiCreature();
 
-function HealthBar(ctx) {
 
-  // draw(ctx) {
-    // if (creature.owner === "AI") {
-    //   this.ctx.strokeStyle = "red";
-    //   this.ctx.strokeRect(530, 70, 250, 30);
-    //   this.ctx.fillStyle = "red";
-    //   this.ctx.fillRect(530, 70, (250 - (250 * this.percentHealth)), 30);
-    // } else {
-    //   pos = 20 + (250 - (250 * this.percentHealth));
-    //   this.ctx.strokeStyle = "red";
-    //   this.ctx.strokeRect(20, 70, 250, 30);
-    //   this.ctx.fillStyle = "red";
-    //   this.ctx.fillRect(pos, 70, (270 - pos), 30);
-    // }
-  // }
+  let playerPercentHealth = playerCreature.maxHP / playerCreature.currentHP;
+  let aiPercentHealth = aiCreature.maxHP / aiCreature.currentHP;
 
+  // Player creature's health 
+  pos = 20 + (250 - (250 * playerPercentHealth));
   ctx.strokeStyle = "red";
   ctx.strokeRect(20, 70, 250, 30);
   ctx.fillStyle = "red";
-  ctx.fillRect(20, 70, 250, 30);
-
-  // opposing creature's health
+  ctx.fillRect(pos, 70, (270 - pos), 30);
+  
+  // AI creature's health
   ctx.strokeStyle = "red";
   ctx.strokeRect(530, 70, 250, 30);
   ctx.fillStyle = "red";
-  ctx.fillRect(530, 70, 250, 30);
+  ctx.fillRect(530, 70, (250 / aiPercentHealth), 30);
 }
 
 module.exports = HealthBar;
@@ -230,10 +204,10 @@ module.exports = HealthBar;
 /*! no static exports found */
 /***/ (function(module, exports) {
 
+function MoveCreatures(game, ctx, canvas, timeDelta) {
+  let playerCreature = game.playerCreature();
+  let aiCreature = game.aiCreature();
 
-function MoveCreatures(ctx, canvas, timeDelta) {
-  let playerCreature = JSON.parse(localStorage.getItem('playerCreature'));
-  let aiCreature = JSON.parse(localStorage.getItem('aiCreature'));
   let timeScale = timeDelta / NORMAL_FRAME_TIME_DELTA;
 
   ctx.clearRect(0,100,canvas.width,canvas.height);  
@@ -241,26 +215,36 @@ function MoveCreatures(ctx, canvas, timeDelta) {
   // Draw player creature
   ctx.fillStyle = "green"; 
   ctx.fillRect(playerCreature.pos,250,100,200); 
+
+  // Agressive movement pattern, randomizes but favors moving towards enemy
+  // playerCreature.pos+=(Math.floor((Math.random() * ((playerCreature.spd * 2) + 1) -(playerCreature.spd / 2) * timeScale))); 
+
+  // If the player's creature is touching the opposing creature
   if (playerCreature.pos + 100 >= aiCreature.pos){
-    playerCreature.pos+=(Math.floor((Math.random() * 10) -10) * timeScale); 
+    playerCreature.pos+=(Math.floor((Math.random() * ((playerCreature.spd * 2) + 1)) -(playerCreature.spd * 2)) * timeScale); 
   } else {
-    playerCreature.pos+=(Math.floor((Math.random() * 10) -4) * timeScale); 
-    playerCreature.pos = Math.min(Math.max(playerCreature.pos, 0));
+    // Default movement pattern, randomizes completely and has no directional "preference"
+    playerCreature.pos+=(Math.floor((Math.random() * ((playerCreature.spd * 2) + 1)) -playerCreature.spd) * timeScale); 
   }
+
+  // Prevents the creature from "falling off" the screen
+  playerCreature.pos = Math.min(Math.max(playerCreature.pos, 0));
+
 
   // Draw opposing creature
   ctx.fillStyle = "blue"; 
   ctx.fillRect(aiCreature.pos, 250, 100, 200);
-  if (aiCreature.pos <= playerCreature.pos + 100) {
-    aiCreature.pos-=(Math.floor((Math.random() * 10) -10) * timeScale);
-    aiCreature.pos = Math.min(Math.max(aiCreature.pos, 0), 700);
-  } else {
-    aiCreature.pos-=(Math.floor((Math.random() * 10) -4) * timeScale);
-  }
 
-  // Save new creature state
-  localStorage.setItem('playerCreature', JSON.stringify(playerCreature));
-  localStorage.setItem('aiCreature', JSON.stringify(aiCreature));
+  // If aiCreature is touching playerCreature
+  if (aiCreature.pos <= playerCreature.pos + 110) {
+    aiCreature.pos-=(Math.floor((Math.random() * ((aiCreature.spd * 2) + 1)) -(aiCreature.spd * 2)) * timeScale);
+  } else {
+    // Default movement pattern, completely random with no directional preference
+    aiCreature.pos-=(Math.floor((Math.random() * ((aiCreature.spd * 2) + 1)) -aiCreature.spd) * timeScale);
+  }
+  
+  // Prevents the creature from "falling off" the screen
+  aiCreature.pos = Math.min(Math.max(aiCreature.pos, 0), 700);
 }
 
 const NORMAL_FRAME_TIME_DELTA = 1000 / 60;
@@ -277,9 +261,9 @@ module.exports = MoveCreatures;
 /***/ (function(module, exports) {
 
 function Creature(
-  position = 0,
+  position = 200,
   strength = 10,
-  speed = 10,
+  speed = 5,
   defense = 10,
   healthPoints = 100,
   weapon = null,
@@ -290,7 +274,8 @@ function Creature(
   this.str = strength;
   this.spd = speed;
   this.def = defense;
-  this.hp = healthPoints;
+  this.maxHP = healthPoints;
+  this.currentHP = healthPoints;
   this.weapon = weapon;
   this.armor = armor;
   
@@ -308,23 +293,23 @@ module.exports  = Creature;
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-const BattleView = __webpack_require__(/*! ./battleView/battleView */ "./src/battleView/battleView.js");
 const Creature = __webpack_require__(/*! ./creature */ "./src/creature.js");
 
-function Game(ctx, canvas) {
-    this.creature = [];
-    this.weapon = [];
-    this.armor = [];
-    this.ctx = ctx;
+function Game() {
+  let playerCreature = new Creature();
+  let aiCreature = new Creature(pos = 500);
 
-    new BattleView(ctx, canvas).start();
-    let playerCreature = new Creature();
-    console.log("PLAYER CREATURE")
-    console.log(playerCreature)
-    let aiCreature = new Creature(pos = 700);
-    localStorage.setItem('playerCreature', JSON.stringify(playerCreature));
-    localStorage.setItem('aiCreature', JSON.stringify(aiCreature));
+  localStorage.setItem('playerCreature', JSON.stringify(playerCreature));
+  localStorage.setItem('aiCreature', JSON.stringify(aiCreature));
+  
+  Game.prototype.playerCreature = () => {
+      return playerCreature;
+    }
+    
+  Game.prototype.aiCreature= () => {
+    return aiCreature;
   }
+}
 
 module.exports = Game;
 
@@ -337,20 +322,8 @@ module.exports = Game;
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-// import _ from 'lodash';
-
-// function component() {
-//   // let element = document.createElement('div');
-//   // element.innerHTML = _.join(['Hello', 'webpack'], ' ');
-
-//   // return element;
-
-
-  
-// }
-
 const Game = __webpack_require__(/*! ./game */ "./src/game.js");
-// const GameView = require('./gameView');
+const BattleView = __webpack_require__(/*! ./battleView/battleView */ "./src/battleView/battleView.js");
 
 document.addEventListener("DOMContentLoaded", function(){
   const canvas = document.getElementById("myCanvas");
@@ -358,87 +331,11 @@ document.addEventListener("DOMContentLoaded", function(){
   canvas.height = 500;
 
   const ctx = canvas.getContext("2d");
-  new Game(ctx, canvas);
-  // new GameView(game, ctx).start();
-
-
-  // // shim layer with setTimeout fallback 
-  // window.requestAnimFrame = (function(){ 
-  //   return  window.requestAnimationFrame       ||  
-  //           window.webkitRequestAnimationFrame ||  
-  //           window.mozRequestAnimationFrame    ||  
-  //           window.oRequestAnimationFrame      ||  
-  //           window.msRequestAnimationFrame     ||  
-  //           function( callback ){ 
-  //             window.setTimeout(callback, 1000 / 60); 
-  //           }; 
-  // })(); 
-
-  // let x = 0; 
-  // let y = 800;
-  // function drawIt() { 
-  //   window.requestAnimFrame(drawIt);
-  //   // new BattleView(game, ctx).start();
-
-   
-
-
-  //   // player's creature's health
-  //   ctx.strokeStyle = "red";
-  //   ctx.strokeRect(20, 70, 250, 30);
-  //   ctx.fillStyle = "red";
-  //   ctx.fillRect(20, 70, 250, 30);
-
-  //   // opposing creature's health
-  //   ctx.strokeStyle = "red";
-  //   ctx.strokeRect(530, 70, 250, 30);
-  //   ctx.fillStyle = "red";
-  //   ctx.fillRect(530, 70, 250, 30);
-
-  //   ctx.clearRect(0,100,canvas.width,canvas.height);  
-  //   ctx.fillStyle = "green"; 
-  //   ctx.fillRect(x,250,100,200); 
-  //   if (x + 100 >= y) { // If the blocks are touching
-  //     x+=Math.floor((Math.random() * 10) -10); 
-  //   } else if (x + 210 >= 800) {
-  //     x+=Math.floor((Math.random() * 10) -10); 
-  //   } else {
-  //     x+=Math.floor((Math.random() * 10) -4); 
-  //   }
-  //   ctx.fillStyle = "blue"; 
-  //   ctx.fillRect(y, 250, 100, 200);
-  //   if (y <= x + 100) { // If the blocks are touching
-  //     y-=Math.floor((Math.random() * 10) -10);
-  //   } else if (y - 210 <= 0) {
-  //     y-=Math.floor((Math.random() * 10) -10);
-  //   } else {
-  //     y-=Math.floor((Math.random() * 10) -4);
-  //   }
-  //   // distance bar
-  //   ctx.clearRect(0, 0, canvas.width, 50);
-  //   ctx.strokeStyle = "purple";
-  //   ctx.beginPath();
-  //   ctx.moveTo(20,20);
-  //   ctx.lineTo(780,20);
-  //   ctx.stroke();
-  
-  //   // animate creature spot on distance bar
-  //   ctx.beginPath();
-  //   ctx.arc(x + 30, 20, 10, 0, 2*Math.PI, true);
-  //   ctx.fill();
-  
-  //   ctx.beginPath();
-  //   ctx.arc(y - 30, 20, 10, 0, 2*Math.PI, true);
-  //   ctx.fill();
-  // } 
-
-
-  // window.requestAnimFrame(drawIt); 
-
+  let game = new Game();
+  new BattleView(game, ctx, canvas).start();
 });
 
-// document.body.appendChild(component());
-
+// MISC TODO LIST
 
 /***/ })
 

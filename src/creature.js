@@ -1,7 +1,7 @@
 function Creature(
-  position = 0,
+  position = 200,
   strength = 10,
-  speed = 10,
+  speed = 5,
   defense = 10,
   healthPoints = 100,
   weapon = null,
@@ -12,7 +12,8 @@ function Creature(
   this.str = strength;
   this.spd = speed;
   this.def = defense;
-  this.hp = healthPoints;
+  this.maxHP = healthPoints;
+  this.currentHP = healthPoints;
   this.weapon = weapon;
   this.armor = armor;
   
