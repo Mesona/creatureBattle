@@ -24,16 +24,45 @@ body {
   color: #03120E;
 }
 
-body canvas {
+.game-screen {
+  position: relative;
+}
+
+.game-screen #myCanvas, .image-test {
+  position: absolute;
+  left: 0;
+  right: 0;
   margin: 0 auto;
-  display: block;
+}
+
+#myCanvas {
   border: 3px solid #3E505B;
+
+  /* background from https://edermunizz.itch.io/free-pixel-art-hill */
+  background-image: url('./hillsBackground/HillsLayer05.png'), url('./hillsBackground/HillsLayer04.png'), url('./hillsBackground/HillsLayer03.png'), url('./hillsBackground/HillsLayer02.png'), url('./hillsBackground/HillsLayer01.png');
+
+  background-repeat: no-repeat;
+  background-size: cover;
+  z-index: -1;
+}
+
+.image-test {
+  /* background from https://edermunizz.itch.io/free-pixel-art-hill */
+  background-image: url('./hillsBackground/HillsLayer06.png');
+
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 500px;
+  width: 700px;
+  z-index: 2;
 }
 
 .game-space {
-  display: flex;
-  justify-content: center;
+  /* display: flex; */
+  /* justify-content: center; */
+  height: 500px;
 }
+
 
 footer {
   margin-top: 20px;

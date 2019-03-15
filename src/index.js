@@ -14,3 +14,5 @@ document.addEventListener("DOMContentLoaded", function(){
 // MISC TODO LIST
 // Damage ranges (8-10, 7-13 eg. instead of static)
 // Figure out how to slow everything down
+
+// background from https://edermunizz.itch.io/free-pixel-art-hill
