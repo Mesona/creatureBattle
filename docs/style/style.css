@@ -27,6 +27,7 @@ body {
 body canvas {
   margin: 0 auto;
   display: block;
+  border: 3px solid #3E505B;
 }
 
 .game-space {
