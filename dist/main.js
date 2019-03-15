@@ -269,6 +269,38 @@ module.exports = MoveCreatures;
 
 /***/ }),
 
+/***/ "./src/creature.js":
+/*!*************************!*\
+  !*** ./src/creature.js ***!
+  \*************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function Creature(
+  position = 0,
+  strength = 10,
+  speed = 10,
+  defense = 10,
+  healthPoints = 100,
+  weapon = null,
+  armor = null
+  ) {
+  
+  this.pos = position;
+  this.str = strength;
+  this.spd = speed;
+  this.def = defense;
+  this.hp = healthPoints;
+  this.weapon = weapon;
+  this.armor = armor;
+  
+
+}
+
+module.exports  = Creature;
+
+/***/ }),
+
 /***/ "./src/game.js":
 /*!*********************!*\
   !*** ./src/game.js ***!
@@ -277,6 +309,7 @@ module.exports = MoveCreatures;
 /***/ (function(module, exports, __webpack_require__) {
 
 const BattleView = __webpack_require__(/*! ./battleView/battleView */ "./src/battleView/battleView.js");
+const Creature = __webpack_require__(/*! ./creature */ "./src/creature.js");
 
 function Game(ctx, canvas) {
     this.creature = [];
@@ -285,8 +318,10 @@ function Game(ctx, canvas) {
     this.ctx = ctx;
 
     new BattleView(ctx, canvas).start();
-    let playerCreature = {pos: 0, currentHealth: 100, maxHealth: 100}
-    let aiCreature = {pos: 700, currentHealth: 100, maxHealth: 100}
+    let playerCreature = new Creature();
+    console.log("PLAYER CREATURE")
+    console.log(playerCreature)
+    let aiCreature = new Creature(pos = 700);
     localStorage.setItem('playerCreature', JSON.stringify(playerCreature));
     localStorage.setItem('aiCreature', JSON.stringify(aiCreature));
   }

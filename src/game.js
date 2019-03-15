@@ -1,4 +1,5 @@
 const BattleView = require("./battleView/battleView");
+const Creature = require('./creature');
 
 function Game(ctx, canvas) {
     this.creature = [];
@@ -7,8 +8,10 @@ function Game(ctx, canvas) {
     this.ctx = ctx;
 
     new BattleView(ctx, canvas).start();
-    let playerCreature = {pos: 0, currentHealth: 100, maxHealth: 100}
-    let aiCreature = {pos: 700, currentHealth: 100, maxHealth: 100}
+    let playerCreature = new Creature();
+    console.log("PLAYER CREATURE")
+    console.log(playerCreature)
+    let aiCreature = new Creature(pos = 700);
     localStorage.setItem('playerCreature', JSON.stringify(playerCreature));
     localStorage.setItem('aiCreature', JSON.stringify(aiCreature));
   }
