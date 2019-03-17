@@ -37,16 +37,23 @@ body {
 
 #myCanvas {
   border: 3px solid #3E505B;
+}
 
+.back-image-layers {
   /* background from https://edermunizz.itch.io/free-pixel-art-hill */
-  background-image: url('./hillsBackground/HillsLayer05.png'), url('./hillsBackground/HillsLayer04.png'), url('./hillsBackground/HillsLayer03.png'), url('./hillsBackground/HillsLayer02.png'), url('./hillsBackground/HillsLayer01.png');
-
+  background-image: url('./hillsBackground/HillsLayer05.png'),
+                    url('./hillsBackground/HillsLayer04.png'),
+                    url('./hillsBackground/HillsLayer03.png'),
+                    url('./hillsBackground/HillsLayer02.png'),
+                    url('./hillsBackground/HillsLayer01.png');
+  
   background-repeat: no-repeat;
   background-size: cover;
   z-index: -1;
+  
 }
 
-.image-test {
+.front-image-layer {
   /* background from https://edermunizz.itch.io/free-pixel-art-hill */
   background-image: url('./hillsBackground/HillsLayer06.png');
 

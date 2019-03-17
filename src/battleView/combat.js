@@ -4,7 +4,6 @@ function Combat(game) {
 
   // Calculates distance between the two
   creatureDistance = aiCreature.pos - playerCreature.pos - 100;
-  // console.log(creatureDistance)
   if (creatureDistance < 151) {
     aiCreature.currentHP -= playerCreature.attack('close');
     playerCreature.currentHP -= aiCreature.attack('close');

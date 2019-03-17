@@ -98,17 +98,17 @@ const DistanceBar = __webpack_require__(/*! ./distanceBar */ "./src/battleView/d
 const MoveCreatures = __webpack_require__(/*! ./moveCreature */ "./src/battleView/moveCreature.js");
 const Combat= __webpack_require__(/*! ./combat */ "./src/battleView/combat.js");
 
-function BattleView(game, ctx, canvas) {
-  this.ctx = ctx;
-  this.canvas = canvas;
-  // this.animationId = '';
+function BattleView(game, ctx, canvas, gameView) {
   this.game = game;
+  this.canvas = canvas;
+  this.ctx = ctx;
+  this.gameView = gameView;
+  this.animationId = 0;
 }
 
 BattleView.prototype.start = function start() {
   this.lastTime = 0;
-  console.log(this.game.playerCreature().pos)
-  requestAnimationFrame(this.animate.bind(this));
+  requestAnimationFrame(this.animate.bind(this)); 
 };
 
 BattleView.prototype.animate = function animate(time) {
@@ -117,21 +117,77 @@ BattleView.prototype.animate = function animate(time) {
 
   this.step(timeDelta);
   this.lastTime = time;
-  
-  this.animationId = requestAnimationFrame(this.animate.bind(this));
+
+
+  if (this.game.playerCreature().currentHP === 0 || this.game.aiCreature().currentHP === 0) {
+    this.step(timeDelta);
+    this.step(timeDelta);
+    this.step(timeDelta);
+    this.step(timeDelta);
+    cancelAnimationFrame(this.animationId);
+    this.finishCombat();
+     
+  } else {
+    this.animationId = requestAnimationFrame(this.animate.bind(this)); 
+  }
 };
 
 BattleView.prototype.step = function step(timeDelta) {
-  if (this.game.gameSpeed() % 4 === 0) {
+  if (this.game.getGameSpeed() % 4 === 0) {
     DistanceBar(this.game, this.ctx, this.canvas);
     HealthBar(this.game, this.ctx, this.canvas);
     MoveCreatures(this.game, this.ctx, this.canvas, timeDelta);
-    Combat(this.game);
+    Combat(this.game, this.animationId);
     this.game.gameSpeedStep();
   } else {
     this.game.gameSpeedStep();
   }
 }
+
+BattleView.prototype.finishCombat = function() {
+  let text;
+  if (this.game.playerCreature().currentHP === 0 && this.game.aiCreature().currentHP === 0) {
+    text = "You tie!";
+  } else if (this.game.playerCreature().currentHP === 0) {
+    text = "Opponent wins!";
+  } else {
+    text = "You win!";
+  }
+  this.textFadeIn(text);
+}
+
+BattleView.prototype.textFadeIn = function(text) {
+  this.ctx.fillStyle = "rgba(255, 0, 0, 1)";
+  this.ctx.font = "italic 40pt Arial";
+  let xloc;
+  if (text === "Opponent wins!") {
+    xloc = 200;
+  } else {
+    xloc = 300;
+  }
+  this.ctx.fillText(text, xloc, 250);
+  setTimeout(this.textFadeOut(text, xloc), 5000);
+}
+
+BattleView.prototype.textFadeOut = function(text, xloc) {
+  let alpha = 1.0,   // full opacity
+  interval = setInterval(() => {
+      // this.canvas.width = this.canvas.width; // Clears the canvas
+      this.ctx.clearRect(0, 200, this.canvas.width, 70);
+      this.ctx.fillStyle = "rgba(255, 0, 0, " + alpha + ")";
+      this.ctx.font = "italic 40pt Arial";
+      this.ctx.fillText(text, xloc, 250);
+      alpha = alpha - 0.05; // decrease opacity (fade out)
+      if (alpha < 0) {
+        this.ctx.clearRect(0, 200, this.canvas.width, 70);
+        clearInterval(interval);
+      }
+  }, 50);
+
+  console.log(this.gameView)
+  setTimeout(() => this.gameView.switchScreen(), 1000);
+};
+
 
 
 module.exports = BattleView;
@@ -151,7 +207,6 @@ function Combat(game) {
 
   // Calculates distance between the two
   creatureDistance = aiCreature.pos - playerCreature.pos - 100;
-  // console.log(creatureDistance)
   if (creatureDistance < 151) {
     aiCreature.currentHP -= playerCreature.attack('close');
     playerCreature.currentHP -= aiCreature.attack('close');
@@ -335,9 +390,9 @@ function Creature(
     // {rangeMin: 0, rangeMax: 150, damage: 10},
     // {rangeMin: 151, rangeMax: 400, damage: 10},
     // {rangeMid: 401, rangeMax: 700, damage: 5},
-    {damage: 1},
-    {damage: 1},
-    {damage: 5},
+    {damage: 10},
+    {damage: 10},
+    {damage: 50},
     ]
   ) {
   
@@ -353,46 +408,15 @@ function Creature(
   this.attacks = attacks;
 
   Creature.prototype.attack = (range) => {
-    // console.log(this.attacks)
     if (range === "close") {
-      return this.attacks[0].damage;
+      return (Math.random() * this.attacks[0].damage) + 1;
     } else if (range === "mid") {
-      // console.log('here')
-      return this.attacks[1].damage;
+      return (Math.random() * this.attacks[1].damage) + 1;
     } else {
-      return this.attacks[2].damage;
+      return (Math.random() * this.attacks[2].damage) + 1;
     }
   }
 }
-
-
-  // switch(range) {
-  //   case 'close':
-  //     // console.log("Smash");
-  //     return this.attacks[0].damage;
-  //   case 'mid':
-  //     // console.log("Smack");
-  //     return this.attacks;
-  //   case 'far':
-  //     // console.log("pew pew");
-  //     return this.attacks[2].damage;
-  //   default:
-  //     return null;
-  // }
-// }
-
-// Creature.prototype.attack = (range) => {
-// // attack = range => {
-//   if (range === "close") {
-//     console.log("Smash");
-//     console.log(this.pos)
-// } else if (range === "mid") {
-//     console.log("boom");
-//     console.log(this.pos)
-//   } else {
-//     console.log("pew pew");
-//   }
-// }
 
 module.exports  = Creature;
 
@@ -410,26 +434,85 @@ const Creature = __webpack_require__(/*! ./creature */ "./src/creature.js");
 function Game() {
   let playerCreature = new Creature();
   let aiCreature = new Creature(pos = 500);
-  let gameSpeed = 0
+  let gameSpeed = 0;
+  let gameScreen = "battle";
 
   Game.prototype.playerCreature = () => {
-      return playerCreature;
-    }
+    return playerCreature;
+  }
     
   Game.prototype.aiCreature= () => {
     return aiCreature;
   }
 
-  Game.prototype.gameSpeed = () => {
+  Game.prototype.resetGameSpeed = () => {
+    this.gameSpeed = 0;
+  }
+
+  Game.prototype.getGameSpeed = () => {
     return gameSpeed;
   }
 
   Game.prototype.gameSpeedStep = () => {
     gameSpeed++;
   }
+
+  Game.prototype.screen = () => {
+    return gameScreen;
+  }
+
+  Game.prototype.setScreen = (newScreen) => {
+    gameScreen = newScreen;
+  }
+
 }
 
 module.exports = Game;
+
+/***/ }),
+
+/***/ "./src/gameView.js":
+/*!*************************!*\
+  !*** ./src/gameView.js ***!
+  \*************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+const PreparationView = __webpack_require__(/*! ./preparationView/preparationView */ "./src/preparationView/preparationView.js");
+const BattleView = __webpack_require__(/*! ./battleView/battleView */ "./src/battleView/battleView.js");
+
+function GameView(game, ctx, canvas) {
+  this.game = game;
+  this.ctx = ctx;
+  this.canvas = canvas;
+}
+
+GameView.prototype.switchScreen = function switchScreen() {
+  if (this.game.screen() === "battle") {
+    this.game.setScreen("prep");
+    this.game.resetGameSpeed();
+
+    // Remove the battle background
+    const backgroundLayerFront = document.getElementById("bg-front");
+    backgroundLayerFront.classList.remove("front-image-layer");
+    this.canvas.classList.remove("back-image-layers");
+
+    // console.log(this.game)
+    new PreparationView(this.game, this.ctx, this.canvas).start();
+  } else {
+    this.game.setScreen("battle");
+    this.game.resetGameSpeed();
+
+    // Restore the battle background
+    const backgroundLayerFront = document.getElementById("bg-front");
+    backgroundLayerFront.classList.add("front-image-layer");
+    this.canvas.classList.add("back-image-layers");
+    
+    new BattleView(this.game, this.ctx, this.canvas).start();
+  }
+}
+
+module.exports = GameView;
 
 /***/ }),
 
@@ -442,22 +525,65 @@ module.exports = Game;
 
 const Game = __webpack_require__(/*! ./game */ "./src/game.js");
 const BattleView = __webpack_require__(/*! ./battleView/battleView */ "./src/battleView/battleView.js");
+const GameView = __webpack_require__(/*! ./gameView */ "./src/gameView.js");
 
 document.addEventListener("DOMContentLoaded", function(){
   const canvas = document.getElementById("myCanvas");
   canvas.width = 800;
   canvas.height = 500;
-
   const ctx = canvas.getContext("2d");
+
   let game = new Game();
-  new BattleView(game, ctx, canvas).start();
+  let gameView = new GameView(game, ctx, canvas);
+  new BattleView(game, ctx, canvas, gameView).start();
 });
 
-// MISC TODO LIST
-// Damage ranges (8-10, 7-13 eg. instead of static)
-// Figure out how to slow everything down
+/***/ }),
 
-// background from https://edermunizz.itch.io/free-pixel-art-hill
+/***/ "./src/preparationView/preparationView.js":
+/*!************************************************!*\
+  !*** ./src/preparationView/preparationView.js ***!
+  \************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function PreparationView(game, ctx, canvas) {
+  this.game = game;
+  this.canvas = canvas;
+  this.ctx = ctx;
+}
+
+PreparationView.prototype.start = function start() {
+  console.log('yeah')
+  this.lastTime = 0;
+  requestAnimationFrame(this.animate.bind(this));
+};
+
+PreparationView.prototype.animate = function animate(time) {
+  const timeDelta = time - this.lastTime;
+  
+
+  this.step(timeDelta);
+  this.lastTime = time;
+
+  this.animationId = requestAnimationFrame(this.animate.bind(this)); 
+}
+
+// PreparationView.prototype.step = (timeDelta) => {
+PreparationView.prototype.step = function step(timeDelta) {
+  // console.log(this.game.playerCreature());
+  console.log(this.game.getGameSpeed())
+  if (this.game.getGameSpeed() % 4 === 0) {
+    EquipBox(this.game, this.ctx, this.canvas);
+    // CreatureBox(this.game, this.ctx, this.canvas);
+    // DescriptionBox(this.game, this.ctx, this.canvas);
+    this.game.gameSpeedStep();
+  } else {
+    this.game.gameSpeedStep();
+  }
+}
+
+module.exports = PreparationView;
 
 /***/ })
 
