@@ -28,7 +28,7 @@ body {
   position: relative;
 }
 
-.game-screen #myCanvas, .image-test {
+.game-screen #myCanvas, .front-image-layer {
   position: absolute;
   left: 0;
   right: 0;

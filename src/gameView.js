@@ -11,13 +11,13 @@ GameView.prototype.switchScreen = function switchScreen() {
   if (this.game.screen() === "battle") {
     this.game.setScreen("prep");
     this.game.resetGameSpeed();
-
+    
     // Remove the battle background
     const backgroundLayerFront = document.getElementById("bg-front");
     backgroundLayerFront.classList.remove("front-image-layer");
     this.canvas.classList.remove("back-image-layers");
-
-    // console.log(this.game)
+    
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     new PreparationView(this.game, this.ctx, this.canvas).start();
   } else {
     this.game.setScreen("battle");
@@ -28,6 +28,7 @@ GameView.prototype.switchScreen = function switchScreen() {
     backgroundLayerFront.classList.add("front-image-layer");
     this.canvas.classList.add("back-image-layers");
     
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     new BattleView(this.game, this.ctx, this.canvas).start();
   }
 }

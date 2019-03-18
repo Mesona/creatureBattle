@@ -491,13 +491,13 @@ GameView.prototype.switchScreen = function switchScreen() {
   if (this.game.screen() === "battle") {
     this.game.setScreen("prep");
     this.game.resetGameSpeed();
-
+    
     // Remove the battle background
     const backgroundLayerFront = document.getElementById("bg-front");
     backgroundLayerFront.classList.remove("front-image-layer");
     this.canvas.classList.remove("back-image-layers");
-
-    // console.log(this.game)
+    
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     new PreparationView(this.game, this.ctx, this.canvas).start();
   } else {
     this.game.setScreen("battle");
@@ -508,6 +508,7 @@ GameView.prototype.switchScreen = function switchScreen() {
     backgroundLayerFront.classList.add("front-image-layer");
     this.canvas.classList.add("back-image-layers");
     
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     new BattleView(this.game, this.ctx, this.canvas).start();
   }
 }
@@ -525,6 +526,7 @@ module.exports = GameView;
 
 const Game = __webpack_require__(/*! ./game */ "./src/game.js");
 const BattleView = __webpack_require__(/*! ./battleView/battleView */ "./src/battleView/battleView.js");
+const PreparationView = __webpack_require__(/*! ./preparationView/preparationView */ "./src/preparationView/preparationView.js");
 const GameView = __webpack_require__(/*! ./gameView */ "./src/gameView.js");
 
 document.addEventListener("DOMContentLoaded", function(){
@@ -535,8 +537,82 @@ document.addEventListener("DOMContentLoaded", function(){
 
   let game = new Game();
   let gameView = new GameView(game, ctx, canvas);
-  new BattleView(game, ctx, canvas, gameView).start();
+  // new BattleView(game, ctx, canvas, gameView).start();
+  new PreparationView(game, ctx, canvas, gameView).start();
 });
+
+/***/ }),
+
+/***/ "./src/preparationView/creatureBox.js":
+/*!********************************************!*\
+  !*** ./src/preparationView/creatureBox.js ***!
+  \********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function CreatureBox(game, ctx, canvas) {
+  this.game = game;
+  this.ctx = ctx;
+  this.canvas = canvas;
+
+  ctx.fillStyle = "purple";
+  ctx.fillRect(0, 300, canvas.width, 200);
+  ctx.clearRect(10, 310, (canvas.width - 20), 180);
+
+  // Need to animate creature
+}
+
+
+
+module.exports = CreatureBox;
+
+/***/ }),
+
+/***/ "./src/preparationView/descriptionBox.js":
+/*!***********************************************!*\
+  !*** ./src/preparationView/descriptionBox.js ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function DescriptionBox(game, ctx, canvas) {
+  this.game = game;
+  this.ctx = ctx;
+  this.canvas = canvas;
+
+  ctx.fillStyle = "orange";
+  ctx.fillRect(400, 0, 400, 300);
+  ctx.clearRect(410, 10, 380, 280);
+}
+
+
+
+module.exports = DescriptionBox;
+
+/***/ }),
+
+/***/ "./src/preparationView/equipBox.js":
+/*!*****************************************!*\
+  !*** ./src/preparationView/equipBox.js ***!
+  \*****************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+// const Weapons = require('./weapon');
+
+function EquipBox(game, ctx, canvas) {
+  this.game = game;
+  this.ctx = ctx;
+  this.canvas = canvas;
+
+  ctx.fillStyle = "green";
+  ctx.fillRect(0,0,400,300);
+  ctx.clearRect(10, 10, 380, 280)
+}
+
+
+
+module.exports = EquipBox;
 
 /***/ }),
 
@@ -545,7 +621,11 @@ document.addEventListener("DOMContentLoaded", function(){
   !*** ./src/preparationView/preparationView.js ***!
   \************************************************/
 /*! no static exports found */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
+
+const EquipBox = __webpack_require__(/*! ./equipBox */ "./src/preparationView/equipBox.js");
+const CreatureBox = __webpack_require__(/*! ./creatureBox */ "./src/preparationView/creatureBox.js");
+const DescriptionBox = __webpack_require__(/*! ./descriptionBox */ "./src/preparationView/descriptionBox.js");
 
 function PreparationView(game, ctx, canvas) {
   this.game = game;
@@ -575,8 +655,8 @@ PreparationView.prototype.step = function step(timeDelta) {
   console.log(this.game.getGameSpeed())
   if (this.game.getGameSpeed() % 4 === 0) {
     EquipBox(this.game, this.ctx, this.canvas);
-    // CreatureBox(this.game, this.ctx, this.canvas);
-    // DescriptionBox(this.game, this.ctx, this.canvas);
+    CreatureBox(this.game, this.ctx, this.canvas);
+    DescriptionBox(this.game, this.ctx, this.canvas);
     this.game.gameSpeedStep();
   } else {
     this.game.gameSpeedStep();

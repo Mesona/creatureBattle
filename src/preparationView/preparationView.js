@@ -1,3 +1,7 @@
+const EquipBox = require('./equipBox');
+const CreatureBox = require('./creatureBox');
+const DescriptionBox = require('./descriptionBox');
+
 function PreparationView(game, ctx, canvas) {
   this.game = game;
   this.canvas = canvas;
@@ -26,8 +30,8 @@ PreparationView.prototype.step = function step(timeDelta) {
   console.log(this.game.getGameSpeed())
   if (this.game.getGameSpeed() % 4 === 0) {
     EquipBox(this.game, this.ctx, this.canvas);
-    // CreatureBox(this.game, this.ctx, this.canvas);
-    // DescriptionBox(this.game, this.ctx, this.canvas);
+    CreatureBox(this.game, this.ctx, this.canvas);
+    DescriptionBox(this.game, this.ctx, this.canvas);
     this.game.gameSpeedStep();
   } else {
     this.game.gameSpeedStep();
