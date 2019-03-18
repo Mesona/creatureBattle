@@ -4,8 +4,8 @@ function EquipBox(game, ctx, canvas) {
   this.canvas = canvas;
 
   ctx.fillStyle = "green";
-  ctx.fillRect(0,0,400,300);
-  ctx.clearRect(10, 10, 380, 280)
+  // ctx.fillRect(0,0,400,300);
+  // ctx.clearRect(10, 10, 380, 280)
 
   weaponSelectText();
   armorSelectText();
@@ -15,9 +15,6 @@ function EquipBox(game, ctx, canvas) {
   weaponSelectRight();
   armorSelectLeft();
   armorSelectRight();
-  console.log(game.showWeapons());
-  console.log(game.showArmors());
-  // console.log(Equipment.showWeapons());
 }
 
 weaponSelectText = function() {
@@ -33,14 +30,22 @@ armorSelectText = function() {
 }
 
 weaponSelect = function() {
-  ctx.fillRect(130, 20, 220, 50);
-  ctx.clearRect(135, 25, 210, 40);
+  ctx.fillRect(130, 20, 250, 50);
+  ctx.clearRect(135, 25, 240, 40);
 
+  ctx.fillStyle = "black";
+  ctx.font = "italic 12pt Arial";
+  ctx.fillText(this.game.showWeapons()[0].name, 180, 52);
 }
 
 armorSelect = function() {
-  ctx.fillRect(130, 115, 220, 50);
-  ctx.clearRect(135, 120, 210, 40);
+  ctx.fillStyle = "rgba(255, 0, 0, 1)";
+  ctx.fillRect(130, 115, 250, 50);
+  ctx.clearRect(135, 120, 240, 40);
+
+  ctx.fillStyle = "black";
+  ctx.font = "italic 12pt Arial";
+  ctx.fillText(this.game.showArmors()[0].name, 180, 146);
 }
 
 weaponSelectLeft = function() {
@@ -57,12 +62,12 @@ weaponSelectLeft = function() {
 
 weaponSelectRight = function() {
   ctx.fillStyle = "black";
-  ctx.fillRect(305, 25, 40, 40)
+  ctx.fillRect(335, 25, 40, 40)
   ctx.fillStyle="white";
   ctx.beginPath();
-  ctx.moveTo(315, 39);
-  ctx.lineTo(335, 46);
-  ctx.lineTo(315, 53);
+  ctx.moveTo(345, 39);
+  ctx.lineTo(365, 46);
+  ctx.lineTo(345, 53);
   ctx.closePath();
   ctx.fill();;
 
@@ -82,12 +87,12 @@ armorSelectLeft = function() {
 
 armorSelectRight = function() {
   ctx.fillStyle = "black";
-  ctx.fillRect(305, 120, 40, 40);
+  ctx.fillRect(335, 120, 40, 40);
   ctx.fillStyle="white";
   ctx.beginPath();
-  ctx.moveTo(315, 134);
-  ctx.lineTo(335, 141);
-  ctx.lineTo(315, 148);
+  ctx.moveTo(345, 134);
+  ctx.lineTo(365, 141);
+  ctx.lineTo(345, 148);
   ctx.closePath();
   ctx.fill();
 }

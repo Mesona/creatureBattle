@@ -12,7 +12,8 @@ function Armor() {
       "shield",
       "helm",
       "cloak",
-      "spectacles"
+      // "spectacles"
+      "ring",
     ]
     const suffix = [
       "protection",
@@ -32,10 +33,10 @@ function Armor() {
 
   generateArmorDescription = function() {
     const possibilities = [
-      "Lorem ipsum",
-      "Ipsum lorem",
-      "Placeholder",
-      "This ancient tool was once used as currency",
+      "This armor was once worn by . . .",
+      "This rusty bucket offers . . .",
+      "This is a placebo",
+      "I guess you can use this?",
     ]
 
     return possibilities[Math.floor(Math.random() * 4)];

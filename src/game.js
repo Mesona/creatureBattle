@@ -51,6 +51,14 @@ function Game() {
     return equipment.showArmors();
   }
 
+  Game.prototype.rotateWeapons = (direction) => {
+    equipment.rotateWeapons(direction);
+  }
+
+  Game.prototype.rotateArmors= (direction) => {
+    equipment.rotateArmors(direction);
+  }
+
 }
 
 module.exports = Game;

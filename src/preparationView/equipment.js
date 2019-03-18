@@ -23,6 +23,22 @@ function Equipment() {
   Equipment.prototype.addArmor = function() {
     this.armors = this.armors.concat(new Armor());
   }
+
+  Equipment.prototype.rotateWeapons = (direction) => {
+    if (direction === "left") {
+      this.weapons.push(this.weapons.shift());
+    } else {
+      this.weapons.unshift(this.weapons.pop());
+    }
+  }
+
+  Equipment.prototype.rotateArmors = (direction) => {
+    if (direction === "left") {
+      this.armors.push(this.armors.shift());
+    } else {
+      this.armors.unshift(this.armors.pop());
+    }
+  }
 }
 
 module.exports = Equipment;

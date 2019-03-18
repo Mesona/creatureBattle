@@ -34,10 +34,12 @@ generateWeaponName = function() {
      "ice",
      "frenzy",
      "fury",
-     "protection",
+    //  "protection",
      "decay",
-     "destruction",
-     "bravado"
+    //  "destruction",
+     "bravado",
+     "grit",
+     "pizzaz"
    ]
    weaponName = prefix[Math.floor(Math.random() * 8)]
                 + " of " + suffix[Math.floor(Math.random() * 8)];

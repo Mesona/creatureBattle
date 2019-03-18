@@ -57,10 +57,11 @@ body {
   /* background from https://edermunizz.itch.io/free-pixel-art-hill */
   background-image: url('./hillsBackground/HillsLayer06.png');
 
-  background-repeat: no-repeat;
+  /* background-repeat: no-repeat; */
+  background-repeat: repeat-x;
   background-size: cover;
   height: 500px;
-  width: 700px;
+  width: 800px;
   z-index: 2;
 }
 
