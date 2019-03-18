@@ -1,6 +1,8 @@
-function Armor() {
-  this.name = generateArmorName();
-  this.description = generateArmorDescription();
+function Armor(
+    name = generateArmorName(),
+    description = generateArmorDescription()) {
+  this.name = name;
+  this.description = description;
 }
 
   generateArmorName = function() {

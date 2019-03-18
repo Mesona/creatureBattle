@@ -385,14 +385,14 @@ function Creature(
   healthPoints = 100,
   weapon = null,
   armor = null,
-  attacks = [
+  attacks = {
     // {rangeMin: 0, rangeMax: 150, damage: 10},
     // {rangeMin: 151, rangeMax: 400, damage: 10},
     // {rangeMid: 401, rangeMax: 700, damage: 5},
-    {damage: 10},
-    {damage: 10},
-    {damage: 50},
-    ]
+    attackClose: 10,
+    attackMid: 10,
+    attackFar: 50,
+    }
   ) {
   
   this.pos = position;
@@ -408,11 +408,11 @@ function Creature(
 
   Creature.prototype.attack = (range) => {
     if (range === "close") {
-      return (Math.random() * this.attacks[0].damage) + 1;
+      return (Math.random() * this.attacks.attackClose) + 1;
     } else if (range === "mid") {
-      return (Math.random() * this.attacks[1].damage) + 1;
+      return (Math.random() * this.attacks.attackMid) + 1;
     } else {
-      return (Math.random() * this.attacks[2].damage) + 1;
+      return (Math.random() * this.attacks.attackFar) + 1;
     }
   }
 }
@@ -432,15 +432,18 @@ const Creature = __webpack_require__(/*! ./creature */ "./src/creature.js");
 const Equipment = __webpack_require__(/*! ./preparationView/equipment */ "./src/preparationView/equipment.js");
 
 function Game() {
+  let equipment = new Equipment();
+  equipment.addDefaultWeapon();
+  equipment.addWeapon();
+  equipment.addWeapon();
+  equipment.addWeapon();
+  equipment.addDefaultArmor();
+  equipment.addArmor();
+  equipment.addArmor();
+  equipment.addArmor();
+  // let playerCreature = new Creature(attacks = equipment.getWeaponDamages());
   let playerCreature = new Creature();
   let aiCreature = new Creature(pos = 500);
-  let equipment = new Equipment();
-  equipment.addWeapon();
-  equipment.addWeapon();
-  equipment.addWeapon();
-  equipment.addArmor();
-  equipment.addArmor();
-  equipment.addArmor();
   let gameSpeed = 0;
   let gameScreen = "battle";
 
@@ -485,8 +488,23 @@ function Game() {
     equipment.rotateWeapons(direction);
   }
 
-  Game.prototype.rotateArmors= (direction) => {
+  Game.prototype.rotateArmors = (direction) => {
     equipment.rotateArmors(direction);
+  }
+
+  Game.prototype.weaponDescription = () => {
+    return equipment.weaponDescription();
+  }
+
+  Game.prototype.armorDescription = () => {
+    return equipment.armorDescription();
+  }
+
+  Game.prototype.getWeaponDamages = () => {
+    // return equipment.getWeaponDamages()p;
+    return `Close: ${equipment.weapons[0].attackClose},
+            Medium: ${equipment.weapons[0].attackMid},
+            Far: ${equipment.weapons[0].attackFar}`;
   }
 
 }
@@ -574,9 +592,11 @@ document.addEventListener("DOMContentLoaded", function(){
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-function Armor() {
-  this.name = generateArmorName();
-  this.description = generateArmorDescription();
+function Armor(
+    name = generateArmorName(),
+    description = generateArmorDescription()) {
+  this.name = name;
+  this.description = description;
 }
 
   generateArmorName = function() {
@@ -668,11 +688,37 @@ function DescriptionBox(game, ctx, canvas) {
   this.ctx = ctx;
   this.canvas = canvas;
 
-  ctx.fillStyle = "orange";
-  ctx.fillRect(400, 0, 400, 300);
+  // Box border for testing UI bounds
+  // ctx.fillStyle = "orange";
+  // ctx.fillRect(400, 0, 400, 300);
   ctx.clearRect(410, 10, 380, 280);
+
+  ctx.fillStyle = "rgba(255, 0, 0, 1)";
+  ctx.font = "italic 12pt Arial";
+  ctx.fillText(getLines(ctx, this.game.weaponDescription(), 350), 425, 52);
+  ctx.fillText(getLines(ctx, this.game.getWeaponDamages(), 350), 425, 71);
+  ctx.fillText(getLines(ctx, this.game.armorDescription(), 350), 425, 146);
+  // getLines(ctx, this.game.weaponDescription(), 350);
 }
 
+function getLines(ctx, text, maxWidth) {
+  let words = text.split(" ");
+  let lines = [];
+  let currentLine = words[0];
+
+  for (var i = 1; i < words.length; i++) {
+      let word = words[i];
+      let width = ctx.measureText(currentLine + " " + word).width;
+      if (width < maxWidth) {
+          currentLine += " " + word;
+      } else {
+          lines.push(currentLine);
+          currentLine = word;
+      }
+  }
+  lines.push(currentLine);
+  return lines;
+}
 
 
 module.exports = DescriptionBox;
@@ -806,6 +852,14 @@ function Equipment() {
   Equipment.prototype.showWeapons = () => {
     return this.weapons;
   }
+
+  Equipment.prototype.addDefaultWeapon = function() {
+    this.weapons = this.weapons.concat(new Weapon(4, 3, 3, "Default", "Your starting weapon"));
+  }
+
+  Equipment.prototype.addDefaultArmor = function() {
+    this.armors = this.armors.concat(new Armor("Default", "Your starting armor"));
+  }
   
   Equipment.prototype.addWeapon = function() {
     let closeDamage = Math.floor(Math.random() * 10);
@@ -836,6 +890,20 @@ function Equipment() {
     } else {
       this.armors.unshift(this.armors.pop());
     }
+  }
+
+  Equipment.prototype.weaponDescription = () => {
+    return this.weapons[0].description;
+  }
+
+  Equipment.prototype.armorDescription = () => {
+    return this.armors[0].description;
+  }
+
+  Equipment.prototype.getWeaponDamages = () => {
+    return {attackClose: weapons[0].attackClose,
+            attackMid: weapons[0].attackMid,
+            attackFar: weapons[0].attackFar}
   }
 }
 
@@ -872,24 +940,30 @@ PreparationView.prototype.start = function start() {
     // If the user clicks on the "left" arrow
     if (clickX > 139 && clickX < 178) {
       // of the weapons select
-      if (clickY > 115 && clickY < 152) {
+      if (clickY > 27 && clickY < 66) {
         this.game.rotateWeapons("left");
       // of the armors select
-      } else if (clickY > 159 && clickY < 248) {
+      } else if (clickY > 122 && clickY < 159) {
         this.game.rotateArmors("left");
       }
     }
 
     // If the user clicks on the "right" arrow
-    if (clickX > 337 && clickX < 378) {
+    if (clickX > 338 && clickX < 378) {
       // of the weapons select
-      if (clickY > 112 && clickY < 153) {
+      if (clickY > 27 && clickY < 66) {
         this.game.rotateWeapons("right");
       // of the armors select
-      } else if (clickY > 209 && clickY < 248) {
+      } else if (clickY > 122 && clickY < 162) {
         this.game.rotateArmors("right");
       }
     }
+
+    // If the user clicks the "Next Battle" button
+    if (clickX > 604 && clickX < 778
+        && clickY > 377 && clickY < 402) {
+          console.log(this.game.showWeapons())
+        }    
 
   });
 
@@ -928,12 +1002,17 @@ module.exports = PreparationView;
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-function Weapon(attackClose, attackMid, attackFar) {
+function Weapon(
+    attackClose,
+    attackMid,
+    attackFar,
+    name = generateWeaponName(),
+    description = generateWeaponDescription()) {
   this.attackClose = attackClose;
   this.attackMid = attackMid;
   this.attackFar = attackFar;
-  this.name = generateWeaponName();
-  this.description = generateWeaponDescription();
+  this.name = name;
+  this.description = description;
 }
 
 close = function() {

@@ -1,9 +1,14 @@
-function Weapon(attackClose, attackMid, attackFar) {
+function Weapon(
+    attackClose,
+    attackMid,
+    attackFar,
+    name = generateWeaponName(),
+    description = generateWeaponDescription()) {
   this.attackClose = attackClose;
   this.attackMid = attackMid;
   this.attackFar = attackFar;
-  this.name = generateWeaponName();
-  this.description = generateWeaponDescription();
+  this.name = name;
+  this.description = description;
 }
 
 close = function() {

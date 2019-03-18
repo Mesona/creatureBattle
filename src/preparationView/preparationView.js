@@ -20,24 +20,30 @@ PreparationView.prototype.start = function start() {
     // If the user clicks on the "left" arrow
     if (clickX > 139 && clickX < 178) {
       // of the weapons select
-      if (clickY > 115 && clickY < 152) {
+      if (clickY > 27 && clickY < 66) {
         this.game.rotateWeapons("left");
       // of the armors select
-      } else if (clickY > 159 && clickY < 248) {
+      } else if (clickY > 122 && clickY < 159) {
         this.game.rotateArmors("left");
       }
     }
 
     // If the user clicks on the "right" arrow
-    if (clickX > 337 && clickX < 378) {
+    if (clickX > 338 && clickX < 378) {
       // of the weapons select
-      if (clickY > 112 && clickY < 153) {
+      if (clickY > 27 && clickY < 66) {
         this.game.rotateWeapons("right");
       // of the armors select
-      } else if (clickY > 209 && clickY < 248) {
+      } else if (clickY > 122 && clickY < 162) {
         this.game.rotateArmors("right");
       }
     }
+
+    // If the user clicks the "Next Battle" button
+    if (clickX > 604 && clickX < 778
+        && clickY > 377 && clickY < 402) {
+          console.log(this.game.showWeapons())
+        }    
 
   });
 
