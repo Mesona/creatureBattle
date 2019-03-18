@@ -184,7 +184,6 @@ BattleView.prototype.textFadeOut = function(text, xloc) {
       }
   }, 50);
 
-  console.log(this.gameView)
   setTimeout(() => this.gameView.switchScreen(), 1000);
 };
 
@@ -430,12 +429,21 @@ module.exports  = Creature;
 /***/ (function(module, exports, __webpack_require__) {
 
 const Creature = __webpack_require__(/*! ./creature */ "./src/creature.js");
+const Equipment = __webpack_require__(/*! ./preparationView/equipment */ "./src/preparationView/equipment.js");
 
 function Game() {
   let playerCreature = new Creature();
   let aiCreature = new Creature(pos = 500);
+  let equipment = new Equipment();
+  equipment.addWeapon();
+  equipment.addWeapon();
+  equipment.addWeapon();
+  equipment.addArmor();
+  equipment.addArmor();
+  equipment.addArmor();
   let gameSpeed = 0;
   let gameScreen = "battle";
+
 
   Game.prototype.playerCreature = () => {
     return playerCreature;
@@ -463,6 +471,14 @@ function Game() {
 
   Game.prototype.setScreen = (newScreen) => {
     gameScreen = newScreen;
+  };
+
+  Game.prototype.showWeapons = () => {
+    return equipment.showWeapons();
+  }
+
+  Game.prototype.showArmors = () => {
+    return equipment.showArmors();
   }
 
 }
@@ -543,6 +559,62 @@ document.addEventListener("DOMContentLoaded", function(){
 
 /***/ }),
 
+/***/ "./src/preparationView/armor.js":
+/*!**************************************!*\
+  !*** ./src/preparationView/armor.js ***!
+  \**************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function Armor() {
+  this.name = generateArmorName();
+  this.description = generateArmorDescription();
+}
+
+  generateArmorName = function() {
+    const prefix = [
+      "collar",
+      "pendant",
+      "greaves",
+      "gauntlet",
+      "shield",
+      "helm",
+      "cloak",
+      "spectacles"
+    ]
+    const suffix = [
+      "protection",
+      "evasion",
+      "fortitude",
+      "moxy",
+      "resiliance",
+      "enervation",
+      "awe",
+      "fancy feet"
+    ]
+    let armorName = prefix[Math.floor(Math.random() * 8)]
+                + " of " + suffix[Math.floor(Math.random() * 8)];
+
+    return armorName;
+  }
+
+  generateArmorDescription = function() {
+    const possibilities = [
+      "Lorem ipsum",
+      "Ipsum lorem",
+      "Placeholder",
+      "This ancient tool was once used as currency",
+    ]
+
+    return possibilities[Math.floor(Math.random() * 4)];
+  }
+
+
+
+module.exports = Armor;
+
+/***/ }),
+
 /***/ "./src/preparationView/creatureBox.js":
 /*!********************************************!*\
   !*** ./src/preparationView/creatureBox.js ***!
@@ -598,8 +670,6 @@ module.exports = DescriptionBox;
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-// const Weapons = require('./weapon');
-
 function EquipBox(game, ctx, canvas) {
   this.game = game;
   this.ctx = ctx;
@@ -608,11 +678,131 @@ function EquipBox(game, ctx, canvas) {
   ctx.fillStyle = "green";
   ctx.fillRect(0,0,400,300);
   ctx.clearRect(10, 10, 380, 280)
+
+  weaponSelectText();
+  armorSelectText();
+  weaponSelect();
+  armorSelect();
+  weaponSelectLeft();
+  weaponSelectRight();
+  armorSelectLeft();
+  armorSelectRight();
+  console.log(game.showWeapons());
+  console.log(game.showArmors());
+  // console.log(Equipment.showWeapons());
 }
 
+weaponSelectText = function() {
+  ctx.fillStyle = "rgba(255, 0, 0, 1)";
+  ctx.font = "italic 20pt Arial";
+  ctx.fillText("Weapon: ", 20, 55);
+}
 
+armorSelectText = function() {
+  ctx.fillStyle = "rgba(255, 0, 0, 1)";
+  ctx.font = "italic 20pt Arial";
+  ctx.fillText("Armor: ", 20, 150);
+}
+
+weaponSelect = function() {
+  ctx.fillRect(130, 20, 220, 50);
+  ctx.clearRect(135, 25, 210, 40);
+
+}
+
+armorSelect = function() {
+  ctx.fillRect(130, 115, 220, 50);
+  ctx.clearRect(135, 120, 210, 40);
+}
+
+weaponSelectLeft = function() {
+  ctx.fillStyle = "black";
+  ctx.fillRect(135, 25, 40, 40);
+  ctx.fillStyle="white";
+  ctx.beginPath();
+  ctx.moveTo(165, 39);
+  ctx.lineTo(145, 46);
+  ctx.lineTo(165, 53);
+  ctx.closePath();
+  ctx.fill();
+}
+
+weaponSelectRight = function() {
+  ctx.fillStyle = "black";
+  ctx.fillRect(305, 25, 40, 40)
+  ctx.fillStyle="white";
+  ctx.beginPath();
+  ctx.moveTo(315, 39);
+  ctx.lineTo(335, 46);
+  ctx.lineTo(315, 53);
+  ctx.closePath();
+  ctx.fill();;
+
+}
+
+armorSelectLeft = function() {
+  ctx.fillStyle = "black";
+  ctx.fillRect(135, 120, 40, 40);
+  ctx.fillStyle="white";
+  ctx.beginPath();
+  ctx.moveTo(165, 134);
+  ctx.lineTo(145, 141);
+  ctx.lineTo(165, 148);
+  ctx.closePath();
+  ctx.fill();
+}
+
+armorSelectRight = function() {
+  ctx.fillStyle = "black";
+  ctx.fillRect(305, 120, 40, 40);
+  ctx.fillStyle="white";
+  ctx.beginPath();
+  ctx.moveTo(315, 134);
+  ctx.lineTo(335, 141);
+  ctx.lineTo(315, 148);
+  ctx.closePath();
+  ctx.fill();
+}
 
 module.exports = EquipBox;
+
+/***/ }),
+
+/***/ "./src/preparationView/equipment.js":
+/*!******************************************!*\
+  !*** ./src/preparationView/equipment.js ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+const Weapon = __webpack_require__(/*! ./weapon */ "./src/preparationView/weapon.js");
+const Armor = __webpack_require__(/*! ./armor */ "./src/preparationView/armor.js");
+
+function Equipment() {
+  this.weapons = [];
+  this.armors = [];
+
+  Equipment.prototype.showWeapons = () => {
+    return this.weapons;
+  }
+  
+  Equipment.prototype.addWeapon = function() {
+    let closeDamage = Math.floor(Math.random() * 10);
+    let farDamage = (Math.floor(Math.random() * (10 - closeDamage)));
+    let midDamage = 10 - closeDamage - farDamage;
+    this.weapons = this.weapons.concat(new Weapon(closeDamage, midDamage, farDamage));
+  }
+
+  Equipment.prototype.showArmors = () => {
+    return this.armors;
+  }
+
+  Equipment.prototype.addArmor = function() {
+    this.armors = this.armors.concat(new Armor());
+  }
+}
+
+module.exports = Equipment;
 
 /***/ }),
 
@@ -634,7 +824,6 @@ function PreparationView(game, ctx, canvas) {
 }
 
 PreparationView.prototype.start = function start() {
-  console.log('yeah')
   this.lastTime = 0;
   requestAnimationFrame(this.animate.bind(this));
 };
@@ -649,10 +838,7 @@ PreparationView.prototype.animate = function animate(time) {
   this.animationId = requestAnimationFrame(this.animate.bind(this)); 
 }
 
-// PreparationView.prototype.step = (timeDelta) => {
 PreparationView.prototype.step = function step(timeDelta) {
-  // console.log(this.game.playerCreature());
-  console.log(this.game.getGameSpeed())
   if (this.game.getGameSpeed() % 4 === 0) {
     EquipBox(this.game, this.ctx, this.canvas);
     CreatureBox(this.game, this.ctx, this.canvas);
@@ -664,6 +850,77 @@ PreparationView.prototype.step = function step(timeDelta) {
 }
 
 module.exports = PreparationView;
+
+/***/ }),
+
+/***/ "./src/preparationView/weapon.js":
+/*!***************************************!*\
+  !*** ./src/preparationView/weapon.js ***!
+  \***************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function Weapon(attackClose, attackMid, attackFar) {
+  this.attackClose = attackClose;
+  this.attackMid = attackMid;
+  this.attackFar = attackFar;
+  this.name = generateWeaponName();
+  this.description = generateWeaponDescription();
+}
+
+close = function() {
+  return this.attackClose.damage;
+}
+
+mid = function() {
+  return this.attackMid.damage;
+}
+
+far = function() {
+  return this.attackFar.damage;
+}
+
+generateWeaponName = function() {
+  const prefix = [
+    "sword",
+    "torch",
+    "gauntlet",
+    "dagger",
+    "tentacle",
+    "tooth",
+    "claw",
+    "eye"
+   ]
+   const suffix = [
+     "fire",
+     "ice",
+     "frenzy",
+     "fury",
+     "protection",
+     "decay",
+     "destruction",
+     "bravado"
+   ]
+   weaponName = prefix[Math.floor(Math.random() * 8)]
+                + " of " + suffix[Math.floor(Math.random() * 8)];
+
+   return weaponName;
+}
+
+generateWeaponDescription = function() {
+  const possibilities = [
+    "Lorem ipsum",
+    "Ipsum lorem",
+    "Placeholder",
+    "This ancient tool was once used as currency",
+  ]
+
+  return possibilities[Math.floor(Math.random() * 4)];
+}
+
+
+
+module.exports = Weapon;
 
 /***/ })
 

@@ -89,7 +89,6 @@ BattleView.prototype.textFadeOut = function(text, xloc) {
       }
   }, 50);
 
-  console.log(this.gameView)
   setTimeout(() => this.gameView.switchScreen(), 1000);
 };
 

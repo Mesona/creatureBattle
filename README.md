@@ -16,9 +16,9 @@
 * Users will be able to change their creature's armor to augment its stats
 
 ### MVPs
-* [] Basic page setup and UI
+* [x] Basic page setup and UI
 * [] Creature preparation page
-* [] Creature battle page
+* [x] Creature battle page
 * [] Creature weapons and armor
 
 ### Bonus MVPs
@@ -38,17 +38,17 @@
 ### Thursday
 * [x] Set up webpack
 * [x] Create skeleton for class Creature
-* [] Create skeleton for class Equipment
-* [] Create skeleton for subclasses Armors and Weapons
+* [x] Create skeleton for class Equipment
+* [x] Create skeleton for subclasses Armors and Weapons
 * [x] Create skeleton for Battle
-* [] Create skeleton for Preparation
+* [x] Create skeleton for Preparation
 
 ### Friday
 * [x] Build out Creature
 * [x] Begin on building out Battle
 
 ### Saturday
-* [] Finish building out Battle
+* [x] Finish building out Battle
 * [x] Basic animations
 
 ### Sunday
