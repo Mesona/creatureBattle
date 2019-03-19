@@ -14,7 +14,7 @@ function Equipment() {
   }
 
   Equipment.prototype.addDefaultArmor = function() {
-    this.armors = this.armors.concat(new Armor("Default", "Your starting armor"));
+    this.armors = this.armors.concat(new Armor({str: 4, def: 3, agi: 3}, "Default", "Your starting armor"));
   }
   
   Equipment.prototype.addWeapon = function() {

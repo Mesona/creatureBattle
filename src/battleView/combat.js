@@ -4,15 +4,19 @@ function Combat(game) {
 
   // Calculates distance between the two
   creatureDistance = aiCreature.pos - playerCreature.pos - 100;
+  playerCreatureDamageModifier = (playerCreature.str / 100) + 1;
+  playerCreatureDefenseModifier = (playerCreature.def / 100) + 1;
+  aiCreatureDamageModifier = (aiCreature.str / 100) + 1;
+  aiCreatureDefenseModifier = (aiCreature.def / 100) + 1;
   if (creatureDistance < 151) {
-    aiCreature.currentHP -= playerCreature.attack('close');
-    playerCreature.currentHP -= aiCreature.attack('close');
+    aiCreature.currentHP -= (playerCreature.attack('close') * playerCreatureDamageModifier / aiCreatureDefenseModifier);
+    playerCreature.currentHP -= aiCreature.attack('close') * aiCreatureDamageModifier / playerCreatureDefenseModifier;
   } else if (creatureDistance < 401) {
-    aiCreature.currentHP -= playerCreature.attack('mid');
-    playerCreature.currentHP -= aiCreature.attack('mid');
+    aiCreature.currentHP -= (playerCreature.attack('mid') * playerCreatureDamageModifier / aiCreatureDefenseModifier);
+    playerCreature.currentHP -= aiCreature.attack('mid') * aiCreatureDamageModifier / playerCreatureDefenseModifier;
   } else {
-    aiCreature.currentHP -= playerCreature.attack('far');
-    playerCreature.currentHP -= aiCreature.attack('far');
+    aiCreature.currentHP -= (playerCreature.attack('far')  * playerCreatureDamageModifier / aiCreatureDefenseModifier);
+    playerCreature.currentHP -= aiCreature.attack('far') * aiCreatureDamageModifier / playerCreatureDefenseModifier;
   }
 
   playerCreature.currentHP = Math.min(Math.max(playerCreature.currentHP, 0));

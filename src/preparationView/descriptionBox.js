@@ -13,7 +13,7 @@ function DescriptionBox(game, ctx, canvas) {
   ctx.fillText(getLines(ctx, this.game.weaponDescription(), 350), 425, 52);
   ctx.fillText(getLines(ctx, this.game.getWeaponDamages(), 350), 425, 71);
   ctx.fillText(getLines(ctx, this.game.armorDescription(), 350), 425, 146);
-  // getLines(ctx, this.game.weaponDescription(), 350);
+  ctx.fillText(getLines(ctx, this.game.getArmorStats(), 350), 425, 165);
 }
 
 function getLines(ctx, text, maxWidth) {

@@ -67,8 +67,19 @@ body {
 
 .game-space {
   /* display: flex; */
+  /* flex-wrap: wrap; */
   /* justify-content: center; */
   height: 500px;
+}
+
+.instructions {
+  padding-top: 20px;
+  width: 20%;
+  float: left;
+  font-family: 'Arial';
+  font-style: italic;
+  color: black;
+  text-align: right;
 }
 
 

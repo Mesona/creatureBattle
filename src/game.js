@@ -11,9 +11,8 @@ function Game() {
   equipment.addArmor();
   equipment.addArmor();
   equipment.addArmor();
-  // let playerCreature = new Creature(attacks = equipment.getWeaponDamages());
   let playerCreature = new Creature();
-  let aiCreature = new Creature(pos = 500);
+  let aiCreature = new Creature(pos = 500, str = 14, def = 13, agi = 13);
   let gameSpeed = 0;
   let gameScreen = "prep";
 
@@ -67,6 +66,15 @@ function Game() {
 
   Game.prototype.rotateArmors = (direction) => {
     equipment.rotateArmors(direction);
+
+    // Should also be moved into a method at some point
+    playerCreature.str = 10 + equipment.armors[0].stats.str;
+    playerCreature.def = 10 + equipment.armors[0].stats.def;
+    playerCreature.agi = 10 + equipment.armors[0].stats.agi;
+  }
+
+  Game.prototype.rotateArmors = (direction) => {
+    equipment.rotateArmors(direction);
   }
 
   Game.prototype.weaponDescription = () => {
@@ -78,10 +86,15 @@ function Game() {
   }
 
   Game.prototype.getWeaponDamages = () => {
-    // return equipment.getWeaponDamages()p;
     return `Close: ${equipment.weapons[0].attackClose},
             Medium: ${equipment.weapons[0].attackMid},
             Far: ${equipment.weapons[0].attackFar}`;
+  }
+
+  Game.prototype.getArmorStats = () => {
+    return `Str: ${equipment.armors[0].str},
+            Def: ${equipment.armors[0].def},
+            Agi: ${equipment.armors[0].agi}`;
   }
 
   // Game.prototype.updatePlayerWeapons = () => {

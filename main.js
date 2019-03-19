@@ -211,15 +211,19 @@ function Combat(game) {
 
   // Calculates distance between the two
   creatureDistance = aiCreature.pos - playerCreature.pos - 100;
+  playerCreatureDamageModifier = (playerCreature.str / 100) + 1;
+  playerCreatureDefenseModifier = (playerCreature.def / 100) + 1;
+  aiCreatureDamageModifier = (aiCreature.str / 100) + 1;
+  aiCreatureDefenseModifier = (aiCreature.def / 100) + 1;
   if (creatureDistance < 151) {
-    aiCreature.currentHP -= playerCreature.attack('close');
-    playerCreature.currentHP -= aiCreature.attack('close');
+    aiCreature.currentHP -= (playerCreature.attack('close') * playerCreatureDamageModifier / aiCreatureDefenseModifier);
+    playerCreature.currentHP -= aiCreature.attack('close') * aiCreatureDamageModifier / playerCreatureDefenseModifier;
   } else if (creatureDistance < 401) {
-    aiCreature.currentHP -= playerCreature.attack('mid');
-    playerCreature.currentHP -= aiCreature.attack('mid');
+    aiCreature.currentHP -= (playerCreature.attack('mid') * playerCreatureDamageModifier / aiCreatureDefenseModifier);
+    playerCreature.currentHP -= aiCreature.attack('mid') * aiCreatureDamageModifier / playerCreatureDefenseModifier;
   } else {
-    aiCreature.currentHP -= playerCreature.attack('far');
-    playerCreature.currentHP -= aiCreature.attack('far');
+    aiCreature.currentHP -= (playerCreature.attack('far')  * playerCreatureDamageModifier / aiCreatureDefenseModifier);
+    playerCreature.currentHP -= aiCreature.attack('far') * aiCreatureDamageModifier / playerCreatureDefenseModifier;
   }
 
   playerCreature.currentHP = Math.min(Math.max(playerCreature.currentHP, 0));
@@ -385,8 +389,9 @@ function Creature(
   position = 200,
   nextPosition = position,
   strength = 10,
-  speed = 5,
   defense = 10,
+  agi = 10,
+  speed = 5,
   healthPoints = 100,
   weapon = null,
   armor = null,
@@ -403,8 +408,9 @@ function Creature(
   this.pos = position;
   this.nextPosition = nextPosition;
   this.str = strength;
-  this.spd = speed;
   this.def = defense;
+  this.agi = agi;
+  this.spd = speed;
   this.maxHP = healthPoints;
   this.currentHP = healthPoints;
   this.weapon = weapon;
@@ -470,9 +476,8 @@ function Game() {
   equipment.addArmor();
   equipment.addArmor();
   equipment.addArmor();
-  // let playerCreature = new Creature(attacks = equipment.getWeaponDamages());
   let playerCreature = new Creature();
-  let aiCreature = new Creature(pos = 500);
+  let aiCreature = new Creature(pos = 500, str = 14, def = 13, agi = 13);
   let gameSpeed = 0;
   let gameScreen = "prep";
 
@@ -526,6 +531,15 @@ function Game() {
 
   Game.prototype.rotateArmors = (direction) => {
     equipment.rotateArmors(direction);
+
+    // Should also be moved into a method at some point
+    playerCreature.str = 10 + equipment.armors[0].stats.str;
+    playerCreature.def = 10 + equipment.armors[0].stats.def;
+    playerCreature.agi = 10 + equipment.armors[0].stats.agi;
+  }
+
+  Game.prototype.rotateArmors = (direction) => {
+    equipment.rotateArmors(direction);
   }
 
   Game.prototype.weaponDescription = () => {
@@ -537,10 +551,15 @@ function Game() {
   }
 
   Game.prototype.getWeaponDamages = () => {
-    // return equipment.getWeaponDamages()p;
     return `Close: ${equipment.weapons[0].attackClose},
             Medium: ${equipment.weapons[0].attackMid},
             Far: ${equipment.weapons[0].attackFar}`;
+  }
+
+  Game.prototype.getArmorStats = () => {
+    return `Str: ${equipment.armors[0].str},
+            Def: ${equipment.armors[0].def},
+            Agi: ${equipment.armors[0].agi}`;
   }
 
   // Game.prototype.updatePlayerWeapons = () => {
@@ -634,50 +653,63 @@ document.addEventListener("DOMContentLoaded", function(){
 /***/ (function(module, exports) {
 
 function Armor(
+    stats = generateStats(),
     name = generateArmorName(),
     description = generateArmorDescription()) {
+  this.str = stats.str;
+  this.def = stats.def;
+  this.agi = stats.agi;
   this.name = name;
   this.description = description;
 }
 
-  generateArmorName = function() {
-    const prefix = [
-      "collar",
-      "pendant",
-      "greaves",
-      "gauntlet",
-      "shield",
-      "helm",
-      "cloak",
-      // "spectacles"
-      "ring",
-    ]
-    const suffix = [
-      "protection",
-      "evasion",
-      "fortitude",
-      "moxy",
-      "resiliance",
-      "enervation",
-      "awe",
-      "fancy feet"
-    ]
-    let armorName = prefix[Math.floor(Math.random() * 8)]
-                + " of " + suffix[Math.floor(Math.random() * 8)];
+generateStats = function() {
+  // let statTotal = 10;
+  let str = Math.floor(Math.random() * 10);
+  let def = Math.floor(Math.random() * (10 - str))
+  let agi = 10 - str - def;
+  return {str: str, def: def, agi: agi}
 
-    return armorName;
-  }
+}
 
-  generateArmorDescription = function() {
-    const possibilities = [
-      "This armor was once worn by . . .",
-      "This rusty bucket offers . . .",
-      "This is a placebo",
-      "I guess you can use this?",
-    ]
+generateArmorName = function() {
+  const prefix = [
+    "collar",
+    "pendant",
+    "greaves",
+    "gauntlet",
+    "shield",
+    "helm",
+    "cloak",
+    // "spectacles"
+    "ring",
+  ]
+  const suffix = [
+    "protection",
+    "evasion",
+    "fortitude",
+    "moxy",
+    "resiliance",
+    "enervation",
+    "awe",
+    "fancy feet"
+  ]
+  let armorName = prefix[Math.floor(Math.random() * 8)]
+              + " of " + suffix[Math.floor(Math.random() * 8)];
 
-    return possibilities[Math.floor(Math.random() * 4)];
-  }
+  return armorName;
+}
+
+generateArmorDescription = function() {
+  const possibilities = [
+    "This armor was once worn by . . .",
+    "This rusty bucket offers . . .",
+    "This is a placebo",
+    "I guess you can use this?",
+  ]
+
+  return possibilities[Math.floor(Math.random() * 4)];
+}
 
 
 
@@ -739,7 +771,7 @@ function DescriptionBox(game, ctx, canvas) {
   ctx.fillText(getLines(ctx, this.game.weaponDescription(), 350), 425, 52);
   ctx.fillText(getLines(ctx, this.game.getWeaponDamages(), 350), 425, 71);
   ctx.fillText(getLines(ctx, this.game.armorDescription(), 350), 425, 146);
-  // getLines(ctx, this.game.weaponDescription(), 350);
+  ctx.fillText(getLines(ctx, this.game.getArmorStats(), 350), 425, 165);
 }
 
 function getLines(ctx, text, maxWidth) {
@@ -899,7 +931,7 @@ function Equipment() {
   }
 
   Equipment.prototype.addDefaultArmor = function() {
-    this.armors = this.armors.concat(new Armor("Default", "Your starting armor"));
+    this.armors = this.armors.concat(new Armor({str: 4, def: 3, agi: 3}, "Default", "Your starting armor"));
   }
   
   Equipment.prototype.addWeapon = function() {
@@ -982,6 +1014,7 @@ PreparationView.prototype.start = function start() {
 PreparationView.prototype.handleClick = function(e) {
   let clickX = e.pageX - this.canvas.offsetLeft;
   let clickY = e.pageY - 87 - this.canvas.offsetTop;
+  console.log(this.game.playerCreature())
   // console.log(`${clickX}, ${clickY}`)
 
   // If the user clicks on the "left" arrow
