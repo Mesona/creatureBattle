@@ -118,7 +118,7 @@ BattleView.prototype.animate = function animate(time) {
   this.step(timeDelta);
   this.lastTime = time;
 
-
+  
   if (this.game.playerCreature().currentHP === 0 || this.game.aiCreature().currentHP === 0) {
     this.step(timeDelta);
     this.step(timeDelta);
@@ -126,7 +126,7 @@ BattleView.prototype.animate = function animate(time) {
     this.step(timeDelta);
     cancelAnimationFrame(this.animationId);
     this.finishCombat();
-     
+    
   } else {
     this.animationId = requestAnimationFrame(this.animate.bind(this)); 
   }
@@ -146,6 +146,8 @@ BattleView.prototype.step = function step(timeDelta) {
 
 BattleView.prototype.finishCombat = function() {
   let text;
+  console.log(`Player Values: ${this.game.playerCreature().currentHP}`)
+  console.log(`AI Values: ${this.game.aiCreature().currentHP}`)
   if (this.game.playerCreature().currentHP === 0 && this.game.aiCreature().currentHP === 0) {
     text = "You tie!";
   } else if (this.game.playerCreature().currentHP === 0) {
@@ -215,16 +217,43 @@ function Combat(game) {
   playerCreatureDefenseModifier = (playerCreature.def / 100) + 1;
   aiCreatureDamageModifier = (aiCreature.str / 100) + 1;
   aiCreatureDefenseModifier = (aiCreature.def / 100) + 1;
-  if (creatureDistance < 151) {
-    aiCreature.currentHP -= (playerCreature.attack('close') * playerCreatureDamageModifier / aiCreatureDefenseModifier);
-    playerCreature.currentHP -= aiCreature.attack('close') * aiCreatureDamageModifier / playerCreatureDefenseModifier;
-  } else if (creatureDistance < 401) {
-    aiCreature.currentHP -= (playerCreature.attack('mid') * playerCreatureDamageModifier / aiCreatureDefenseModifier);
-    playerCreature.currentHP -= aiCreature.attack('mid') * aiCreatureDamageModifier / playerCreatureDefenseModifier;
-  } else {
-    aiCreature.currentHP -= (playerCreature.attack('far')  * playerCreatureDamageModifier / aiCreatureDefenseModifier);
-    playerCreature.currentHP -= aiCreature.attack('far') * aiCreatureDamageModifier / playerCreatureDefenseModifier;
+
+  playerCreature.attackTimer = playerCreature.attackTimer - playerCreature.agi;
+  aiCreature.attackTimer = aiCreature.attackTimer - aiCreature.agi;
+  
+  if (playerCreature.attackTimer < 0) {
+    playerCreature.attackTimer += 25;
+    if (creatureDistance < 151) {
+      aiCreature.currentHP -= (playerCreature.attack('close') * playerCreatureDamageModifier / aiCreatureDefenseModifier);
+    } else if (creatureDistance < 401) {
+      aiCreature.currentHP -= (playerCreature.attack('mid') * playerCreatureDamageModifier / aiCreatureDefenseModifier);
+    } else {
+      aiCreature.currentHP -= (playerCreature.attack('far')  * playerCreatureDamageModifier / aiCreatureDefenseModifier);
+    }
   }
+
+
+  if(aiCreature.attackTimer < 0) {
+    aiCreature.attackTimer += 25;
+    if (creatureDistance < 151) {
+      playerCreature.currentHP -= aiCreature.attack('close') * aiCreatureDamageModifier / playerCreatureDefenseModifier;
+    } else if (creatureDistance < 401) {
+      playerCreature.currentHP -= aiCreature.attack('mid') * aiCreatureDamageModifier / playerCreatureDefenseModifier;
+    } else {
+      playerCreature.currentHP -= aiCreature.attack('far') * aiCreatureDamageModifier / playerCreatureDefenseModifier;
+    }
+  }
+
+  // if (creatureDistance < 151) {
+  //   aiCreature.currentHP -= (playerCreature.attack('close') * playerCreatureDamageModifier / aiCreatureDefenseModifier);
+  //   playerCreature.currentHP -= aiCreature.attack('close') * aiCreatureDamageModifier / playerCreatureDefenseModifier;
+  // } else if (creatureDistance < 401) {
+  //   aiCreature.currentHP -= (playerCreature.attack('mid') * playerCreatureDamageModifier / aiCreatureDefenseModifier);
+  //   playerCreature.currentHP -= aiCreature.attack('mid') * aiCreatureDamageModifier / playerCreatureDefenseModifier;
+  // } else {
+  //   aiCreature.currentHP -= (playerCreature.attack('far')  * playerCreatureDamageModifier / aiCreatureDefenseModifier);
+  //   playerCreature.currentHP -= aiCreature.attack('far') * aiCreatureDamageModifier / playerCreatureDefenseModifier;
+  // }
 
   playerCreature.currentHP = Math.min(Math.max(playerCreature.currentHP, 0));
   aiCreature.currentHP = Math.min(Math.max(aiCreature.currentHP, 0));
@@ -388,20 +417,21 @@ module.exports = MoveCreatures;
 function Creature(
   position = 200,
   nextPosition = position,
-  strength = 10,
-  defense = 10,
-  agi = 10,
+  strength = 14,
+  defense = 13,
+  agi = 13,
   speed = 5,
   healthPoints = 100,
+  attackTimer = 25,
   weapon = null,
   armor = null,
   attacks = {
     // {rangeMin: 0, rangeMax: 150, damage: 10},
     // {rangeMin: 151, rangeMax: 400, damage: 10},
     // {rangeMid: 401, rangeMax: 700, damage: 5},
-    attackClose: 10,
-    attackMid: 10,
-    attackFar: 50,
+    attackClose: 4,
+    attackMid: 3,
+    attackFar: 3,
     }
   ) {
   
@@ -412,6 +442,7 @@ function Creature(
   this.agi = agi;
   this.spd = speed;
   this.maxHP = healthPoints;
+  this.attackTimer = attackTimer;
   this.currentHP = healthPoints;
   this.weapon = weapon;
   this.armor = armor;
@@ -438,9 +469,7 @@ function Creature(
     // attacks.attackClose = weapon.attackClose;
     // attacks.attackMid = weapon.attackMid;
     // attacks.attackFar = weapon.attackFar;
-    // console.log(weapon.attackClose)
     // this.attacks = weapon.attacks;
-    // console.log(weapon.attacks);
   // }
   
   Creature.prototype.restoreHP = function() {
@@ -448,9 +477,21 @@ function Creature(
   }
 }
   
-  Creature.prototype.resetPos = function(newPos) {
-    this.pos = newPos;
-  }
+Creature.prototype.resetPos = function(newPos) {
+  this.pos = newPos;
+}
+
+Creature.prototype.updateStats = function(armor) {
+  this.str = 10 + armor.str;
+  this.def = 10 + armor.def;
+  this.agi = 10 + armor.agi;
+}
+
+Creature.prototype.updateAttacks = function(weapon) {
+  this.attacks.attackClose = weapon.attackClose;
+  this.attacks.attackMid = weapon.attackMid;
+  this.attacks.attackFar = weapon.attackFar;
+}
 
 module.exports  = Creature;
 
@@ -477,7 +518,8 @@ function Game() {
   equipment.addArmor();
   equipment.addArmor();
   let playerCreature = new Creature();
-  let aiCreature = new Creature(pos = 500, str = 14, def = 13, agi = 13);
+  let aiCreature = new Creature(pos = 500);
+  // let aiCreature = new Creature(pos = 500, str = 14, def = 13, agi = 13);
   let gameSpeed = 0;
   let gameScreen = "prep";
 
@@ -510,36 +552,29 @@ function Game() {
     gameScreen = newScreen;
   };
 
-  Game.prototype.showWeapons = () => {
-    return equipment.showWeapons();
+  Game.prototype.getWeapons = () => {
+    return equipment.getWeapons();
   }
 
-  Game.prototype.showArmors = () => {
-    return equipment.showArmors();
+  Game.prototype.getArmors = () => {
+    return equipment.getArmors();
   }
 
   Game.prototype.rotateWeapons = (direction) => {
     equipment.rotateWeapons(direction);
 
     // Should put this into a method on creature.js at some point
-    playerCreature.attacks = {
-      attackClose: equipment.weapons[0].attackClose,
-      attackMid: equipment.weapons[0].attackMid,
-      attackFar: equipment.weapons[0].attackFar
-    }
+    playerCreature.updateAttacks(equipment.getWeapons()[0]);
+    // playerCreature.attacks = {
+    //   attackClose: equipment.weapons[0].attackClose,
+    //   attackMid: equipment.weapons[0].attackMid,
+    //   attackFar: equipment.weapons[0].attackFar
+    // }
   }
 
   Game.prototype.rotateArmors = (direction) => {
     equipment.rotateArmors(direction);
-
-    // Should also be moved into a method at some point
-    playerCreature.str = 10 + equipment.armors[0].stats.str;
-    playerCreature.def = 10 + equipment.armors[0].stats.def;
-    playerCreature.agi = 10 + equipment.armors[0].stats.agi;
-  }
-
-  Game.prototype.rotateArmors = (direction) => {
-    equipment.rotateArmors(direction);
+    playerCreature.updateStats(this.getArmors()[0]);
   }
 
   Game.prototype.weaponDescription = () => {
@@ -563,7 +598,6 @@ function Game() {
   }
 
   // Game.prototype.updatePlayerWeapons = () => {
-    // console.log('updating');
     // playerCreature.updateAttacks(equipment.weapons[0]);
   // }
 
@@ -842,7 +876,7 @@ weaponSelect = function() {
 
   ctx.fillStyle = "black";
   ctx.font = "italic 12pt Arial";
-  ctx.fillText(this.game.showWeapons()[0].name, 180, 52);
+  ctx.fillText(this.game.getWeapons()[0].name, 180, 52);
 }
 
 armorSelect = function() {
@@ -852,7 +886,7 @@ armorSelect = function() {
 
   ctx.fillStyle = "black";
   ctx.font = "italic 12pt Arial";
-  ctx.fillText(this.game.showArmors()[0].name, 180, 146);
+  ctx.fillText(this.game.getArmors()[0].name, 180, 146);
 }
 
 weaponSelectLeft = function() {
@@ -922,7 +956,7 @@ function Equipment() {
   this.weapons = [];
   this.armors = [];
 
-  Equipment.prototype.showWeapons = () => {
+  Equipment.prototype.getWeapons = () => {
     return this.weapons;
   }
 
@@ -941,7 +975,7 @@ function Equipment() {
     this.weapons = this.weapons.concat(new Weapon(closeDamage, midDamage, farDamage));
   }
 
-  Equipment.prototype.showArmors = () => {
+  Equipment.prototype.getArmors = () => {
     return this.armors;
   }
 
@@ -1014,7 +1048,6 @@ PreparationView.prototype.start = function start() {
 PreparationView.prototype.handleClick = function(e) {
   let clickX = e.pageX - this.canvas.offsetLeft;
   let clickY = e.pageY - 87 - this.canvas.offsetTop;
-  console.log(this.game.playerCreature())
   // console.log(`${clickX}, ${clickY}`)
 
   // If the user clicks on the "left" arrow

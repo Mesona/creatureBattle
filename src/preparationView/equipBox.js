@@ -35,7 +35,7 @@ weaponSelect = function() {
 
   ctx.fillStyle = "black";
   ctx.font = "italic 12pt Arial";
-  ctx.fillText(this.game.showWeapons()[0].name, 180, 52);
+  ctx.fillText(this.game.getWeapons()[0].name, 180, 52);
 }
 
 armorSelect = function() {
@@ -45,7 +45,7 @@ armorSelect = function() {
 
   ctx.fillStyle = "black";
   ctx.font = "italic 12pt Arial";
-  ctx.fillText(this.game.showArmors()[0].name, 180, 146);
+  ctx.fillText(this.game.getArmors()[0].name, 180, 146);
 }
 
 weaponSelectLeft = function() {

@@ -23,7 +23,7 @@ BattleView.prototype.animate = function animate(time) {
   this.step(timeDelta);
   this.lastTime = time;
 
-
+  
   if (this.game.playerCreature().currentHP === 0 || this.game.aiCreature().currentHP === 0) {
     this.step(timeDelta);
     this.step(timeDelta);
@@ -31,7 +31,7 @@ BattleView.prototype.animate = function animate(time) {
     this.step(timeDelta);
     cancelAnimationFrame(this.animationId);
     this.finishCombat();
-     
+    
   } else {
     this.animationId = requestAnimationFrame(this.animate.bind(this)); 
   }
@@ -51,6 +51,8 @@ BattleView.prototype.step = function step(timeDelta) {
 
 BattleView.prototype.finishCombat = function() {
   let text;
+  console.log(`Player Values: ${this.game.playerCreature().currentHP}`)
+  console.log(`AI Values: ${this.game.aiCreature().currentHP}`)
   if (this.game.playerCreature().currentHP === 0 && this.game.aiCreature().currentHP === 0) {
     text = "You tie!";
   } else if (this.game.playerCreature().currentHP === 0) {

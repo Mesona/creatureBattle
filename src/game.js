@@ -12,7 +12,8 @@ function Game() {
   equipment.addArmor();
   equipment.addArmor();
   let playerCreature = new Creature();
-  let aiCreature = new Creature(pos = 500, str = 14, def = 13, agi = 13);
+  let aiCreature = new Creature(pos = 500);
+  // let aiCreature = new Creature(pos = 500, str = 14, def = 13, agi = 13);
   let gameSpeed = 0;
   let gameScreen = "prep";
 
@@ -45,36 +46,29 @@ function Game() {
     gameScreen = newScreen;
   };
 
-  Game.prototype.showWeapons = () => {
-    return equipment.showWeapons();
+  Game.prototype.getWeapons = () => {
+    return equipment.getWeapons();
   }
 
-  Game.prototype.showArmors = () => {
-    return equipment.showArmors();
+  Game.prototype.getArmors = () => {
+    return equipment.getArmors();
   }
 
   Game.prototype.rotateWeapons = (direction) => {
     equipment.rotateWeapons(direction);
 
     // Should put this into a method on creature.js at some point
-    playerCreature.attacks = {
-      attackClose: equipment.weapons[0].attackClose,
-      attackMid: equipment.weapons[0].attackMid,
-      attackFar: equipment.weapons[0].attackFar
-    }
+    playerCreature.updateAttacks(equipment.getWeapons()[0]);
+    // playerCreature.attacks = {
+    //   attackClose: equipment.weapons[0].attackClose,
+    //   attackMid: equipment.weapons[0].attackMid,
+    //   attackFar: equipment.weapons[0].attackFar
+    // }
   }
 
   Game.prototype.rotateArmors = (direction) => {
     equipment.rotateArmors(direction);
-
-    // Should also be moved into a method at some point
-    playerCreature.str = 10 + equipment.armors[0].stats.str;
-    playerCreature.def = 10 + equipment.armors[0].stats.def;
-    playerCreature.agi = 10 + equipment.armors[0].stats.agi;
-  }
-
-  Game.prototype.rotateArmors = (direction) => {
-    equipment.rotateArmors(direction);
+    playerCreature.updateStats(this.getArmors()[0]);
   }
 
   Game.prototype.weaponDescription = () => {
@@ -98,7 +92,6 @@ function Game() {
   }
 
   // Game.prototype.updatePlayerWeapons = () => {
-    // console.log('updating');
     // playerCreature.updateAttacks(equipment.weapons[0]);
   // }
 

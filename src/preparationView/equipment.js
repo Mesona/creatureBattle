@@ -5,7 +5,7 @@ function Equipment() {
   this.weapons = [];
   this.armors = [];
 
-  Equipment.prototype.showWeapons = () => {
+  Equipment.prototype.getWeapons = () => {
     return this.weapons;
   }
 
@@ -24,7 +24,7 @@ function Equipment() {
     this.weapons = this.weapons.concat(new Weapon(closeDamage, midDamage, farDamage));
   }
 
-  Equipment.prototype.showArmors = () => {
+  Equipment.prototype.getArmors = () => {
     return this.armors;
   }
 
