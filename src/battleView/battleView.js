@@ -61,6 +61,8 @@ BattleView.prototype.finishCombat = function() {
 
   this.game.aiCreature().restoreHP();
   this.game.playerCreature().restoreHP();
+  this.game.aiCreature().resetPos(500);
+  this.game.playerCreature().resetPos(200);
   this.textFadeIn(text);
 }
 

@@ -58,5 +58,9 @@ function Creature(
     this.currentHP = this.maxHP;
   }
 }
+  
+  Creature.prototype.resetPos = function(newPos) {
+    this.pos = newPos;
+  }
 
 module.exports  = Creature;
