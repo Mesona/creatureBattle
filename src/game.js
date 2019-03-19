@@ -15,14 +15,14 @@ function Game() {
   let playerCreature = new Creature();
   let aiCreature = new Creature(pos = 500);
   let gameSpeed = 0;
-  let gameScreen = "battle";
+  let gameScreen = "prep";
 
 
   Game.prototype.playerCreature = () => {
     return playerCreature;
   }
     
-  Game.prototype.aiCreature= () => {
+  Game.prototype.aiCreature = () => {
     return aiCreature;
   }
 
@@ -56,6 +56,13 @@ function Game() {
 
   Game.prototype.rotateWeapons = (direction) => {
     equipment.rotateWeapons(direction);
+
+    // Should put this into a method on creature.js at some point
+    playerCreature.attacks = {
+      attackClose: equipment.weapons[0].attackClose,
+      attackMid: equipment.weapons[0].attackMid,
+      attackFar: equipment.weapons[0].attackFar
+    }
   }
 
   Game.prototype.rotateArmors = (direction) => {
@@ -76,6 +83,11 @@ function Game() {
             Medium: ${equipment.weapons[0].attackMid},
             Far: ${equipment.weapons[0].attackFar}`;
   }
+
+  // Game.prototype.updatePlayerWeapons = () => {
+    // console.log('updating');
+    // playerCreature.updateAttacks(equipment.weapons[0]);
+  // }
 
 }
 

@@ -37,6 +37,26 @@ function Creature(
       return (Math.random() * this.attacks.attackFar) + 1;
     }
   }
+
+  // Creature.prototype.updateAttacks = (weapon) => {
+    // attacks = {attackClose: weapon.attackClose,
+    //            attackMid: weapon.attackMid,
+    //            attackFar: weapon.attackFar}
+    // this.attacks = {
+    //   attackClose: 5,
+    //   attackMid: 8,
+    //   attackFar: 1239}
+    // attacks.attackClose = weapon.attackClose;
+    // attacks.attackMid = weapon.attackMid;
+    // attacks.attackFar = weapon.attackFar;
+    // console.log(weapon.attackClose)
+    // this.attacks = weapon.attacks;
+    // console.log(weapon.attacks);
+  // }
+  
+  Creature.prototype.restoreHP = function() {
+    this.currentHP = this.maxHP;
+  }
 }
 
 module.exports  = Creature;

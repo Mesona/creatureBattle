@@ -58,6 +58,9 @@ BattleView.prototype.finishCombat = function() {
   } else {
     text = "You win!";
   }
+
+  this.game.aiCreature().restoreHP();
+  this.game.playerCreature().restoreHP();
   this.textFadeIn(text);
 }
 
@@ -89,7 +92,7 @@ BattleView.prototype.textFadeOut = function(text, xloc) {
       }
   }, 50);
 
-  setTimeout(() => this.gameView.switchScreen(), 1000);
+  setTimeout(() => this.gameView.switchScreen(this.gameView), 1000);
 };
 
 

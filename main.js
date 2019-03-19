@@ -153,6 +153,9 @@ BattleView.prototype.finishCombat = function() {
   } else {
     text = "You win!";
   }
+
+  this.game.aiCreature().restoreHP();
+  this.game.playerCreature().restoreHP();
   this.textFadeIn(text);
 }
 
@@ -184,7 +187,7 @@ BattleView.prototype.textFadeOut = function(text, xloc) {
       }
   }, 50);
 
-  setTimeout(() => this.gameView.switchScreen(), 1000);
+  setTimeout(() => this.gameView.switchScreen(this.gameView), 1000);
 };
 
 
@@ -415,6 +418,26 @@ function Creature(
       return (Math.random() * this.attacks.attackFar) + 1;
     }
   }
+
+  // Creature.prototype.updateAttacks = (weapon) => {
+    // attacks = {attackClose: weapon.attackClose,
+    //            attackMid: weapon.attackMid,
+    //            attackFar: weapon.attackFar}
+    // this.attacks = {
+    //   attackClose: 5,
+    //   attackMid: 8,
+    //   attackFar: 1239}
+    // attacks.attackClose = weapon.attackClose;
+    // attacks.attackMid = weapon.attackMid;
+    // attacks.attackFar = weapon.attackFar;
+    // console.log(weapon.attackClose)
+    // this.attacks = weapon.attacks;
+    // console.log(weapon.attacks);
+  // }
+  
+  Creature.prototype.restoreHP = function() {
+    this.currentHP = this.maxHP;
+  }
 }
 
 module.exports  = Creature;
@@ -445,14 +468,14 @@ function Game() {
   let playerCreature = new Creature();
   let aiCreature = new Creature(pos = 500);
   let gameSpeed = 0;
-  let gameScreen = "battle";
+  let gameScreen = "prep";
 
 
   Game.prototype.playerCreature = () => {
     return playerCreature;
   }
     
-  Game.prototype.aiCreature= () => {
+  Game.prototype.aiCreature = () => {
     return aiCreature;
   }
 
@@ -486,6 +509,13 @@ function Game() {
 
   Game.prototype.rotateWeapons = (direction) => {
     equipment.rotateWeapons(direction);
+
+    // Should put this into a method on creature.js at some point
+    playerCreature.attacks = {
+      attackClose: equipment.weapons[0].attackClose,
+      attackMid: equipment.weapons[0].attackMid,
+      attackFar: equipment.weapons[0].attackFar
+    }
   }
 
   Game.prototype.rotateArmors = (direction) => {
@@ -506,6 +536,11 @@ function Game() {
             Medium: ${equipment.weapons[0].attackMid},
             Far: ${equipment.weapons[0].attackFar}`;
   }
+
+  // Game.prototype.updatePlayerWeapons = () => {
+    // console.log('updating');
+    // playerCreature.updateAttacks(equipment.weapons[0]);
+  // }
 
 }
 
@@ -529,29 +564,29 @@ function GameView(game, ctx, canvas) {
   this.canvas = canvas;
 }
 
-GameView.prototype.switchScreen = function switchScreen() {
+GameView.prototype.switchScreen = function switchScreen(gameView) {
   if (this.game.screen() === "battle") {
     this.game.setScreen("prep");
     this.game.resetGameSpeed();
     
-    // Remove the battle background
-    const backgroundLayerFront = document.getElementById("bg-front");
-    backgroundLayerFront.classList.remove("front-image-layer");
-    this.canvas.classList.remove("back-image-layers");
+    // Remove the battle background -- WILL REENABLE WHEN I HAVE A REPLACEMENT
+    // const backgroundLayerFront = document.getElementById("bg-front");
+    // backgroundLayerFront.classList.remove("front-image-layer");
+    // this.canvas.classList.remove("back-image-layers");
     
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    new PreparationView(this.game, this.ctx, this.canvas).start();
+    new PreparationView(this.game, this.ctx, this.canvas, gameView).start();
   } else {
     this.game.setScreen("battle");
     this.game.resetGameSpeed();
 
     // Restore the battle background
-    const backgroundLayerFront = document.getElementById("bg-front");
-    backgroundLayerFront.classList.add("front-image-layer");
-    this.canvas.classList.add("back-image-layers");
+    // const backgroundLayerFront = document.getElementById("bg-front");
+    // backgroundLayerFront.classList.add("front-image-layer");
+    // this.canvas.classList.add("back-image-layers");
     
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    new BattleView(this.game, this.ctx, this.canvas).start();
+    new BattleView(this.game, this.ctx, this.canvas, gameView).start();
   }
 }
 
@@ -922,53 +957,57 @@ const EquipBox = __webpack_require__(/*! ./equipBox */ "./src/preparationView/eq
 const CreatureBox = __webpack_require__(/*! ./creatureBox */ "./src/preparationView/creatureBox.js");
 const DescriptionBox = __webpack_require__(/*! ./descriptionBox */ "./src/preparationView/descriptionBox.js");
 
-function PreparationView(game, ctx, canvas) {
+function PreparationView(game, ctx, canvas, gameView) {
   this.game = game;
   this.canvas = canvas;
   this.ctx = ctx;
+  this.gameView = gameView;
+
+  this.handleClick = this.handleClick.bind(this);
 }
 
 PreparationView.prototype.start = function start() {
   this.lastTime = 0;
 
-  document.addEventListener('click', (e) => {
-    let clickX = e.pageX - this.canvas.offsetLeft;
-    let clickY = e.pageY - 87 - this.canvas.offsetTop;
-    // there are: pageX/Y, layerX/Y
-    console.log(`${clickX}, ${clickY}`)
-
-    // If the user clicks on the "left" arrow
-    if (clickX > 139 && clickX < 178) {
-      // of the weapons select
-      if (clickY > 27 && clickY < 66) {
-        this.game.rotateWeapons("left");
-      // of the armors select
-      } else if (clickY > 122 && clickY < 159) {
-        this.game.rotateArmors("left");
-      }
-    }
-
-    // If the user clicks on the "right" arrow
-    if (clickX > 338 && clickX < 378) {
-      // of the weapons select
-      if (clickY > 27 && clickY < 66) {
-        this.game.rotateWeapons("right");
-      // of the armors select
-      } else if (clickY > 122 && clickY < 162) {
-        this.game.rotateArmors("right");
-      }
-    }
-
-    // If the user clicks the "Next Battle" button
-    if (clickX > 604 && clickX < 778
-        && clickY > 377 && clickY < 402) {
-          console.log(this.game.showWeapons())
-        }    
-
-  });
-
+  document.addEventListener('click', this.handleClick, false);
   requestAnimationFrame(this.animate.bind(this));
 };
+
+PreparationView.prototype.handleClick = function(e) {
+  let clickX = e.pageX - this.canvas.offsetLeft;
+  let clickY = e.pageY - 87 - this.canvas.offsetTop;
+  // console.log(`${clickX}, ${clickY}`)
+
+  // If the user clicks on the "left" arrow
+  if (clickX > 139 && clickX < 178) {
+    // of the weapons select
+    if (clickY > 27 && clickY < 66) {
+      this.game.rotateWeapons("left");
+    // of the armors select
+    } else if (clickY > 122 && clickY < 159) {
+      this.game.rotateArmors("left");
+    }
+  }
+
+  // If the user clicks on the "right" arrow
+  if (clickX > 338 && clickX < 378) {
+    // of the weapons select
+    if (clickY > 27 && clickY < 66) {
+      this.game.rotateWeapons("right");
+    // of the armors select
+    } else if (clickY > 122 && clickY < 162) {
+      this.game.rotateArmors("right");
+    }
+  }
+
+  // If the user clicks the "Next Battle" button
+  if (clickX > 604 && clickX < 778
+      && clickY > 377 && clickY < 402) {
+        document.removeEventListener("click", this.handleClick);
+        cancelAnimationFrame(this.animationId);
+        this.finishPreparation();
+  }    
+}
 
 PreparationView.prototype.animate = function animate(time) {
   const timeDelta = time - this.lastTime;
@@ -990,6 +1029,36 @@ PreparationView.prototype.step = function step(timeDelta) {
     this.game.gameSpeedStep();
   }
 }
+
+PreparationView.prototype.finishPreparation = function() {
+  this.textFadeIn("Get Ready!");
+}
+
+PreparationView.prototype.textFadeIn = function(text) {
+  this.ctx.fillStyle = "rgba(255, 0, 0, 1)";
+  this.ctx.font = "italic 40pt Arial";
+  let xloc = 300;
+  this.ctx.fillText(text, xloc, 250);
+  setTimeout(this.textFadeOut(text, xloc), 5000);
+}
+
+PreparationView.prototype.textFadeOut = function(text, xloc) {
+  let alpha = 1.0,   // full opacity
+  interval = setInterval(() => {
+    // this.canvas.width = this.canvas.width; // Clears the canvas
+    this.ctx.clearRect(0, 200, this.canvas.width, 70);
+    this.ctx.fillStyle = "rgba(255, 0, 0, " + alpha + ")";
+    this.ctx.font = "italic 40pt Arial";
+    this.ctx.fillText(text, xloc, 250);
+    alpha = alpha - 0.05; // decrease opacity (fade out)
+    if (alpha < 0) {
+      this.ctx.clearRect(0, 200, this.canvas.width, 70);
+      clearInterval(interval);
+    }
+  }, 50);
+
+  setTimeout(() => this.gameView.switchScreen(this.gameView), 1000);
+};
 
 module.exports = PreparationView;
 
