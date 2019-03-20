@@ -31,6 +31,9 @@ function Creature(
   this.weapon = weapon;
   this.armor = armor;
   this.attacks = attacks;
+  this.animationFrame = 0;
+  this.creatureImage = new Image();
+  this.creatureImage.src = "./docs/creatures/BigFishPlayer.png";
 
   Creature.prototype.attack = (range) => {
     if (range === "close") {
@@ -76,5 +79,10 @@ Creature.prototype.updateAttacks = function(weapon) {
   this.attacks.attackMid = weapon.attackMid;
   this.attacks.attackFar = weapon.attackFar;
 }
+
+Creature.prototype.animationFrameStep = function() {
+  this.animationFrame++;
+  if (this.animationFrame >= 10) this.animationFrame-=10;
+};
 
 module.exports  = Creature;
