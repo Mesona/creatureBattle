@@ -17,9 +17,9 @@
 
 ### MVPs
 * [x] Basic page setup and UI
-* [] Creature preparation page
+* [x] Creature preparation page
 * [x] Creature battle page
-* [] Creature weapons and armor
+* [x] Creature weapons and armor
 
 ### Bonus MVPs
 * [] Music and audio
@@ -52,6 +52,6 @@
 * [x] Basic animations
 
 ### Sunday
-* [] Build out Preparation
-* [] Build out Armors
-* [] Build out Weapons
+* [x] Build out Preparation
+* [x] Build out Armors
+* [x] Build out Weapons
