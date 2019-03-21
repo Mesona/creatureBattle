@@ -1,5 +1,6 @@
 function Creature(
   position = 200,
+  character = "./docs/creatures/OceanosL.png",
   nextPosition = position,
   strength = 14,
   defense = 13,
@@ -33,7 +34,8 @@ function Creature(
   this.attacks = attacks;
   this.animationFrame = 0;
   this.creatureImage = new Image();
-  this.creatureImage.src = "./docs/creatures/BigFishPlayer.png";
+  console.log(character)
+  this.creatureImage.src = character;
 
   Creature.prototype.attack = (range) => {
     if (range === "close") {
@@ -82,7 +84,7 @@ Creature.prototype.updateAttacks = function(weapon) {
 
 Creature.prototype.animationFrameStep = function() {
   this.animationFrame++;
-  if (this.animationFrame >= 10) this.animationFrame-=10;
+  // if (this.animationFrame > 23) this.animationFrame-=24;
 };
 
 module.exports  = Creature;

@@ -21,6 +21,7 @@ PreparationView.prototype.start = function start() {
 PreparationView.prototype.handleClick = function(e) {
   let clickX = e.pageX - this.canvas.offsetLeft;
   let clickY = e.pageY - 87 - this.canvas.offsetTop;
+  console.log(this.game.playerCreature());
   // console.log(`${clickX}, ${clickY}`)
 
   // If the user clicks on the "left" arrow

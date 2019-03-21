@@ -1,6 +1,6 @@
 function Combat(game) {
   let playerCreature = game.playerCreature();
-  let aiCreature = game.aiCreature()
+  let aiCreature = game.aiCreature();
 
   // Calculates distance between the two
   creatureDistance = aiCreature.pos - playerCreature.pos - 100;

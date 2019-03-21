@@ -14,3 +14,10 @@ document.addEventListener("DOMContentLoaded", function(){
   // new BattleView(game, ctx, canvas, gameView).start();
   new PreparationView(game, ctx, canvas, gameView).start();
 });
+
+// TODO
+// Fix creatures to use hashmap, so custom assignments and stat management are easier
+// More involved animation, if possible
+// Damage numbers
+// Pause movement and attack animation while attacking
+// projectile animation for mid/far ranged attacks

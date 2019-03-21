@@ -207,7 +207,7 @@ module.exports = BattleView;
 
 function Combat(game) {
   let playerCreature = game.playerCreature();
-  let aiCreature = game.aiCreature()
+  let aiCreature = game.aiCreature();
 
   // Calculates distance between the two
   creatureDistance = aiCreature.pos - playerCreature.pos - 100;
@@ -346,12 +346,40 @@ function MoveCreatures(game, ctx, canvas, timeDelta) {
   let aiCreature = game.aiCreature();
 
   let timeScale = timeDelta / NORMAL_FRAME_TIME_DELTA;
+  let timing = Math.floor(playerCreature.animationFrame / 4); 
+
+  let playerSpriteX = 512 * (timing % 6);
+  let playerSpriteY = 0;
+  switch (playerSpriteX) {
+    case 1536:
+      playerSpriteX = 1024;
+      playerSpriteY = 512;
+      break;
+    case 2048:
+      playerSpriteX = 512;
+      playerSpriteY = 512;
+      break;
+    case 2560:
+      playerSpriteX = 0;
+      playerSpriteY = 512;
+      break;
+  }
 
   ctx.clearRect(0,100,canvas.width,canvas.height);  
 
   // Draw player creature
-  ctx.fillStyle = "green"; 
-  ctx.fillRect(playerCreature.pos,290,100,200); 
+  // ctx.fillStyle = "green"; 
+  // ctx.fillRect(playerCreature.pos,290,100,200); 
+  ctx.drawImage(
+    game.playerCreature().creatureImage,
+    // testImage,
+    playerSpriteX, playerSpriteY, 512, 512,
+    // 0, playerSpriteY, 512, 512,
+    // playerSpriteX, 0, 512, 512,
+    playerCreature.pos, 290, 200, 200);
+
+  playerCreature.animationFrameStep();
+
 
   // Agressive movement pattern, randomizes but favors moving towards enemy
   // playerCreature.pos+=(Math.floor((Math.random() * ((playerCreature.spd * 2) + 1) -(playerCreature.spd / 2) * timeScale))); 
@@ -372,12 +400,35 @@ function MoveCreatures(game, ctx, canvas, timeDelta) {
     playerCreature.pos -= playerCreature.spd;
   }
 
+  let aiTiming = Math.floor(aiCreature.animationFrame / 4); 
 
-
-
+  let aiSpriteX = 512 * (aiTiming % 6);
+  let aiSpriteY = 0;
+  switch (aiSpriteX) {
+    case 1536:
+      aiSpriteX = 1024;
+      aiSpriteY = 512;
+      break;
+    case 2048:
+      aiSpriteX = 512;
+      aiSpriteY = 512;
+      break;
+    case 2560:
+      aiSpriteX = 0;
+      aiSpriteY = 512;
+      break;
+  }
+  
+  ctx.drawImage(
+    game.aiCreature().creatureImage,
+    aiSpriteX, aiSpriteY, 512, 512,
+    aiCreature.pos, 290, 200, 200);
+    
+  aiCreature.animationFrameStep();
+    
   // Draw opposing creature
-  ctx.fillStyle = "blue"; 
-  ctx.fillRect(aiCreature.pos, 290, 100, 200);
+  // ctx.fillStyle = "blue"; 
+  // ctx.fillRect(aiCreature.pos, 290, 100, 200);
 
   if (
     aiCreature.pos === aiCreature.nextPosition ||
@@ -414,6 +465,7 @@ module.exports = MoveCreatures;
 
 function Creature(
   position = 200,
+  character = "./docs/creatures/OceanosL.png",
   nextPosition = position,
   strength = 14,
   defense = 13,
@@ -447,7 +499,8 @@ function Creature(
   this.attacks = attacks;
   this.animationFrame = 0;
   this.creatureImage = new Image();
-  this.creatureImage.src = "./docs/creatures/BigFishPlayer.png";
+  console.log(character)
+  this.creatureImage.src = character;
 
   Creature.prototype.attack = (range) => {
     if (range === "close") {
@@ -496,7 +549,7 @@ Creature.prototype.updateAttacks = function(weapon) {
 
 Creature.prototype.animationFrameStep = function() {
   this.animationFrame++;
-  if (this.animationFrame >= 10) this.animationFrame-=10;
+  // if (this.animationFrame > 23) this.animationFrame-=24;
 };
 
 module.exports  = Creature;
@@ -523,7 +576,7 @@ function Game() {
   equipment.addArmor();
   equipment.addArmor();
   equipment.addArmor();
-  let playerCreature = new Creature();
+  let playerCreature = new Creature(pos = 200, character = './docs/creatures/BigFishPlayer.png');
   let aiCreature = new Creature(pos = 500);
   // let aiCreature = new Creature(pos = 500, str = 14, def = 13, agi = 13);
   let gameSpeed = 0;
@@ -634,21 +687,29 @@ GameView.prototype.switchScreen = function switchScreen(gameView) {
     this.game.setScreen("prep");
     this.game.resetGameSpeed();
     
-    // Remove the battle background -- WILL REENABLE WHEN I HAVE A REPLACEMENT
-    // const backgroundLayerFront = document.getElementById("bg-front");
-    // backgroundLayerFront.classList.remove("front-image-layer");
-    // this.canvas.classList.remove("back-image-layers");
-    
+    // Remove the forest background
+    const backgroundLayerFront = document.getElementById("bg-front");
+    backgroundLayerFront.classList.remove("front-image-layers-forest");
+    this.canvas.classList.remove("back-image-layers-forest");
+
+    // Apply the hills background
+    backgroundLayerFront.classList.add("front-image-layers-hills");
+    this.canvas.classList.add("back-image-layers-hills");
+
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     new PreparationView(this.game, this.ctx, this.canvas, gameView).start();
   } else {
     this.game.setScreen("battle");
     this.game.resetGameSpeed();
+    
+    // Remove the hills background
+    const backgroundLayerFront = document.getElementById("bg-front");
+    backgroundLayerFront.classList.remove("front-image-layers-hills");
+    this.canvas.classList.remove("back-image-layers-hills");
 
-    // Restore the battle background
-    // const backgroundLayerFront = document.getElementById("bg-front");
-    // backgroundLayerFront.classList.add("front-image-layer");
-    // this.canvas.classList.add("back-image-layers");
+    // Apply the forest background
+    backgroundLayerFront.classList.add("front-image-layers-forest");
+    this.canvas.classList.add("back-image-layers-forest");
     
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     new BattleView(this.game, this.ctx, this.canvas, gameView).start();
@@ -682,6 +743,13 @@ document.addEventListener("DOMContentLoaded", function(){
   // new BattleView(game, ctx, canvas, gameView).start();
   new PreparationView(game, ctx, canvas, gameView).start();
 });
+
+// TODO
+// Fix creatures to use hashmap, so custom assignments and stat management are easier
+// More involved animation, if possible
+// Damage numbers
+// Pause movement and attack animation while attacking
+// projectile animation for mid/far ranged attacks
 
 /***/ }),
 
@@ -780,13 +848,44 @@ function CreatureBox(game, ctx, canvas) {
 
   ctx.clearRect(350, 290, 200, 200);
 
-  let playerSpriteX = playerCreature.animationFrame * 1;
-  let playerSpriteY = 512;
+  // let playerSpriteX = playerCreature.animationFrame * 1;
+  // let playerSpriteY = 512;
+  // let playerSpriteY = playerCreature.animationFrame * 1;
+  // let playerSpriteY = 512 * Math.floor(playerCreature.animationFrame / 4);
+
+  // let timing = Math.floor(playerCreature.animationFrame); 
+  let timing = Math.floor(playerCreature.animationFrame / 4); 
+
+  // let playerSpriteX = 512 * (timing % 9);
+
+  // WORKING< FOR TESTINGS SMALLER IDLE ANIMATION
+  // let playerSpriteY = 512 * (Math.floor(timing / 9) % 2);
+  let playerSpriteX = 512 * (timing % 6);
+  let playerSpriteY = 0;
+  switch (playerSpriteX) {
+    case 1536:
+      playerSpriteX = 1024;
+      playerSpriteY = 512;
+      break;
+    case 2048:
+      playerSpriteX = 512;
+      playerSpriteY = 512;
+      break;
+    case 2560:
+      playerSpriteX = 0;
+      playerSpriteY = 512;
+      break;
+  }
+
+  // let playerSpriteY = 512 * (Math.floor(timing / 9) % 6);
+
+  // console.log(playerSpriteY)
   ctx.drawImage(
     this.game.playerCreature().creatureImage,
     // testImage,
     playerSpriteX, playerSpriteY, 512, 512,
-    // 0, 0, 512, 512,
+    // 0, playerSpriteY, 512, 512,
+    // playerSpriteX, 0, 512, 512,
     350, 290, 200, 200);
 
   playerCreature.animationFrameStep();
@@ -1068,6 +1167,7 @@ PreparationView.prototype.start = function start() {
 PreparationView.prototype.handleClick = function(e) {
   let clickX = e.pageX - this.canvas.offsetLeft;
   let clickY = e.pageY - 87 - this.canvas.offsetTop;
+  console.log(this.game.playerCreature());
   // console.log(`${clickX}, ${clickY}`)
 
   // If the user clicks on the "left" arrow

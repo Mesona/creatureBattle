@@ -3,12 +3,40 @@ function MoveCreatures(game, ctx, canvas, timeDelta) {
   let aiCreature = game.aiCreature();
 
   let timeScale = timeDelta / NORMAL_FRAME_TIME_DELTA;
+  let timing = Math.floor(playerCreature.animationFrame / 4); 
+
+  let playerSpriteX = 512 * (timing % 6);
+  let playerSpriteY = 0;
+  switch (playerSpriteX) {
+    case 1536:
+      playerSpriteX = 1024;
+      playerSpriteY = 512;
+      break;
+    case 2048:
+      playerSpriteX = 512;
+      playerSpriteY = 512;
+      break;
+    case 2560:
+      playerSpriteX = 0;
+      playerSpriteY = 512;
+      break;
+  }
 
   ctx.clearRect(0,100,canvas.width,canvas.height);  
 
   // Draw player creature
-  ctx.fillStyle = "green"; 
-  ctx.fillRect(playerCreature.pos,290,100,200); 
+  // ctx.fillStyle = "green"; 
+  // ctx.fillRect(playerCreature.pos,290,100,200); 
+  ctx.drawImage(
+    game.playerCreature().creatureImage,
+    // testImage,
+    playerSpriteX, playerSpriteY, 512, 512,
+    // 0, playerSpriteY, 512, 512,
+    // playerSpriteX, 0, 512, 512,
+    playerCreature.pos, 290, 200, 200);
+
+  playerCreature.animationFrameStep();
+
 
   // Agressive movement pattern, randomizes but favors moving towards enemy
   // playerCreature.pos+=(Math.floor((Math.random() * ((playerCreature.spd * 2) + 1) -(playerCreature.spd / 2) * timeScale))); 
@@ -29,12 +57,35 @@ function MoveCreatures(game, ctx, canvas, timeDelta) {
     playerCreature.pos -= playerCreature.spd;
   }
 
+  let aiTiming = Math.floor(aiCreature.animationFrame / 4); 
 
-
-
+  let aiSpriteX = 512 * (aiTiming % 6);
+  let aiSpriteY = 0;
+  switch (aiSpriteX) {
+    case 1536:
+      aiSpriteX = 1024;
+      aiSpriteY = 512;
+      break;
+    case 2048:
+      aiSpriteX = 512;
+      aiSpriteY = 512;
+      break;
+    case 2560:
+      aiSpriteX = 0;
+      aiSpriteY = 512;
+      break;
+  }
+  
+  ctx.drawImage(
+    game.aiCreature().creatureImage,
+    aiSpriteX, aiSpriteY, 512, 512,
+    aiCreature.pos, 290, 200, 200);
+    
+  aiCreature.animationFrameStep();
+    
   // Draw opposing creature
-  ctx.fillStyle = "blue"; 
-  ctx.fillRect(aiCreature.pos, 290, 100, 200);
+  // ctx.fillStyle = "blue"; 
+  // ctx.fillRect(aiCreature.pos, 290, 100, 200);
 
   if (
     aiCreature.pos === aiCreature.nextPosition ||

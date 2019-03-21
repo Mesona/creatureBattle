@@ -11,7 +11,7 @@ function Game() {
   equipment.addArmor();
   equipment.addArmor();
   equipment.addArmor();
-  let playerCreature = new Creature();
+  let playerCreature = new Creature(pos = 200, character = './docs/creatures/BigFishPlayer.png');
   let aiCreature = new Creature(pos = 500);
   // let aiCreature = new Creature(pos = 500, str = 14, def = 13, agi = 13);
   let gameSpeed = 0;

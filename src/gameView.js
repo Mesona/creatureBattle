@@ -12,21 +12,29 @@ GameView.prototype.switchScreen = function switchScreen(gameView) {
     this.game.setScreen("prep");
     this.game.resetGameSpeed();
     
-    // Remove the battle background -- WILL REENABLE WHEN I HAVE A REPLACEMENT
-    // const backgroundLayerFront = document.getElementById("bg-front");
-    // backgroundLayerFront.classList.remove("front-image-layer");
-    // this.canvas.classList.remove("back-image-layers");
-    
+    // Remove the forest background
+    const backgroundLayerFront = document.getElementById("bg-front");
+    backgroundLayerFront.classList.remove("front-image-layers-forest");
+    this.canvas.classList.remove("back-image-layers-forest");
+
+    // Apply the hills background
+    backgroundLayerFront.classList.add("front-image-layers-hills");
+    this.canvas.classList.add("back-image-layers-hills");
+
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     new PreparationView(this.game, this.ctx, this.canvas, gameView).start();
   } else {
     this.game.setScreen("battle");
     this.game.resetGameSpeed();
+    
+    // Remove the hills background
+    const backgroundLayerFront = document.getElementById("bg-front");
+    backgroundLayerFront.classList.remove("front-image-layers-hills");
+    this.canvas.classList.remove("back-image-layers-hills");
 
-    // Restore the battle background
-    // const backgroundLayerFront = document.getElementById("bg-front");
-    // backgroundLayerFront.classList.add("front-image-layer");
-    // this.canvas.classList.add("back-image-layers");
+    // Apply the forest background
+    backgroundLayerFront.classList.add("front-image-layers-forest");
+    this.canvas.classList.add("back-image-layers-forest");
     
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     new BattleView(this.game, this.ctx, this.canvas, gameView).start();

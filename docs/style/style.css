@@ -3,13 +3,7 @@
   font-family: 'Overpass', sans-serif;
   font-family: 'Work Sans', sans-serif;
 }
-/* Color pallette: */
-/* https://coolors.co/2a4d14-a62639-db324d-56494e-a29c9b */
-/* color: #2A4D14;
-color: #8AB0AB;
-color: #3E505B;
-color: #03120E;
-color: #A29C9B; */
+
 body {
   justify-content: center;
   flex-wrap: nowrap;
@@ -37,11 +31,13 @@ body {
 
 #myCanvas {
   border: 3px solid #3E505B;
+  background-color: #4F6379;
 }
 
-.back-image-layers {
+.back-image-layers-hills {
   /* background from https://edermunizz.itch.io/free-pixel-art-hill */
-  background-image: url('./hillsBackground/HillsLayer05.png'),
+  background-image: url('./hillsBackground/HillsLayer06.png'),
+                    url('./hillsBackground/HillsLayer05.png'),
                     url('./hillsBackground/HillsLayer04.png'),
                     url('./hillsBackground/HillsLayer03.png'),
                     url('./hillsBackground/HillsLayer02.png'),
@@ -53,22 +49,40 @@ body {
   
 }
 
-.front-image-layer {
+.back-image-layers-forest {
+  /* background from https://edermunizz.itch.io/free-pixel-art-forest */
+  background-image: url('./forestBackground/Layer_0000_9.png'),
+                    url('./forestBackground/Layer_0001_8.png'),
+                    url('./forestBackground/Layer_0002_7.png'),
+                    url('./forestBackground/Layer_0003_6.png'),
+                    url('./forestBackground/Layer_0004_Lights.png'),
+                    url('./forestBackground/Layer_0005_5.png'),
+                    url('./forestBackground/Layer_0006_4.png'),
+                    url('./forestBackground/Layer_0007_Lights.png'),
+                    url('./forestBackground/Layer_0008_3.png'),
+                    url('./forestBackground/Layer_0009_2.png'),
+                    url('./forestBackground/Layer_0010_1.png');
+
+
+  background-repeat: repeat;
+  background-size: 100% 100%;
+}
+
+.front-image-layers-hills {
   /* background from https://edermunizz.itch.io/free-pixel-art-hill */
   background-image: url('./hillsBackground/HillsLayer06.png');
 
-  /* background-repeat: no-repeat; */
-  background-repeat: repeat-x;
+  background-repeat: no-repeat;
   background-size: cover;
-  height: 500px;
-  width: 800px;
   z-index: 2;
 }
 
+.front-image-layers-forest {
+
+  background-size: cover;
+}
+
 .game-space {
-  /* display: flex; */
-  /* flex-wrap: wrap; */
-  /* justify-content: center; */
   height: 500px;
 }
 
