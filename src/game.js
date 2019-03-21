@@ -13,7 +13,6 @@ function Game() {
   equipment.addArmor();
   let playerCreature = new Creature(pos = 200, character = './docs/creatures/BigFishPlayer.png');
   let aiCreature = new Creature(pos = 500);
-  // let aiCreature = new Creature(pos = 500, str = 14, def = 13, agi = 13);
   let gameSpeed = 0;
   let gameScreen = "prep";
 
@@ -57,13 +56,7 @@ function Game() {
   Game.prototype.rotateWeapons = (direction) => {
     equipment.rotateWeapons(direction);
 
-    // Should put this into a method on creature.js at some point
     playerCreature.updateAttacks(equipment.getWeapons()[0]);
-    // playerCreature.attacks = {
-    //   attackClose: equipment.weapons[0].attackClose,
-    //   attackMid: equipment.weapons[0].attackMid,
-    //   attackFar: equipment.weapons[0].attackFar
-    // }
   }
 
   Game.prototype.rotateArmors = (direction) => {
@@ -90,10 +83,6 @@ function Game() {
             Def: ${equipment.armors[0].def},
             Agi: ${equipment.armors[0].agi}`;
   }
-
-  // Game.prototype.updatePlayerWeapons = () => {
-    // playerCreature.updateAttacks(equipment.weapons[0]);
-  // }
 
 }
 

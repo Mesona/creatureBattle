@@ -15,6 +15,12 @@ document.addEventListener("DOMContentLoaded", function(){
   new PreparationView(game, ctx, canvas, gameView).start();
 });
 
+// Creature sprites from:
+// https://aekashics.itch.io/aekashics-librarium-librarium-static-batch-megapack
+
+// Backgrounds from:
+// https://edermunizz.itch.io/
+
 // TODO
 // Fix creatures to use hashmap, so custom assignments and stat management are easier
 // More involved animation, if possible

@@ -9,9 +9,6 @@ function CreatureBox(game, ctx, canvas) {
   // ctx.fillRect(0, 300, canvas.width, 200);
   // ctx.clearRect(10, 310, (canvas.width - 20), 180);
 
-  // ctx.fillStyle = "green"; 
-  // ctx.fillRect(350,290,100,200);
-
   ctx.clearRect(350, 290, 200, 200);
 
   // let playerSpriteX = playerCreature.animationFrame * 1;

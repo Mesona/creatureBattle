@@ -367,15 +367,9 @@ function MoveCreatures(game, ctx, canvas, timeDelta) {
 
   ctx.clearRect(0,100,canvas.width,canvas.height);  
 
-  // Draw player creature
-  // ctx.fillStyle = "green"; 
-  // ctx.fillRect(playerCreature.pos,290,100,200); 
   ctx.drawImage(
     game.playerCreature().creatureImage,
-    // testImage,
     playerSpriteX, playerSpriteY, 512, 512,
-    // 0, playerSpriteY, 512, 512,
-    // playerSpriteX, 0, 512, 512,
     playerCreature.pos, 290, 200, 200);
 
   playerCreature.animationFrameStep();
@@ -426,10 +420,6 @@ function MoveCreatures(game, ctx, canvas, timeDelta) {
     
   aiCreature.animationFrameStep();
     
-  // Draw opposing creature
-  // ctx.fillStyle = "blue"; 
-  // ctx.fillRect(aiCreature.pos, 290, 100, 200);
-
   if (
     aiCreature.pos === aiCreature.nextPosition ||
     aiCreature.pos <= playerCreature.pos + 110
@@ -512,20 +502,6 @@ function Creature(
     }
   }
 
-  // Creature.prototype.updateAttacks = (weapon) => {
-    // attacks = {attackClose: weapon.attackClose,
-    //            attackMid: weapon.attackMid,
-    //            attackFar: weapon.attackFar}
-    // this.attacks = {
-    //   attackClose: 5,
-    //   attackMid: 8,
-    //   attackFar: 1239}
-    // attacks.attackClose = weapon.attackClose;
-    // attacks.attackMid = weapon.attackMid;
-    // attacks.attackFar = weapon.attackFar;
-    // this.attacks = weapon.attacks;
-  // }
-  
   Creature.prototype.restoreHP = function() {
     this.currentHP = this.maxHP;
   }
@@ -549,7 +525,6 @@ Creature.prototype.updateAttacks = function(weapon) {
 
 Creature.prototype.animationFrameStep = function() {
   this.animationFrame++;
-  // if (this.animationFrame > 23) this.animationFrame-=24;
 };
 
 module.exports  = Creature;
@@ -578,7 +553,6 @@ function Game() {
   equipment.addArmor();
   let playerCreature = new Creature(pos = 200, character = './docs/creatures/BigFishPlayer.png');
   let aiCreature = new Creature(pos = 500);
-  // let aiCreature = new Creature(pos = 500, str = 14, def = 13, agi = 13);
   let gameSpeed = 0;
   let gameScreen = "prep";
 
@@ -622,13 +596,7 @@ function Game() {
   Game.prototype.rotateWeapons = (direction) => {
     equipment.rotateWeapons(direction);
 
-    // Should put this into a method on creature.js at some point
     playerCreature.updateAttacks(equipment.getWeapons()[0]);
-    // playerCreature.attacks = {
-    //   attackClose: equipment.weapons[0].attackClose,
-    //   attackMid: equipment.weapons[0].attackMid,
-    //   attackFar: equipment.weapons[0].attackFar
-    // }
   }
 
   Game.prototype.rotateArmors = (direction) => {
@@ -655,10 +623,6 @@ function Game() {
             Def: ${equipment.armors[0].def},
             Agi: ${equipment.armors[0].agi}`;
   }
-
-  // Game.prototype.updatePlayerWeapons = () => {
-    // playerCreature.updateAttacks(equipment.weapons[0]);
-  // }
 
 }
 
@@ -743,6 +707,12 @@ document.addEventListener("DOMContentLoaded", function(){
   // new BattleView(game, ctx, canvas, gameView).start();
   new PreparationView(game, ctx, canvas, gameView).start();
 });
+
+// Creature sprites from:
+// https://aekashics.itch.io/aekashics-librarium-librarium-static-batch-megapack
+
+// Backgrounds from:
+// https://edermunizz.itch.io/
 
 // TODO
 // Fix creatures to use hashmap, so custom assignments and stat management are easier
@@ -842,9 +812,6 @@ function CreatureBox(game, ctx, canvas) {
   // ctx.fillStyle = "purple";
   // ctx.fillRect(0, 300, canvas.width, 200);
   // ctx.clearRect(10, 310, (canvas.width - 20), 180);
-
-  // ctx.fillStyle = "green"; 
-  // ctx.fillRect(350,290,100,200);
 
   ctx.clearRect(350, 290, 200, 200);
 

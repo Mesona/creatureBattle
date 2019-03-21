@@ -24,15 +24,9 @@ function MoveCreatures(game, ctx, canvas, timeDelta) {
 
   ctx.clearRect(0,100,canvas.width,canvas.height);  
 
-  // Draw player creature
-  // ctx.fillStyle = "green"; 
-  // ctx.fillRect(playerCreature.pos,290,100,200); 
   ctx.drawImage(
     game.playerCreature().creatureImage,
-    // testImage,
     playerSpriteX, playerSpriteY, 512, 512,
-    // 0, playerSpriteY, 512, 512,
-    // playerSpriteX, 0, 512, 512,
     playerCreature.pos, 290, 200, 200);
 
   playerCreature.animationFrameStep();
@@ -83,10 +77,6 @@ function MoveCreatures(game, ctx, canvas, timeDelta) {
     
   aiCreature.animationFrameStep();
     
-  // Draw opposing creature
-  // ctx.fillStyle = "blue"; 
-  // ctx.fillRect(aiCreature.pos, 290, 100, 200);
-
   if (
     aiCreature.pos === aiCreature.nextPosition ||
     aiCreature.pos <= playerCreature.pos + 110

@@ -47,20 +47,6 @@ function Creature(
     }
   }
 
-  // Creature.prototype.updateAttacks = (weapon) => {
-    // attacks = {attackClose: weapon.attackClose,
-    //            attackMid: weapon.attackMid,
-    //            attackFar: weapon.attackFar}
-    // this.attacks = {
-    //   attackClose: 5,
-    //   attackMid: 8,
-    //   attackFar: 1239}
-    // attacks.attackClose = weapon.attackClose;
-    // attacks.attackMid = weapon.attackMid;
-    // attacks.attackFar = weapon.attackFar;
-    // this.attacks = weapon.attacks;
-  // }
-  
   Creature.prototype.restoreHP = function() {
     this.currentHP = this.maxHP;
   }
@@ -84,7 +70,6 @@ Creature.prototype.updateAttacks = function(weapon) {
 
 Creature.prototype.animationFrameStep = function() {
   this.animationFrame++;
-  // if (this.animationFrame > 23) this.animationFrame-=24;
 };
 
 module.exports  = Creature;
