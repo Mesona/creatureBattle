@@ -34,7 +34,6 @@ function Creature(
   this.attacks = attacks;
   this.animationFrame = 0;
   this.creatureImage = new Image();
-  console.log(character)
   this.creatureImage.src = character;
 
   Creature.prototype.attack = (range) => {

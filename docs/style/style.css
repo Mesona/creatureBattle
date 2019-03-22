@@ -7,7 +7,8 @@
 body {
   justify-content: center;
   flex-wrap: nowrap;
-  background-color: #A29C9B;
+  /* background-color: #A29C9B; */
+  background-color: #F4F2CE;
   /* height: 100%; */
   min-height: 700px;
   position: relative;
@@ -22,6 +23,7 @@ body {
   font-size: 40px;
   color: #03120E;
   width: 100%;
+  max-height: 10%;
 }
 
 .game-screen {

@@ -20,9 +20,17 @@ PreparationView.prototype.start = function start() {
 
 PreparationView.prototype.handleClick = function(e) {
   let clickX = e.pageX - this.canvas.offsetLeft;
-  let clickY = e.pageY - 87 - this.canvas.offsetTop;
-  console.log(this.game.playerCreature());
-  // console.log(`${clickX}, ${clickY}`)
+  // let clickY = e.pageY - 87 - this.canvas.offsetTop;
+  let clickY = e.pageY - (document.getElementById('height-test').offsetTop);
+  // let clickY = e.pageY - this.canvas.offset().top;
+  // let clickY = this.canvas.clientTop;
+  // console.log('-----')
+  // console.log(document.getElementById('height-test').offsetTop)
+  // console.log(this.ctx);
+  // console.log(this.canvas.pageY);
+  // console.log(this.canvas.layerY);
+  // console.log(this.canvas.offsetTop);
+  console.log(`${clickX}, ${clickY}`)
 
   // If the user clicks on the "left" arrow
   if (clickX > 139 && clickX < 178) {
