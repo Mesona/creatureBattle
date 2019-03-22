@@ -8,6 +8,11 @@ body {
   justify-content: center;
   flex-wrap: nowrap;
   background-color: #A29C9B;
+  /* height: 100%; */
+  min-height: 700px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
 }
 
 .creature-battle {
@@ -16,10 +21,13 @@ body {
   font-family: 'Overpass', sans-serif;
   font-size: 40px;
   color: #03120E;
+  width: 100%;
 }
 
 .game-screen {
   position: relative;
+  margin: 0;
+  /* transform: translateY(-50%); */
 }
 
 .game-screen #myCanvas, .front-image-layer {
@@ -84,6 +92,9 @@ body {
 
 .game-space {
   height: 500px;
+  position: relative;
+  margin: 0;
+  top: 50%;
 }
 
 .instructions {
@@ -98,7 +109,10 @@ body {
 
 
 footer {
+  position: absolute;
+  bottom: 0;
   margin-top: 20px;
+  width: 100%;
   display: flex;
   justify-content: center;
 }
