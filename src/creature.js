@@ -57,7 +57,6 @@ function Creature(
     } else {
       this.behaviorList.unshift(this.behaviorList.pop());
     }
-    console.log(this.behaviorList)
   }
 }
   
