@@ -22,14 +22,13 @@ PreparationView.prototype.handleClick = function(e) {
   let clickX = e.pageX - this.canvas.offsetLeft;
   // let clickY = e.pageY - 87 - this.canvas.offsetTop;
   let clickY = e.pageY - (document.getElementById('height-test').offsetTop);
-  // let clickY = e.pageY - this.canvas.offset().top;
-  // let clickY = this.canvas.clientTop;
   // console.log('-----')
   // console.log(document.getElementById('height-test').offsetTop)
   // console.log(this.ctx);
   // console.log(this.canvas.pageY);
   // console.log(this.canvas.layerY);
   // console.log(this.canvas.offsetTop);
+  // console.log('-----)
   console.log(`${clickX}, ${clickY}`)
 
   // If the user clicks on the "left" arrow
@@ -40,6 +39,8 @@ PreparationView.prototype.handleClick = function(e) {
     // of the armors select
     } else if (clickY > 122 && clickY < 159) {
       this.game.rotateArmors("left");
+    } else if (clickY > 221 && clickY < 262) {
+      this.game.rotateBehavior("left");
     }
   }
 
@@ -51,6 +52,8 @@ PreparationView.prototype.handleClick = function(e) {
     // of the armors select
     } else if (clickY > 122 && clickY < 162) {
       this.game.rotateArmors("right");
+    } else if (clickY > 221 && clickY < 262) {
+      this.game.rotateBehavior("right");
     }
   }
 

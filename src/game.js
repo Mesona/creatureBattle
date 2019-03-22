@@ -64,6 +64,10 @@ function Game() {
     playerCreature.updateStats(this.getArmors()[0]);
   }
 
+  Game.prototype.rotateBehavior = function(direction) {
+    playerCreature.updateBehavior(direction);
+  }
+
   Game.prototype.weaponDescription = () => {
     return equipment.weaponDescription();
   }
@@ -82,6 +86,10 @@ function Game() {
     return `Str: ${equipment.armors[0].str},
             Def: ${equipment.armors[0].def},
             Agi: ${equipment.armors[0].agi}`;
+  }
+
+  Game.prototype.getBehavior = function() {
+    return playerCreature.getBehavior();
   }
 
 }

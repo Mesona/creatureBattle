@@ -35,6 +35,7 @@ function Creature(
   this.animationFrame = 0;
   this.creatureImage = new Image();
   this.creatureImage.src = character;
+  this.behaviorList = ["Random", "Aggressive", "Neutral", "Timid"];
 
   Creature.prototype.attack = (range) => {
     if (range === "close") {
@@ -48,6 +49,15 @@ function Creature(
 
   Creature.prototype.restoreHP = function() {
     this.currentHP = this.maxHP;
+  }
+
+  Creature.prototype.updateBehavior = function(direction) {
+    if (direction === "left") {
+      this.behaviorList.push(this.behaviorList.shift());
+    } else {
+      this.behaviorList.unshift(this.behaviorList.pop());
+    }
+    console.log(this.behaviorList)
   }
 }
   
@@ -70,5 +80,10 @@ Creature.prototype.updateAttacks = function(weapon) {
 Creature.prototype.animationFrameStep = function() {
   this.animationFrame++;
 };
+
+Creature.prototype.getBehavior = function() {
+  return this.behaviorList[0];
+}
+
 
 module.exports  = Creature;

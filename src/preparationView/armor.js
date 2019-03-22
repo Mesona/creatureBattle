@@ -48,10 +48,14 @@ generateArmorName = function() {
 
 generateArmorDescription = function() {
   const possibilities = [
-    "This armor was once worn by . . .",
-    "This rusty bucket offers . . .",
-    "This is a placebo",
-    "I guess you can use this?",
+    "Placeholder Text",
+    "Lorem Ipsum",
+    "To be expanded upon later",
+    "Filler text!",
+    // "This armor was once worn by . . .",
+    // "This rusty bucket offers . . .",
+    // "This is a placebo",
+    // "I guess you can use this?",
   ]
 
   return possibilities[Math.floor(Math.random() * 4)];

@@ -490,6 +490,7 @@ function Creature(
   this.animationFrame = 0;
   this.creatureImage = new Image();
   this.creatureImage.src = character;
+  this.behaviorList = ["Random", "Aggressive", "Neutral", "Timid"];
 
   Creature.prototype.attack = (range) => {
     if (range === "close") {
@@ -503,6 +504,15 @@ function Creature(
 
   Creature.prototype.restoreHP = function() {
     this.currentHP = this.maxHP;
+  }
+
+  Creature.prototype.updateBehavior = function(direction) {
+    if (direction === "left") {
+      this.behaviorList.push(this.behaviorList.shift());
+    } else {
+      this.behaviorList.unshift(this.behaviorList.pop());
+    }
+    console.log(this.behaviorList)
   }
 }
   
@@ -525,6 +535,11 @@ Creature.prototype.updateAttacks = function(weapon) {
 Creature.prototype.animationFrameStep = function() {
   this.animationFrame++;
 };
+
+Creature.prototype.getBehavior = function() {
+  return this.behaviorList[0];
+}
+
 
 module.exports  = Creature;
 
@@ -603,6 +618,10 @@ function Game() {
     playerCreature.updateStats(this.getArmors()[0]);
   }
 
+  Game.prototype.rotateBehavior = function(direction) {
+    playerCreature.updateBehavior(direction);
+  }
+
   Game.prototype.weaponDescription = () => {
     return equipment.weaponDescription();
   }
@@ -621,6 +640,10 @@ function Game() {
     return `Str: ${equipment.armors[0].str},
             Def: ${equipment.armors[0].def},
             Agi: ${equipment.armors[0].agi}`;
+  }
+
+  Game.prototype.getBehavior = function() {
+    return playerCreature.getBehavior();
   }
 
 }
@@ -779,10 +802,14 @@ generateArmorName = function() {
 
 generateArmorDescription = function() {
   const possibilities = [
-    "This armor was once worn by . . .",
-    "This rusty bucket offers . . .",
-    "This is a placebo",
-    "I guess you can use this?",
+    "Placeholder Text",
+    "Lorem Ipsum",
+    "To be expanded upon later",
+    "Filler text!",
+    // "This armor was once worn by . . .",
+    // "This rusty bucket offers . . .",
+    // "This is a placebo",
+    // "I guess you can use this?",
   ]
 
   return possibilities[Math.floor(Math.random() * 4)];
@@ -935,12 +962,16 @@ function EquipBox(game, ctx, canvas) {
 
   weaponSelectText();
   armorSelectText();
+  aiSelectText();
   weaponSelect();
   armorSelect();
+  aiSelect();
   weaponSelectLeft();
   weaponSelectRight();
   armorSelectLeft();
   armorSelectRight();
+  aiSelectLeft();
+  aiSelectRight();
 }
 
 weaponSelectText = function() {
@@ -955,9 +986,17 @@ armorSelectText = function() {
   ctx.fillText("Armor: ", 20, 150);
 }
 
+aiSelectText = function() {
+  ctx.fillStyle = "rgba(255, 0, 0, 1)";
+  ctx.font = "italic 20pt Arial";
+  ctx.fillText("AI: ", 20, 245);
+}
+
 weaponSelect = function() {
   ctx.fillRect(130, 20, 250, 50);
-  ctx.clearRect(135, 25, 240, 40);
+  ctx.fillStyle = "rgba(244, 242, 206, 1)";
+  ctx.fillRect(135, 25, 240, 40);
+  // ctx.clearRect(135, 25, 240, 40);
 
   ctx.fillStyle = "black";
   ctx.font = "italic 12pt Arial";
@@ -967,11 +1006,24 @@ weaponSelect = function() {
 armorSelect = function() {
   ctx.fillStyle = "rgba(255, 0, 0, 1)";
   ctx.fillRect(130, 115, 250, 50);
-  ctx.clearRect(135, 120, 240, 40);
+  ctx.fillStyle = "rgba(244, 242, 206, 1)";
+  ctx.fillRect(135, 120, 240, 40);
 
   ctx.fillStyle = "black";
   ctx.font = "italic 12pt Arial";
   ctx.fillText(this.game.getArmors()[0].name, 180, 146);
+}
+
+aiSelect = function() {
+  ctx.fillStyle = "rgba(255, 0, 0, 1)";
+  ctx.fillRect(130, 210, 250, 50);
+  ctx.fillStyle = "rgba(244, 242, 206, 1)";
+  ctx.fillRect(135, 215, 240, 40);
+  // ctx.clearRect(135, 215, 240, 40);
+
+  ctx.fillStyle = "black";
+  ctx.font = "italic 12pt Arial";
+  ctx.fillText(this.game.getBehavior(), 180, 240);
 }
 
 weaponSelectLeft = function() {
@@ -1019,6 +1071,30 @@ armorSelectRight = function() {
   ctx.moveTo(345, 134);
   ctx.lineTo(365, 141);
   ctx.lineTo(345, 148);
+  ctx.closePath();
+  ctx.fill();
+}
+
+aiSelectLeft = function() {
+  ctx.fillStyle = "black";
+  ctx.fillRect(135, 215, 40, 40);
+  ctx.fillStyle="white";
+  ctx.beginPath();
+  ctx.moveTo(165, 229);
+  ctx.lineTo(145, 236);
+  ctx.lineTo(165, 243);
+  ctx.closePath();
+  ctx.fill();
+}
+
+aiSelectRight = function() {
+  ctx.fillStyle = "black";
+  ctx.fillRect(335, 215, 40, 40);
+  ctx.fillStyle="white";
+  ctx.beginPath();
+  ctx.moveTo(345, 229);
+  ctx.lineTo(365, 236);
+  ctx.lineTo(345, 243);
   ctx.closePath();
   ctx.fill();
 }
@@ -1134,14 +1210,13 @@ PreparationView.prototype.handleClick = function(e) {
   let clickX = e.pageX - this.canvas.offsetLeft;
   // let clickY = e.pageY - 87 - this.canvas.offsetTop;
   let clickY = e.pageY - (document.getElementById('height-test').offsetTop);
-  // let clickY = e.pageY - this.canvas.offset().top;
-  // let clickY = this.canvas.clientTop;
   // console.log('-----')
   // console.log(document.getElementById('height-test').offsetTop)
   // console.log(this.ctx);
   // console.log(this.canvas.pageY);
   // console.log(this.canvas.layerY);
   // console.log(this.canvas.offsetTop);
+  // console.log('-----)
   console.log(`${clickX}, ${clickY}`)
 
   // If the user clicks on the "left" arrow
@@ -1152,6 +1227,8 @@ PreparationView.prototype.handleClick = function(e) {
     // of the armors select
     } else if (clickY > 122 && clickY < 159) {
       this.game.rotateArmors("left");
+    } else if (clickY > 221 && clickY < 262) {
+      this.game.rotateBehavior("left");
     }
   }
 
@@ -1163,6 +1240,8 @@ PreparationView.prototype.handleClick = function(e) {
     // of the armors select
     } else if (clickY > 122 && clickY < 162) {
       this.game.rotateArmors("right");
+    } else if (clickY > 221 && clickY < 262) {
+      this.game.rotateBehavior("right");
     }
   }
 
