@@ -35,7 +35,7 @@ function Creature(
   this.animationFrame = 0;
   this.creatureImage = new Image();
   this.creatureImage.src = character;
-  this.behaviorList = ["Random", "Aggressive", "Neutral", "Timid"];
+  this.behaviorList = ["Random", "Aggressive", "Lazy", "Timid"];
 
   Creature.prototype.attack = (range) => {
     if (range === "close") {

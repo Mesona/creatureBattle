@@ -375,20 +375,42 @@ function MoveCreatures(game, ctx, canvas, timeDelta) {
   playerCreature.animationFrameStep();
 
 
+  let playerCreatureBehavior = this.game.getBehavior();
+  let playerCreatureMovePattern = '';
+  switch (playerCreatureBehavior) {
+    case "Random":
+      playerCreatureMovePattern =
+        (Math.random() < 0.5 ? -1 : 1) * (playerCreature.spd * 10);
+        break;
+    case "Aggressive":
+      playerCreatureMovePattern =
+      ((Math.random() < 0.5 ? -1 : 1) * (playerCreature.spd * 10) + (playerCreature.spd * 2));
+        break;
+    case "Lazy":
+      playerCreatureMovePattern = 0;
+        break;
+    case "Timid":
+      playerCreatureMovePattern =
+        ((Math.random() < 0.5 ? -1 : 1) * (playerCreature.spd * 10) - (playerCreature.spd * 2));
+        break;
+  }
   // Agressive movement pattern, randomizes but favors moving towards enemy
   // playerCreature.pos+=(Math.floor((Math.random() * ((playerCreature.spd * 2) + 1) -(playerCreature.spd / 2) * timeScale))); 
+
 
   if (
     playerCreature.pos === playerCreature.nextPosition ||
     playerCreature.pos + 110 >= aiCreature.pos
     ) {
-    playerCreature.nextPosition = playerCreature.pos + ((Math.random() < 0.5 ? -1 : 1) * (playerCreature.spd * 10));
+    playerCreature.nextPosition = playerCreature.pos + playerCreatureMovePattern;
 
     // Prevents the creature from "falling off" the screen
     playerCreature.nextPosition = Math.min(Math.max(playerCreature.nextPosition, 10), aiCreature.pos - 110);
   }
 
-  if (playerCreature.pos < playerCreature.nextPosition) {
+  if (playerCreatureBehavior === "Lazy") {
+    playerCreature.pos += 0;
+  } else if (playerCreature.pos < playerCreature.nextPosition) {
     playerCreature.pos += playerCreature.spd;
   } else {
     playerCreature.pos -= playerCreature.spd;
@@ -490,7 +512,7 @@ function Creature(
   this.animationFrame = 0;
   this.creatureImage = new Image();
   this.creatureImage.src = character;
-  this.behaviorList = ["Random", "Aggressive", "Neutral", "Timid"];
+  this.behaviorList = ["Random", "Aggressive", "Lazy", "Timid"];
 
   Creature.prototype.attack = (range) => {
     if (range === "close") {
@@ -644,6 +666,22 @@ function Game() {
 
   Game.prototype.getBehavior = function() {
     return playerCreature.getBehavior();
+  }
+
+  Game.prototype.getBehaviorDescription = function() {
+  //   if (this.getBehavior === "Random") {
+  //     return "Your creature will go where it wants!"
+  //   } else if (this.getBehavior === "")
+    switch (this.getBehavior()) {
+      case "Random":
+        return "Your creature will go anywhere it wants!"
+      case "Aggressive":
+        return "Your creature likes to fight up close."
+      case "Lazy":
+        return "Your creature tries to not move too much."
+      case "Timid":
+        return "Your creature tries to stay far away."
+    }
   }
 
 }
@@ -918,6 +956,7 @@ function DescriptionBox(game, ctx, canvas) {
   ctx.fillText(getLines(ctx, this.game.getWeaponDamages(), 350), 425, 71);
   ctx.fillText(getLines(ctx, this.game.armorDescription(), 350), 425, 146);
   ctx.fillText(getLines(ctx, this.game.getArmorStats(), 350), 425, 165);
+  ctx.fillText(getLines(ctx, this.game.getBehaviorDescription(), 350), 425, 240);
 }
 
 function getLines(ctx, text, maxWidth) {

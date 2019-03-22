@@ -92,6 +92,22 @@ function Game() {
     return playerCreature.getBehavior();
   }
 
+  Game.prototype.getBehaviorDescription = function() {
+  //   if (this.getBehavior === "Random") {
+  //     return "Your creature will go where it wants!"
+  //   } else if (this.getBehavior === "")
+    switch (this.getBehavior()) {
+      case "Random":
+        return "Your creature will go anywhere it wants!"
+      case "Aggressive":
+        return "Your creature likes to fight up close."
+      case "Lazy":
+        return "Your creature tries to not move too much."
+      case "Timid":
+        return "Your creature tries to stay far away."
+    }
+  }
+
 }
 
 module.exports = Game;
