@@ -44,6 +44,11 @@ body {
   background-color: #4F6379;
 }
 
+.back-image-tutorial {
+  background-image: url('./tutorialBackground.png');
+  background-size: cover;
+}
+
 .back-image-layers-hills {
   /* background from https://edermunizz.itch.io/free-pixel-art-hill */
   background-image: url('./hillsBackground/HillsLayer06.png'),
@@ -117,6 +122,10 @@ footer {
   width: 100%;
   display: flex;
   justify-content: center;
+}
+
+.cursor-pointer {
+  cursor: pointer;
 }
 
 footer img {

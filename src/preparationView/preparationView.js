@@ -1,6 +1,7 @@
 const EquipBox = require('./equipBox');
 const CreatureBox = require('./creatureBox');
 const DescriptionBox = require('./descriptionBox');
+// const TutorialView = require('../tutorialView');
 
 function PreparationView(game, ctx, canvas, gameView) {
   this.game = game;
