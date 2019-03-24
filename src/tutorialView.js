@@ -100,8 +100,12 @@ TutorialView.prototype.handleSkip = function(e) {
   this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
   document.removeEventListener("click", this.handleClick);
   document.removeEventListener("mousemove", this.handleCursor);
-  // new PreparationView(this.game, this.ctx, this.canvas, this.gameView).start();
+  this.canvas.classList.remove("back-image-tutorial");
+  this.canvas.classList.add("back-image-layers-hills");
+  const backgroundLayerFront = document.getElementById("bg-front");
+  backgroundLayerFront.classList.add("front-image-layers-hills");
   new PreparationView(this.game, this.ctx, this.canvas, this.gameView).start(); 
+
 };
 
 TutorialView.prototype.showCreature = function() {
