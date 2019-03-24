@@ -57,6 +57,7 @@ BattleView.prototype.finishCombat = function() {
     text = "Opponent wins!";
   } else {
     text = "You win!";
+    this.game.playerCreature().addVictory();
   }
 
   this.game.aiCreature().restoreHP();

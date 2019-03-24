@@ -1,7 +1,4 @@
 const Game = require("./game");
-const BattleView = require('./battleView/battleView');
-const PreparationView = require('./preparationView/preparationView');
-const GameView = require('./gameView');
 const TutorialView = require('./tutorialView');
 
 document.addEventListener("DOMContentLoaded", function(){
@@ -11,10 +8,7 @@ document.addEventListener("DOMContentLoaded", function(){
   const ctx = canvas.getContext("2d");
 
   let game = new Game();
-  let gameView = new GameView(game, ctx, canvas);
-  // new BattleView(game, ctx, canvas, gameView).start();
-  new TutorialView(game, ctx, canvas, gameView);
-  // new PreparationView(game, ctx, canvas, gameView).start();
+  new TutorialView(game, ctx, canvas);
 });
 
 // Creature sprites from:

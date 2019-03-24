@@ -3,9 +3,6 @@ function DescriptionBox(game, ctx, canvas) {
   this.ctx = ctx;
   this.canvas = canvas;
 
-  // Box border for testing UI bounds
-  // ctx.fillStyle = "orange";
-  // ctx.fillRect(400, 0, 400, 300);
   ctx.clearRect(410, 10, 380, 280);
 
   ctx.fillStyle = "rgba(255, 0, 0, 1)";

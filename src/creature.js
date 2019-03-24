@@ -36,6 +36,7 @@ function Creature(
   this.creatureImage = new Image();
   this.creatureImage.src = character;
   this.behaviorList = ["Random", "Aggressive", "Lazy", "Timid"];
+  this.victories = 0;
 
   Creature.prototype.attack = (range) => {
     if (range === "close") {
@@ -83,6 +84,15 @@ Creature.prototype.animationFrameStep = function() {
 Creature.prototype.getBehavior = function() {
   return this.behaviorList[0];
 }
+
+Creature.prototype.addVictory = function() {
+  this.victories++;
+}
+
+Creature.prototype.getVictories = function() {
+  return this.victories;
+}
+
 
 
 module.exports  = Creature;

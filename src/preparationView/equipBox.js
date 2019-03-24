@@ -4,8 +4,6 @@ function EquipBox(game, ctx, canvas) {
   this.canvas = canvas;
 
   ctx.fillStyle = "green";
-  // ctx.fillRect(0,0,400,300);
-  // ctx.clearRect(10, 10, 380, 280)
 
   weaponSelectText();
   armorSelectText();
@@ -43,7 +41,6 @@ weaponSelect = function() {
   ctx.fillRect(130, 20, 250, 50);
   ctx.fillStyle = "rgba(244, 242, 206, 1)";
   ctx.fillRect(135, 25, 240, 40);
-  // ctx.clearRect(135, 25, 240, 40);
 
   ctx.fillStyle = "black";
   ctx.font = "italic 12pt Arial";
@@ -66,7 +63,6 @@ aiSelect = function() {
   ctx.fillRect(130, 210, 250, 50);
   ctx.fillStyle = "rgba(244, 242, 206, 1)";
   ctx.fillRect(135, 215, 240, 40);
-  // ctx.clearRect(135, 215, 240, 40);
 
   ctx.fillStyle = "black";
   ctx.font = "italic 12pt Arial";

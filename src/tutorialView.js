@@ -1,10 +1,13 @@
 const PreparationView = require('./preparationView/preparationView');
+const GameView = require('./gameView');
 
-function TutorialView(game, ctx, canvas, gameView) {
+function TutorialView(game, ctx, canvas) {
   this.game = game;
   this.ctx = ctx;
   this.canvas = canvas;
-  this.gameVeiw = gameView;
+
+  this.gameView = new GameView(game, ctx, canvas);
+
   this.offsetLeft = this.canvas.offsetLeft;
   this.offsetTop = document.getElementById('height-test').offsetTop; 
   this.currentHighlight = ["creature", "showWeapon", "showArmor", "showBehavior", "showNext"];
@@ -92,8 +95,6 @@ TutorialView.prototype.handleNext = function(e) {
 
 
   }
-
-  // document.removeEventListener("click", this.handleClick);
 }
 
 TutorialView.prototype.handleSkip = function(e) {
@@ -104,6 +105,7 @@ TutorialView.prototype.handleSkip = function(e) {
   this.canvas.classList.add("back-image-layers-hills");
   const backgroundLayerFront = document.getElementById("bg-front");
   backgroundLayerFront.classList.add("front-image-layers-hills");
+  console.log(this.gameVeiw);
   new PreparationView(this.game, this.ctx, this.canvas, this.gameView).start(); 
 
 };
@@ -112,16 +114,9 @@ TutorialView.prototype.showCreature = function() {
   this.ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
   this.ctx.fillRect(0, 0, 800, 500)
 
-  // this.ctx.clearRect(340, 280, 220, 200);
   this.ctx.clearRect(340, 280, 220, 200);
   this.ctx.fillStyle = "rgba(255, 91, 1, 1)";
 
-  // ctx.font = "italic 18pt Arial";
-  // let lines = "Next";
-  // ctx.fillText(getLines(ctx, lines, 50), 225, 450);
-
-  // lines = "Skip Tutorial";
-  // ctx.fillText(getLines(ctx, lines, 200), 25, 450);
   this.writeTutorialNext();
   this.writeTutorialSkip();
 
@@ -207,7 +202,6 @@ TutorialView.prototype.clearView = function(x, y, width, height) {
   this.ctx.fillRect(0, 0, 800, 500)
 
   this.ctx.clearRect(x, y, width, height);
-  // ctx.fillStyle = "rgba(255, 91, 1, 1)";
 }
 
 function getLines(ctx, text, maxWidth) {

@@ -7,9 +7,7 @@
 body {
   justify-content: center;
   flex-wrap: nowrap;
-  /* background-color: #A29C9B; */
   background-color: #F4F2CE;
-  /* height: 100%; */
   min-height: 700px;
   position: relative;
   display: flex;
@@ -29,7 +27,6 @@ body {
 .game-screen {
   position: relative;
   margin: 0;
-  /* transform: translateY(-50%); */
 }
 
 .game-screen #myCanvas, .front-image-layer {

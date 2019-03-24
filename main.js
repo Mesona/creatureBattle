@@ -152,6 +152,7 @@ BattleView.prototype.finishCombat = function() {
     text = "Opponent wins!";
   } else {
     text = "You win!";
+    this.game.playerCreature().addVictory();
   }
 
   this.game.aiCreature().restoreHP();
@@ -513,6 +514,7 @@ function Creature(
   this.creatureImage = new Image();
   this.creatureImage.src = character;
   this.behaviorList = ["Random", "Aggressive", "Lazy", "Timid"];
+  this.victories = 0;
 
   Creature.prototype.attack = (range) => {
     if (range === "close") {
@@ -560,6 +562,15 @@ Creature.prototype.animationFrameStep = function() {
 Creature.prototype.getBehavior = function() {
   return this.behaviorList[0];
 }
+
+Creature.prototype.addVictory = function() {
+  this.victories++;
+}
+
+Creature.prototype.getVictories = function() {
+  return this.victories;
+}
+
 
 
 module.exports  = Creature;
@@ -751,9 +762,6 @@ module.exports = GameView;
 /***/ (function(module, exports, __webpack_require__) {
 
 const Game = __webpack_require__(/*! ./game */ "./src/game.js");
-const BattleView = __webpack_require__(/*! ./battleView/battleView */ "./src/battleView/battleView.js");
-const PreparationView = __webpack_require__(/*! ./preparationView/preparationView */ "./src/preparationView/preparationView.js");
-const GameView = __webpack_require__(/*! ./gameView */ "./src/gameView.js");
 const TutorialView = __webpack_require__(/*! ./tutorialView */ "./src/tutorialView.js");
 
 document.addEventListener("DOMContentLoaded", function(){
@@ -763,10 +771,7 @@ document.addEventListener("DOMContentLoaded", function(){
   const ctx = canvas.getContext("2d");
 
   let game = new Game();
-  let gameView = new GameView(game, ctx, canvas);
-  // new BattleView(game, ctx, canvas, gameView).start();
-  new TutorialView(game, ctx, canvas, gameView);
-  // new PreparationView(game, ctx, canvas, gameView).start();
+  new TutorialView(game, ctx, canvas);
 });
 
 // Creature sprites from:
@@ -880,15 +885,7 @@ function CreatureBox(game, ctx, canvas) {
 
   ctx.clearRect(350, 290, 200, 200);
 
-  // let playerSpriteX = playerCreature.animationFrame * 1;
-  // let playerSpriteY = 512;
-  // let playerSpriteY = playerCreature.animationFrame * 1;
-  // let playerSpriteY = 512 * Math.floor(playerCreature.animationFrame / 4);
-
-  // let timing = Math.floor(playerCreature.animationFrame); 
   let timing = Math.floor(playerCreature.animationFrame / 4); 
-
-  // let playerSpriteX = 512 * (timing % 9);
 
   // WORKING< FOR TESTINGS SMALLER IDLE ANIMATION
   // let playerSpriteY = 512 * (Math.floor(timing / 9) % 2);
@@ -909,18 +906,16 @@ function CreatureBox(game, ctx, canvas) {
       break;
   }
 
-  // let playerSpriteY = 512 * (Math.floor(timing / 9) % 6);
-
-  // console.log(playerSpriteY)
   ctx.drawImage(
     this.game.playerCreature().creatureImage,
-    // testImage,
     playerSpriteX, playerSpriteY, 512, 512,
-    // 0, playerSpriteY, 512, 512,
-    // playerSpriteX, 0, 512, 512,
     350, 290, 200, 200);
 
   playerCreature.animationFrameStep();
+
+  ctx.fillStyle = "rgba(255, 0, 0, 1)";
+  ctx.font = "italic 26pt Arial";
+  ctx.fillText(`Victories: ${this.game.playerCreature().getVictories()}`, 95, 400);
 
   ctx.fillStyle = "rgba(255, 0, 0, 1)";
   ctx.font = "italic 26pt Arial";
@@ -946,9 +941,6 @@ function DescriptionBox(game, ctx, canvas) {
   this.ctx = ctx;
   this.canvas = canvas;
 
-  // Box border for testing UI bounds
-  // ctx.fillStyle = "orange";
-  // ctx.fillRect(400, 0, 400, 300);
   ctx.clearRect(410, 10, 380, 280);
 
   ctx.fillStyle = "rgba(255, 0, 0, 1)";
@@ -997,8 +989,6 @@ function EquipBox(game, ctx, canvas) {
   this.canvas = canvas;
 
   ctx.fillStyle = "green";
-  // ctx.fillRect(0,0,400,300);
-  // ctx.clearRect(10, 10, 380, 280)
 
   weaponSelectText();
   armorSelectText();
@@ -1036,7 +1026,6 @@ weaponSelect = function() {
   ctx.fillRect(130, 20, 250, 50);
   ctx.fillStyle = "rgba(244, 242, 206, 1)";
   ctx.fillRect(135, 25, 240, 40);
-  // ctx.clearRect(135, 25, 240, 40);
 
   ctx.fillStyle = "black";
   ctx.font = "italic 12pt Arial";
@@ -1059,7 +1048,6 @@ aiSelect = function() {
   ctx.fillRect(130, 210, 250, 50);
   ctx.fillStyle = "rgba(244, 242, 206, 1)";
   ctx.fillRect(135, 215, 240, 40);
-  // ctx.clearRect(135, 215, 240, 40);
 
   ctx.fillStyle = "black";
   ctx.font = "italic 12pt Arial";
@@ -1229,7 +1217,6 @@ module.exports = Equipment;
 const EquipBox = __webpack_require__(/*! ./equipBox */ "./src/preparationView/equipBox.js");
 const CreatureBox = __webpack_require__(/*! ./creatureBox */ "./src/preparationView/creatureBox.js");
 const DescriptionBox = __webpack_require__(/*! ./descriptionBox */ "./src/preparationView/descriptionBox.js");
-// const TutorialView = require('../tutorialView');
 
 function PreparationView(game, ctx, canvas, gameView) {
   this.game = game;
@@ -1436,12 +1423,15 @@ module.exports = Weapon;
 /***/ (function(module, exports, __webpack_require__) {
 
 const PreparationView = __webpack_require__(/*! ./preparationView/preparationView */ "./src/preparationView/preparationView.js");
+const GameView = __webpack_require__(/*! ./gameView */ "./src/gameView.js");
 
-function TutorialView(game, ctx, canvas, gameView) {
+function TutorialView(game, ctx, canvas) {
   this.game = game;
   this.ctx = ctx;
   this.canvas = canvas;
-  this.gameVeiw = gameView;
+
+  this.gameView = new GameView(game, ctx, canvas);
+
   this.offsetLeft = this.canvas.offsetLeft;
   this.offsetTop = document.getElementById('height-test').offsetTop; 
   this.currentHighlight = ["creature", "showWeapon", "showArmor", "showBehavior", "showNext"];
@@ -1529,8 +1519,6 @@ TutorialView.prototype.handleNext = function(e) {
 
 
   }
-
-  // document.removeEventListener("click", this.handleClick);
 }
 
 TutorialView.prototype.handleSkip = function(e) {
@@ -1541,6 +1529,7 @@ TutorialView.prototype.handleSkip = function(e) {
   this.canvas.classList.add("back-image-layers-hills");
   const backgroundLayerFront = document.getElementById("bg-front");
   backgroundLayerFront.classList.add("front-image-layers-hills");
+  console.log(this.gameVeiw);
   new PreparationView(this.game, this.ctx, this.canvas, this.gameView).start(); 
 
 };
@@ -1549,16 +1538,9 @@ TutorialView.prototype.showCreature = function() {
   this.ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
   this.ctx.fillRect(0, 0, 800, 500)
 
-  // this.ctx.clearRect(340, 280, 220, 200);
   this.ctx.clearRect(340, 280, 220, 200);
   this.ctx.fillStyle = "rgba(255, 91, 1, 1)";
 
-  // ctx.font = "italic 18pt Arial";
-  // let lines = "Next";
-  // ctx.fillText(getLines(ctx, lines, 50), 225, 450);
-
-  // lines = "Skip Tutorial";
-  // ctx.fillText(getLines(ctx, lines, 200), 25, 450);
   this.writeTutorialNext();
   this.writeTutorialSkip();
 
@@ -1644,7 +1626,6 @@ TutorialView.prototype.clearView = function(x, y, width, height) {
   this.ctx.fillRect(0, 0, 800, 500)
 
   this.ctx.clearRect(x, y, width, height);
-  // ctx.fillStyle = "rgba(255, 91, 1, 1)";
 }
 
 function getLines(ctx, text, maxWidth) {
