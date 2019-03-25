@@ -9,12 +9,14 @@ function PreparationView(game, ctx, canvas, gameView) {
   this.gameView = gameView;
 
   this.handleClick = this.handleClick.bind(this);
+  this.handleCursor = this.handleCursor.bind(this);
 }
 
 PreparationView.prototype.start = function start() {
   this.lastTime = 0;
 
   document.addEventListener('click', this.handleClick, false);
+  document.addEventListener('mousemove', this.handleCursor, false);
   requestAnimationFrame(this.animate.bind(this));
 };
 
@@ -29,7 +31,7 @@ PreparationView.prototype.handleClick = function(e) {
   // console.log(this.canvas.layerY);
   // console.log(this.canvas.offsetTop);
   // console.log('-----)
-  // console.log(`${clickX}, ${clickY}`)
+  console.log(`${clickX}, ${clickY}`)
 
   // If the user clicks on the "left" arrow
   if (clickX > 139 && clickX < 178) {
@@ -52,6 +54,7 @@ PreparationView.prototype.handleClick = function(e) {
     // of the armors select
     } else if (clickY > 122 && clickY < 162) {
       this.game.rotateArmors("right");
+    // of the behavior select
     } else if (clickY > 221 && clickY < 262) {
       this.game.rotateBehavior("right");
     }
@@ -61,9 +64,48 @@ PreparationView.prototype.handleClick = function(e) {
   if (clickX > 604 && clickX < 778
       && clickY > 377 && clickY < 402) {
         document.removeEventListener("click", this.handleClick);
+        document.removeEventListener("mousemove", this.handleCursor);
         cancelAnimationFrame(this.animationId);
         this.finishPreparation();
   }    
+}
+
+PreparationView.prototype.handleCursor = function(e) {
+  let mouseX = e.pageX - this.canvas.offsetLeft;
+  let mouseY = e.pageY - (document.getElementById('height-test').offsetTop);
+  console.log(`${mouseX}, ${mouseY}`)
+  // console.log(this.canvas.classList)
+  // let mouseX = e.pageX - this.offsetLeft;
+  // let mouseY = e.pageY - this.offsetTop;
+
+  // If the user hovers over the X axis of the left arrow buttons 
+  if (mouseX > 139 && mouseX < 178) {
+  // if (mouseX > 0 && mouseX < 700) {
+    // Of the weapon select 
+    if (mouseY > 27 && mouseY < 66) {
+      // console.log('yeah')
+      console.log(this.canvas.classList)
+      if (!this.canvas.classList.contains('cursor-pointer')) {
+        this.canvas.classList.add('cursor-pointer');
+      }
+    // Of the armor select
+    } else if (mouseY > 122 && mouseY < 162) {
+      if (!this.canvas.classList.contains('cursor-pointer')) {
+        this.canvas.classList.add('cursor-pointer');
+      }
+    // Of the behavior select
+    } else if (mouseY > 221 && mouseY < 262) {
+      if (!this.canvas.classList.contains('cursor-pointer')) {
+        this.canvas.classList.add('cursor-pointer');
+      }
+    }
+  }
+  //   } else {
+  //     this.canvas.classList.remove('cursor-pointer');
+  //   }
+  // } else {
+  //   this.canvas.classList.remove('cursor-pointer');
+  // }
 }
 
 PreparationView.prototype.animate = function animate(time) {
@@ -92,6 +134,7 @@ PreparationView.prototype.finishPreparation = function() {
 }
 
 PreparationView.prototype.textFadeIn = function(text) {
+  this.ctx.clearRect(0, 0, this.canvas.width, 280);
   this.ctx.fillStyle = "rgba(255, 0, 0, 1)";
   this.ctx.font = "italic 40pt Arial";
   let xloc = 300;

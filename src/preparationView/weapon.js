@@ -25,14 +25,14 @@ far = function() {
 
 generateWeaponName = function() {
   const prefix = [
-    "sword",
-    "torch",
-    "gauntlet",
-    "dagger",
-    "tentacle",
-    "tooth",
-    "claw",
-    "eye"
+    "Stick",
+    "Torch",
+    "Fist",
+    "Dagger",
+    "Blade",
+    "Tooth",
+    "Claw",
+    "Eye"
    ]
    const suffix = [
      "fire",

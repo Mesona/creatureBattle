@@ -763,6 +763,8 @@ module.exports = GameView;
 
 const Game = __webpack_require__(/*! ./game */ "./src/game.js");
 const TutorialView = __webpack_require__(/*! ./tutorialView */ "./src/tutorialView.js");
+// const PreparationView = require('./preparationView/preparationView');
+// const GameView = require('./gameView');
 
 document.addEventListener("DOMContentLoaded", function(){
   const canvas = document.getElementById("myCanvas");
@@ -771,6 +773,8 @@ document.addEventListener("DOMContentLoaded", function(){
   const ctx = canvas.getContext("2d");
 
   let game = new Game();
+  // let gameView = new GameView(game, ctx, canvas);
+  // new PreparationView(game, ctx, canvas, gameView);
   new TutorialView(game, ctx, canvas);
 });
 
@@ -818,25 +822,25 @@ generateStats = function() {
 
 generateArmorName = function() {
   const prefix = [
-    "collar",
-    "pendant",
-    "greaves",
-    "gauntlet",
-    "shield",
-    "helm",
-    "cloak",
+    "Collar",
+    "Mask",
+    "Shoes",
+    "Glove",
+    "Shield",
+    "Helm",
+    "Cloak",
     // "spectacles"
-    "ring",
+    "Ring",
   ]
   const suffix = [
-    "protection",
-    "evasion",
-    "fortitude",
-    "moxy",
-    "resiliance",
-    "enervation",
-    "awe",
-    "fancy feet"
+    "Defense",
+    "Evasion",
+    "Strength",
+    "Moxy",
+    "Vigor",
+    "Vim",
+    "Awe",
+    "Pluck"
   ]
   let armorName = prefix[Math.floor(Math.random() * 8)]
               + " of " + suffix[Math.floor(Math.random() * 8)];
@@ -1028,8 +1032,8 @@ weaponSelect = function() {
   ctx.fillRect(135, 25, 240, 40);
 
   ctx.fillStyle = "black";
-  ctx.font = "italic 12pt Arial";
-  ctx.fillText(this.game.getWeapons()[0].name, 180, 52);
+  ctx.font = "italic 14pt Arial";
+  ctx.fillText(this.game.getWeapons()[0].name, 180, 53);
 }
 
 armorSelect = function() {
@@ -1039,8 +1043,8 @@ armorSelect = function() {
   ctx.fillRect(135, 120, 240, 40);
 
   ctx.fillStyle = "black";
-  ctx.font = "italic 12pt Arial";
-  ctx.fillText(this.game.getArmors()[0].name, 180, 146);
+  ctx.font = "italic 14pt Arial";
+  ctx.fillText(this.game.getArmors()[0].name, 180, 147);
 }
 
 aiSelect = function() {
@@ -1050,8 +1054,8 @@ aiSelect = function() {
   ctx.fillRect(135, 215, 240, 40);
 
   ctx.fillStyle = "black";
-  ctx.font = "italic 12pt Arial";
-  ctx.fillText(this.game.getBehavior(), 180, 240);
+  ctx.font = "italic 14pt Arial";
+  ctx.fillText(this.game.getBehavior(), 180, 242);
 }
 
 weaponSelectLeft = function() {
@@ -1225,12 +1229,14 @@ function PreparationView(game, ctx, canvas, gameView) {
   this.gameView = gameView;
 
   this.handleClick = this.handleClick.bind(this);
+  this.handleCursor = this.handleCursor.bind(this);
 }
 
 PreparationView.prototype.start = function start() {
   this.lastTime = 0;
 
   document.addEventListener('click', this.handleClick, false);
+  document.addEventListener('mousemove', this.handleCursor, false);
   requestAnimationFrame(this.animate.bind(this));
 };
 
@@ -1245,7 +1251,7 @@ PreparationView.prototype.handleClick = function(e) {
   // console.log(this.canvas.layerY);
   // console.log(this.canvas.offsetTop);
   // console.log('-----)
-  // console.log(`${clickX}, ${clickY}`)
+  console.log(`${clickX}, ${clickY}`)
 
   // If the user clicks on the "left" arrow
   if (clickX > 139 && clickX < 178) {
@@ -1268,6 +1274,7 @@ PreparationView.prototype.handleClick = function(e) {
     // of the armors select
     } else if (clickY > 122 && clickY < 162) {
       this.game.rotateArmors("right");
+    // of the behavior select
     } else if (clickY > 221 && clickY < 262) {
       this.game.rotateBehavior("right");
     }
@@ -1277,9 +1284,48 @@ PreparationView.prototype.handleClick = function(e) {
   if (clickX > 604 && clickX < 778
       && clickY > 377 && clickY < 402) {
         document.removeEventListener("click", this.handleClick);
+        document.removeEventListener("mousemove", this.handleCursor);
         cancelAnimationFrame(this.animationId);
         this.finishPreparation();
   }    
+}
+
+PreparationView.prototype.handleCursor = function(e) {
+  let mouseX = e.pageX - this.canvas.offsetLeft;
+  let mouseY = e.pageY - (document.getElementById('height-test').offsetTop);
+  console.log(`${mouseX}, ${mouseY}`)
+  // console.log(this.canvas.classList)
+  // let mouseX = e.pageX - this.offsetLeft;
+  // let mouseY = e.pageY - this.offsetTop;
+
+  // If the user hovers over the X axis of the left arrow buttons 
+  if (mouseX > 139 && mouseX < 178) {
+  // if (mouseX > 0 && mouseX < 700) {
+    // Of the weapon select 
+    if (mouseY > 27 && mouseY < 66) {
+      // console.log('yeah')
+      console.log(this.canvas.classList)
+      if (!this.canvas.classList.contains('cursor-pointer')) {
+        this.canvas.classList.add('cursor-pointer');
+      }
+    // Of the armor select
+    } else if (mouseY > 122 && mouseY < 162) {
+      if (!this.canvas.classList.contains('cursor-pointer')) {
+        this.canvas.classList.add('cursor-pointer');
+      }
+    // Of the behavior select
+    } else if (mouseY > 221 && mouseY < 262) {
+      if (!this.canvas.classList.contains('cursor-pointer')) {
+        this.canvas.classList.add('cursor-pointer');
+      }
+    }
+  }
+  //   } else {
+  //     this.canvas.classList.remove('cursor-pointer');
+  //   }
+  // } else {
+  //   this.canvas.classList.remove('cursor-pointer');
+  // }
 }
 
 PreparationView.prototype.animate = function animate(time) {
@@ -1308,6 +1354,7 @@ PreparationView.prototype.finishPreparation = function() {
 }
 
 PreparationView.prototype.textFadeIn = function(text) {
+  this.ctx.clearRect(0, 0, this.canvas.width, 280);
   this.ctx.fillStyle = "rgba(255, 0, 0, 1)";
   this.ctx.font = "italic 40pt Arial";
   let xloc = 300;
@@ -1371,14 +1418,14 @@ far = function() {
 
 generateWeaponName = function() {
   const prefix = [
-    "sword",
-    "torch",
-    "gauntlet",
-    "dagger",
-    "tentacle",
-    "tooth",
-    "claw",
-    "eye"
+    "Stick",
+    "Torch",
+    "Fist",
+    "Dagger",
+    "Blade",
+    "Tooth",
+    "Claw",
+    "Eye"
    ]
    const suffix = [
      "fire",

@@ -43,8 +43,8 @@ weaponSelect = function() {
   ctx.fillRect(135, 25, 240, 40);
 
   ctx.fillStyle = "black";
-  ctx.font = "italic 12pt Arial";
-  ctx.fillText(this.game.getWeapons()[0].name, 180, 52);
+  ctx.font = "italic 14pt Arial";
+  ctx.fillText(this.game.getWeapons()[0].name, 180, 53);
 }
 
 armorSelect = function() {
@@ -54,8 +54,8 @@ armorSelect = function() {
   ctx.fillRect(135, 120, 240, 40);
 
   ctx.fillStyle = "black";
-  ctx.font = "italic 12pt Arial";
-  ctx.fillText(this.game.getArmors()[0].name, 180, 146);
+  ctx.font = "italic 14pt Arial";
+  ctx.fillText(this.game.getArmors()[0].name, 180, 147);
 }
 
 aiSelect = function() {
@@ -65,8 +65,8 @@ aiSelect = function() {
   ctx.fillRect(135, 215, 240, 40);
 
   ctx.fillStyle = "black";
-  ctx.font = "italic 12pt Arial";
-  ctx.fillText(this.game.getBehavior(), 180, 240);
+  ctx.font = "italic 14pt Arial";
+  ctx.fillText(this.game.getBehavior(), 180, 242);
 }
 
 weaponSelectLeft = function() {

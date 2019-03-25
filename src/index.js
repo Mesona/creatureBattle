@@ -1,5 +1,7 @@
 const Game = require("./game");
 const TutorialView = require('./tutorialView');
+// const PreparationView = require('./preparationView/preparationView');
+// const GameView = require('./gameView');
 
 document.addEventListener("DOMContentLoaded", function(){
   const canvas = document.getElementById("myCanvas");
@@ -8,6 +10,8 @@ document.addEventListener("DOMContentLoaded", function(){
   const ctx = canvas.getContext("2d");
 
   let game = new Game();
+  // let gameView = new GameView(game, ctx, canvas);
+  // new PreparationView(game, ctx, canvas, gameView);
   new TutorialView(game, ctx, canvas);
 });
 

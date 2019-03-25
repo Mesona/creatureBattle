@@ -20,25 +20,25 @@ generateStats = function() {
 
 generateArmorName = function() {
   const prefix = [
-    "collar",
-    "pendant",
-    "greaves",
-    "gauntlet",
-    "shield",
-    "helm",
-    "cloak",
+    "Collar",
+    "Mask",
+    "Shoes",
+    "Glove",
+    "Shield",
+    "Helm",
+    "Cloak",
     // "spectacles"
-    "ring",
+    "Ring",
   ]
   const suffix = [
-    "protection",
-    "evasion",
-    "fortitude",
-    "moxy",
-    "resiliance",
-    "enervation",
-    "awe",
-    "fancy feet"
+    "Defense",
+    "Evasion",
+    "Strength",
+    "Moxy",
+    "Vigor",
+    "Vim",
+    "Awe",
+    "Pluck"
   ]
   let armorName = prefix[Math.floor(Math.random() * 8)]
               + " of " + suffix[Math.floor(Math.random() * 8)];
