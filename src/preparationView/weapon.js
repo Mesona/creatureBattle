@@ -39,9 +39,7 @@ generateWeaponName = function() {
      "ice",
      "frenzy",
      "fury",
-    //  "protection",
      "decay",
-    //  "destruction",
      "bravado",
      "grit",
      "pizzaz"

@@ -1,57 +1,74 @@
 # Creature Battle
 
-## Background and Overview
-* This game allows you to equip a creature with various equipment, augmenting its abilities, before it fights another creature.  The battles are automated, and the creatures act based on equipment and personality.
+## Background
+* This game was inspired by the old PS1 era Monster Rancher series, which had many unique systems I have not seen replicated since.  The player has the option to change their creature's weapon, armor, and personality before sending it into battle.  Once in battle, the player can sit back and watch as their creature tries its best to defeat its opponent.
 
-* This game was inspired by the old PS1 era Monster Rancher series, which had many unique systems I have not seen replicated since.
-
-## Wireframes
-![battle page](https://github.com/Mesona/creatureBattle/blob/master/docs/design/creatureBattle.jpg "Battle Page")
-
-![preparation page](https://github.com/Mesona/creatureBattle/blob/master/docs/design/creaturePrep.jpg "Preparation Page")
-
-
-## Functionality and MVPs
-* Users will be able to change their creature's weapons to augment its attacks
-* Users will be able to change their creature's armor to augment its stats
-
-### MVPs
-* [x] Basic page setup and UI
-* [x] Creature preparation page
-* [x] Creature battle page
-* [x] Creature weapons and armor
-
-### Bonus MVPs
-* [] Music and audio
-* [] Creature personality
-* [] Equipment visuals
-* [] Currency and shop menu
-* [] User login and persistent creature data
-* [] Different leagues for increased difficulty
-
-## Architecture and Technologies
+## Technology
 * Vanilla JavaScript: Game logic
 * HTML5 Canvas: Visual rendering
 * Webpack: Resource bundling
 
-## Implementation Timeline
-### Thursday
-* [x] Set up webpack
-* [x] Create skeleton for class Creature
-* [x] Create skeleton for class Equipment
-* [x] Create skeleton for subclasses Armors and Weapons
-* [x] Create skeleton for Battle
-* [x] Create skeleton for Preparation
+## Functionality
+* Randomized weapons and armor that change every game.
+* Customizable personalities.
+* Animated creatures.
+* A tutorial!
 
-### Friday
-* [x] Build out Creature
-* [x] Begin on building out Battle
+## Cool code snippets
 
-### Saturday
-* [x] Finish building out Battle
-* [x] Basic animations
 
-### Sunday
-* [x] Build out Preparation
-* [x] Build out Armors
-* [x] Build out Weapons
+Before the inclusion of the tutorial, canvas would have a slight delay in loading.  To increase the render speed, I stopped rending the backgrounds through canvas and placed them as static images loaded through CSS elements.  When the user switches between the preparation stage and the combat stage, this code gets run to swap out which images are being loaded:
+```javascript
+    // Remove the hills background
+    const backgroundLayerFront = document.getElementById("bg-front");
+    backgroundLayerFront.classList.remove("front-image-layers-hills");
+    this.canvas.classList.remove("back-image-layers-hills");
+
+    // Apply the forest background
+    backgroundLayerFront.classList.add("front-image-layers-forest");
+    this.canvas.classList.add("back-image-layers-forest");
+```
+
+To simulate a tutorial, I discovered I could simply apply an opaque layer to the entire canvas, and then clear the area I wanted the user to focus on:
+```javascript
+  this.ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
+  this.ctx.fillRect(0, 0, 800, 500)
+
+  this.ctx.clearRect(340, 280, 220, 200)
+```
+
+I did a lot of randomizing of elements in this project.  They all rely upon Math.random() in some capacity.  Here, every time a new weapon is created, the weapon's name is chosen from a list of prefixes and suffixes:
+
+```javascript
+generateWeaponName = function() {
+  const prefix = [
+    "Stick",
+    "Torch",
+    "Fist",
+    "Dagger",
+    "Blade",
+    "Tooth",
+    "Claw",
+    "Eye"
+   ]
+   const suffix = [
+     "fire",
+     "ice",
+     "frenzy",
+     "fury",
+     "decay",
+     "bravado",
+     "grit",
+     "pizzaz"
+   ]
+   weaponName = prefix[Math.floor(Math.random() * 8)]
+                + " of " + suffix[Math.floor(Math.random() * 8)];
+
+   return weaponName;
+  }
+```
+And here is how an "Aggressive" behavioral style creature chooses where its next move will be:
+```javascript
+  playerCreatureMovePattern =
+    ((Math.random() < 0.5 ? -1 : 1) * (playerCreature.spd * 10) + (playerCreature.spd * 2));
+```
