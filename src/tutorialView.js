@@ -34,7 +34,7 @@ function TutorialView(game, ctx, canvas) {
 TutorialView.prototype.handleClick = function(e) {
   let clickX = e.pageX - this.offsetLeft;
   let clickY = e.pageY - this.offsetTop;
-  console.log(`${clickX}, ${clickY}`)
+  // console.log(`${clickX}, ${clickY}`)
 
   // If the user clicks the Y axis of the buttons
   if (clickY > 424 && clickY < 471) {
@@ -105,7 +105,7 @@ TutorialView.prototype.handleSkip = function(e) {
   this.canvas.classList.add("back-image-layers-hills");
   const backgroundLayerFront = document.getElementById("bg-front");
   backgroundLayerFront.classList.add("front-image-layers-hills");
-  console.log(this.gameVeiw);
+  // console.log(this.gameVeiw);
   new PreparationView(this.game, this.ctx, this.canvas, this.gameView).start(); 
 
 };

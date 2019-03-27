@@ -31,7 +31,7 @@ PreparationView.prototype.handleClick = function(e) {
   // console.log(this.canvas.layerY);
   // console.log(this.canvas.offsetTop);
   // console.log('-----)
-  console.log(`${clickX}, ${clickY}`)
+  // console.log(`${clickX}, ${clickY}`)
 
   // If the user clicks on the "left" arrow
   if (clickX > 139 && clickX < 178) {
@@ -73,18 +73,15 @@ PreparationView.prototype.handleClick = function(e) {
 PreparationView.prototype.handleCursor = function(e) {
   let mouseX = e.pageX - this.canvas.offsetLeft;
   let mouseY = e.pageY - (document.getElementById('height-test').offsetTop);
-  console.log(`${mouseX}, ${mouseY}`)
+  // console.log(`${mouseX}, ${mouseY}`)
   // console.log(this.canvas.classList)
   // let mouseX = e.pageX - this.offsetLeft;
   // let mouseY = e.pageY - this.offsetTop;
 
   // If the user hovers over the X axis of the left arrow buttons 
   if (mouseX > 139 && mouseX < 178) {
-  // if (mouseX > 0 && mouseX < 700) {
     // Of the weapon select 
     if (mouseY > 27 && mouseY < 66) {
-      // console.log('yeah')
-      console.log(this.canvas.classList)
       if (!this.canvas.classList.contains('cursor-pointer')) {
         this.canvas.classList.add('cursor-pointer');
       }
