@@ -72,7 +72,7 @@ PreparationView.prototype.handleClick = function(e) {
 PreparationView.prototype.handleCursor = function(e) {
   let mouseX = e.pageX - this.canvas.offsetLeft;
   let mouseY = e.pageY - (document.getElementById('height-test').offsetTop);
-  console.log(`${mouseX}, ${mouseY}`)
+  // console.log(`${mouseX}, ${mouseY}`)
 
   // If the user hovers over the X axis of the left arrow buttons 
   if (mouseX > 139 && mouseX < 178) {
