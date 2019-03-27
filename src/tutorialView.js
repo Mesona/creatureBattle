@@ -34,7 +34,6 @@ function TutorialView(game, ctx, canvas) {
 TutorialView.prototype.handleClick = function(e) {
   let clickX = e.pageX - this.offsetLeft;
   let clickY = e.pageY - this.offsetTop;
-  // console.log(`${clickX}, ${clickY}`)
 
   // If the user clicks the Y axis of the buttons
   if (clickY > 424 && clickY < 471) {

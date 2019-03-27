@@ -22,7 +22,6 @@ PreparationView.prototype.start = function start() {
 
 PreparationView.prototype.handleClick = function(e) {
   let clickX = e.pageX - this.canvas.offsetLeft;
-  // let clickY = e.pageY - 87 - this.canvas.offsetTop;
   let clickY = e.pageY - (document.getElementById('height-test').offsetTop);
   // console.log('-----')
   // console.log(document.getElementById('height-test').offsetTop)
@@ -41,7 +40,7 @@ PreparationView.prototype.handleClick = function(e) {
     // of the armors select
     } else if (clickY > 122 && clickY < 159) {
       this.game.rotateArmors("left");
-    } else if (clickY > 221 && clickY < 262) {
+    } else if (clickY > 219 && clickY < 262) {
       this.game.rotateBehavior("left");
     }
   }
@@ -55,7 +54,7 @@ PreparationView.prototype.handleClick = function(e) {
     } else if (clickY > 122 && clickY < 162) {
       this.game.rotateArmors("right");
     // of the behavior select
-    } else if (clickY > 221 && clickY < 262) {
+    } else if (clickY > 219 && clickY < 262) {
       this.game.rotateBehavior("right");
     }
   }
@@ -73,10 +72,7 @@ PreparationView.prototype.handleClick = function(e) {
 PreparationView.prototype.handleCursor = function(e) {
   let mouseX = e.pageX - this.canvas.offsetLeft;
   let mouseY = e.pageY - (document.getElementById('height-test').offsetTop);
-  // console.log(`${mouseX}, ${mouseY}`)
-  // console.log(this.canvas.classList)
-  // let mouseX = e.pageX - this.offsetLeft;
-  // let mouseY = e.pageY - this.offsetTop;
+  console.log(`${mouseX}, ${mouseY}`)
 
   // If the user hovers over the X axis of the left arrow buttons 
   if (mouseX > 139 && mouseX < 178) {
@@ -91,18 +87,41 @@ PreparationView.prototype.handleCursor = function(e) {
         this.canvas.classList.add('cursor-pointer');
       }
     // Of the behavior select
-    } else if (mouseY > 221 && mouseY < 262) {
+    } else if (mouseY > 219 && mouseY < 262) {
       if (!this.canvas.classList.contains('cursor-pointer')) {
         this.canvas.classList.add('cursor-pointer');
       }
+    } else {
+      this.canvas.classList.remove('cursor-pointer');
     }
+  // If the user hovers over the X axis of the right arrow butons
+  } else if (mouseX > 338 && mouseX < 379) {
+    // Of the weapon select 
+    if (mouseY > 27 && mouseY < 66) {
+      if (!this.canvas.classList.contains('cursor-pointer')) {
+        this.canvas.classList.add('cursor-pointer');
+      }
+    // Of the armor select
+    } else if (mouseY > 122 && mouseY < 162) {
+      if (!this.canvas.classList.contains('cursor-pointer')) {
+        this.canvas.classList.add('cursor-pointer');
+      }
+    // Of the behavior select
+    } else if (mouseY > 219 && mouseY < 262) {
+      if (!this.canvas.classList.contains('cursor-pointer')) {
+        this.canvas.classList.add('cursor-pointer');
+      }
+    } else {
+      this.canvas.classList.remove('cursor-pointer');
+    }
+  // If the user hovers of the "Next Battle" button
+  } else if (mouseX > 599 && mouseX < 786 && mouseY > 369 && mouseY < 411) {
+    if (!this.canvas.classList.contains('cursor-pointer')) {
+      this.canvas.classList.add('cursor-pointer');
+    } 
+  } else {
+    this.canvas.classList.remove('cursor-pointer');
   }
-  //   } else {
-  //     this.canvas.classList.remove('cursor-pointer');
-  //   }
-  // } else {
-  //   this.canvas.classList.remove('cursor-pointer');
-  // }
 }
 
 PreparationView.prototype.animate = function animate(time) {
