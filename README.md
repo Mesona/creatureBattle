@@ -2,7 +2,7 @@
 
 [Live Link](http://creaturebattle.mesona.net/)
 
-[readmeBattle](https://github.com/Mesona/creatureBattle/tree/master/docs/design/readmeBattle.png "Creatures battling")
+![readmeBattle](https://github.com/Mesona/creatureBattle/blob/master/docs/design/readmeBattle.png "Creatures battling")
 
 ## Background
 * This game was inspired by the old PS1 era Monster Rancher series, which had many unique systems I have not seen replicated since.  The player has the option to change their creature's weapon, armor, and personality before sending it into battle.  Once in battle, the player can sit back and watch as their creature tries its best to defeat its opponent.
@@ -41,7 +41,7 @@ To simulate a tutorial, I discovered I could simply apply an opaque layer to the
   this.ctx.clearRect(340, 280, 220, 200)
 ```
 
-[readmeTutorial](https://github.com/Mesona/creatureBattle/tree/master/docs/design/readmeTutorial.png "Tutorial")
+![readmeTutorial](https://github.com/Mesona/creatureBattle/blob/master/docs/design/readmeTutorial.png "Tutorial")
 
 
 I did a lot of randomizing of elements in this project.  They all rely upon Math.random() in some capacity.  Here, every time a new weapon is created, the weapon's name is chosen from a list of prefixes and suffixes:
