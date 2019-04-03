@@ -810,7 +810,6 @@ function Armor(
 }
 
 generateStats = function() {
-  // let statTotal = 10;
   let str = Math.floor(Math.random() * 10);
   let def = Math.floor(Math.random() * (10 - str))
   let agi = 10 - str - def;
@@ -827,7 +826,6 @@ generateArmorName = function() {
     "Shield",
     "Helm",
     "Cloak",
-    // "spectacles"
     "Ring",
   ]
   const suffix = [
@@ -848,14 +846,10 @@ generateArmorName = function() {
 
 generateArmorDescription = function() {
   const possibilities = [
-    "Placeholder Text",
-    "Lorem Ipsum",
-    "To be expanded upon later",
-    "Filler text!",
-    // "This armor was once worn by . . .",
-    // "This rusty bucket offers . . .",
-    // "This is a placebo",
-    // "I guess you can use this?",
+    "This shifts sizes to adjust to its wearer",
+    "Provides a modicrum of protection",
+    "Stlyish AND functional!",
+    "Smells faintly of apples",
   ]
 
   return possibilities[Math.floor(Math.random() * 4)];
@@ -1160,9 +1154,9 @@ function Equipment() {
   }
   
   Equipment.prototype.addWeapon = function() {
-    let closeDamage = Math.floor(Math.random() * 10);
-    let farDamage = (Math.floor(Math.random() * (10 - closeDamage)));
-    let midDamage = 10 - closeDamage - farDamage;
+    let closeDamage = Math.floor(Math.random() * 8);
+    let farDamage = Math.max(Math.floor(Math.random() * (9 - closeDamage)), 1);
+    let midDamage = Math.max(10 - closeDamage - farDamage, 1);
     this.weapons = this.weapons.concat(new Weapon(closeDamage, midDamage, farDamage));
   }
 
@@ -1459,9 +1453,9 @@ generateWeaponName = function() {
 
 generateWeaponDescription = function() {
   const possibilities = [
-    "Lorem ipsum",
-    "Ipsum lorem",
-    "Placeholder",
+    "More useful than a spoon",
+    "This object always feels cold to the touch",
+    "It hums with a strange energy",
     "This ancient tool was once used as currency",
   ]
 

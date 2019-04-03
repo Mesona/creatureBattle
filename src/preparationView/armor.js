@@ -10,7 +10,6 @@ function Armor(
 }
 
 generateStats = function() {
-  // let statTotal = 10;
   let str = Math.floor(Math.random() * 10);
   let def = Math.floor(Math.random() * (10 - str))
   let agi = 10 - str - def;
@@ -27,7 +26,6 @@ generateArmorName = function() {
     "Shield",
     "Helm",
     "Cloak",
-    // "spectacles"
     "Ring",
   ]
   const suffix = [
@@ -48,14 +46,10 @@ generateArmorName = function() {
 
 generateArmorDescription = function() {
   const possibilities = [
-    "Placeholder Text",
-    "Lorem Ipsum",
-    "To be expanded upon later",
-    "Filler text!",
-    // "This armor was once worn by . . .",
-    // "This rusty bucket offers . . .",
-    // "This is a placebo",
-    // "I guess you can use this?",
+    "This shifts sizes to adjust to its wearer",
+    "Provides a modicrum of protection",
+    "Stlyish AND functional!",
+    "Smells faintly of apples",
   ]
 
   return possibilities[Math.floor(Math.random() * 4)];

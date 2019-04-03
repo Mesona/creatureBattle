@@ -18,9 +18,9 @@ function Equipment() {
   }
   
   Equipment.prototype.addWeapon = function() {
-    let closeDamage = Math.floor(Math.random() * 10);
-    let farDamage = (Math.floor(Math.random() * (10 - closeDamage)));
-    let midDamage = 10 - closeDamage - farDamage;
+    let closeDamage = Math.floor(Math.random() * 8);
+    let farDamage = Math.max(Math.floor(Math.random() * (9 - closeDamage)), 1);
+    let midDamage = Math.max(10 - closeDamage - farDamage, 1);
     this.weapons = this.weapons.concat(new Weapon(closeDamage, midDamage, farDamage));
   }
 

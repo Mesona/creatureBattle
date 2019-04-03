@@ -52,9 +52,9 @@ generateWeaponName = function() {
 
 generateWeaponDescription = function() {
   const possibilities = [
-    "Lorem ipsum",
-    "Ipsum lorem",
-    "Placeholder",
+    "More useful than a spoon",
+    "This object always feels cold to the touch",
+    "It hums with a strange energy",
     "This ancient tool was once used as currency",
   ]
 
