@@ -42,7 +42,6 @@ TutorialView.prototype.handleClick = function(e) {
       this.handleSkip();      
     // If the user clicks the Next button
     } else if (clickX > 224 && clickX < 296) {
-      // console.log('correctNext')
       this.handleNext();
     }
   }
@@ -104,7 +103,6 @@ TutorialView.prototype.handleSkip = function(e) {
   this.canvas.classList.add("back-image-layers-hills");
   const backgroundLayerFront = document.getElementById("bg-front");
   backgroundLayerFront.classList.add("front-image-layers-hills");
-  // console.log(this.gameVeiw);
   new PreparationView(this.game, this.ctx, this.canvas, this.gameView).start(); 
 
 };

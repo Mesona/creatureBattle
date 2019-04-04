@@ -9,7 +9,6 @@ function HealthBar(game, ctx, canvas) {
 
   // Player creature's health 
   pos = 20 + (250 - (250 * playerPercentHealth));
-  // pos = 20 + (250 - (250 * 0.5));
   ctx.strokeStyle = "red";
   ctx.strokeRect(20, 70, 250, 30);
   ctx.fillStyle = "red";
@@ -19,7 +18,6 @@ function HealthBar(game, ctx, canvas) {
   ctx.strokeStyle = "red";
   ctx.strokeRect(530, 70, 250, 30);
   ctx.fillStyle = "red";
-  // ctx.fillRect(530, 70, (250 / aiPercentHealth), 30);
   ctx.fillRect(530, 70, (250 * aiPercentHealth), 30);
 }
 

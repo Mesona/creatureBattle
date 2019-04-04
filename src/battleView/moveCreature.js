@@ -51,9 +51,6 @@ function MoveCreatures(game, ctx, canvas, timeDelta) {
         ((Math.random() < 0.5 ? -1 : 1) * (playerCreature.spd * 10) - (playerCreature.spd * 2));
         break;
   }
-  // Agressive movement pattern, randomizes but favors moving towards enemy
-  // playerCreature.pos+=(Math.floor((Math.random() * ((playerCreature.spd * 2) + 1) -(playerCreature.spd / 2) * timeScale))); 
-
 
   if (
     playerCreature.pos === playerCreature.nextPosition ||

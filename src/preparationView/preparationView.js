@@ -72,7 +72,7 @@ PreparationView.prototype.handleClick = function(e) {
   // console.log(this.canvas.layerY);
   // console.log(this.canvas.offsetTop);
 
-  console.log(`${clickX}, ${clickY}`)
+  // console.log(`${clickX}, ${clickY}`)
 
   // If the user clicks on the "left" arrow
   if (clickX > 139 && clickX < 178) {
@@ -103,8 +103,8 @@ PreparationView.prototype.handleClick = function(e) {
   }
 
   // If the user clicks the "Next Battle" button
-  if (clickX > 604 && clickX < 778
-      && clickY > 377 && clickY < 402) {
+  if (clickX > 599 && clickX < 786
+      && clickY > 369 && clickY < 411) {
         document.removeEventListener("click", this.handleClick);
         document.removeEventListener("mousemove", this.handleCursor);
         cancelAnimationFrame(this.animationId);

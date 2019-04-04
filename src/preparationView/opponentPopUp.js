@@ -1,4 +1,5 @@
 function OpponentPopUp(game, ctx) {
+  let aiCreature = game.aiCreature();
   ctx.fillStyle = "rgba(77, 77, 77, 1)";
   ctx.fillRect(50, 50, 700, 400);
   ctx.fillStyle = "rgba(246, 241, 198, 1)";
@@ -8,11 +9,42 @@ function OpponentPopUp(game, ctx) {
   ctx.font = "italic 20pt Arial";
   ctx.fillText("~~ Next Opponent ~~", 285, 100);
 
+  let aiTiming = Math.floor(aiCreature.animationFrame / 4); 
+
+  let aiSpriteX = 512 * (aiTiming % 6);
+  let aiSpriteY = 0;
+  switch (aiSpriteX) {
+    case 1536:
+      aiSpriteX = 1024;
+      aiSpriteY = 512;
+      break;
+    case 2048:
+      aiSpriteX = 512;
+      aiSpriteY = 512;
+      break;
+    case 2560:
+      aiSpriteX = 0;
+      aiSpriteY = 512;
+      break;
+  }
+
+  ctx.drawImage(
+    game.aiCreature().creatureImage,
+    aiSpriteX, aiSpriteY, 512, 512,
+    75, 100, 200, 200
+  );
+
+  aiCreature.animationFrameStep();
+
   ctx.font = "italic 14pt Arial";
-  ctx.fillText(" * Armors add to your creature's base stats.", 75, 140);
-  ctx.fillText(" * Strength: Increases your damage dealt by 10% each.", 75, 180);
-  ctx.fillText(" * Defense: Reduces your incoming damage by 10% each.", 75, 220);
-  ctx.fillText(" * Agility: Reduces the cooldown between attacks.", 75, 260);
+  ctx.fillText(" * Attacks:", 275, 180);
+  ctx.fillText(`Close: ${aiCreature.attacks.attackClose},
+                Medium: ${aiCreature.attacks.attackMid},
+                Far: ${aiCreature.attacks.attackFar}`, 275, 220);
+  ctx.fillText(" * Stats:", 275, 260);
+  ctx.fillText(`Str: ${aiCreature.str},
+                Def: ${aiCreature.def},
+                Agi: ${aiCreature.agi}`, 275, 300);
 }
 
 module.exports = OpponentPopUp;

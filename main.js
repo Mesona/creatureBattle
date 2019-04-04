@@ -178,7 +178,6 @@ BattleView.prototype.textFadeIn = function(text) {
 BattleView.prototype.textFadeOut = function(text, xloc) {
   let alpha = 1.0,   // full opacity
   interval = setInterval(() => {
-      // this.canvas.width = this.canvas.width; // Clears the canvas
       this.ctx.clearRect(0, 200, this.canvas.width, 70);
       this.ctx.fillStyle = "rgba(255, 0, 0, " + alpha + ")";
       this.ctx.font = "italic 40pt Arial";
@@ -317,7 +316,6 @@ function HealthBar(game, ctx, canvas) {
 
   // Player creature's health 
   pos = 20 + (250 - (250 * playerPercentHealth));
-  // pos = 20 + (250 - (250 * 0.5));
   ctx.strokeStyle = "red";
   ctx.strokeRect(20, 70, 250, 30);
   ctx.fillStyle = "red";
@@ -327,7 +325,6 @@ function HealthBar(game, ctx, canvas) {
   ctx.strokeStyle = "red";
   ctx.strokeRect(530, 70, 250, 30);
   ctx.fillStyle = "red";
-  // ctx.fillRect(530, 70, (250 / aiPercentHealth), 30);
   ctx.fillRect(530, 70, (250 * aiPercentHealth), 30);
 }
 
@@ -395,9 +392,6 @@ function MoveCreatures(game, ctx, canvas, timeDelta) {
         ((Math.random() < 0.5 ? -1 : 1) * (playerCreature.spd * 10) - (playerCreature.spd * 2));
         break;
   }
-  // Agressive movement pattern, randomizes but favors moving towards enemy
-  // playerCreature.pos+=(Math.floor((Math.random() * ((playerCreature.spd * 2) + 1) -(playerCreature.spd / 2) * timeScale))); 
-
 
   if (
     playerCreature.pos === playerCreature.nextPosition ||
@@ -478,7 +472,7 @@ module.exports = MoveCreatures;
 
 function Creature(
   position = 200,
-  character = "./docs/creatures/OceanosL.png",
+  character = this.randomizeImage(),
   nextPosition = position,
   strength = 14,
   defense = 13,
@@ -489,9 +483,6 @@ function Creature(
   weapon = null,
   armor = null,
   attacks = {
-    // {rangeMin: 0, rangeMax: 150, damage: 10},
-    // {rangeMin: 151, rangeMax: 400, damage: 10},
-    // {rangeMid: 401, rangeMax: 700, damage: 5},
     attackClose: 4,
     attackMid: 3,
     attackFar: 3,
@@ -542,6 +533,32 @@ function Creature(
 Creature.prototype.resetPos = function(newPos) {
   this.pos = newPos;
 }
+
+Creature.prototype.randomizeImage = function() {
+  let images = [
+    "BigFish",
+    "EarthD",
+    "EldritchOvermind",
+    "OceanosL",
+    "Unibun1_1",
+  ];
+
+  let result = `./docs/creatures/${images[Math.floor(Math.random() * images.length)]}.png`
+  return result;
+}
+
+Creature.prototype.newCreature = function() {
+  this.character = this.randomizeImage();
+  let str = Math.floor(Math.random() * 10);
+  let def = Math.floor(Math.random() * (10 - str))
+  let agi = 10 - str - def;
+  this.str = 10 + str;
+  this.def = 10 + def;
+  this.agi = 10 + agi;
+  this.attacks.attackClose = Math.floor(Math.random() * 8);
+  this.attacks.attackFar = Math.max(Math.floor(Math.random() * (9 - this.attacks.attackClose)), 1);
+  this.attacks.attackMid = Math.max(10 - this.attacks.attackClose - this.attacks.attackFar, 1);
+};
 
 Creature.prototype.updateStats = function(armor) {
   this.str = 10 + armor.str;
@@ -597,7 +614,6 @@ function Game() {
   equipment.addArmor();
   equipment.addArmor();
   equipment.addArmor();
-  // let playerCreature = new Creature(pos = 200, character = './docs/creatures/BigFish.png');
   let playerCreature = new Creature(pos = 200, character = './docs/creatures/BigFishPlayer.png');
   let aiCreature = new Creature(pos = 500);
   let gameSpeed = 0;
@@ -729,6 +745,7 @@ GameView.prototype.switchScreen = function switchScreen(gameView) {
     this.canvas.classList.add("back-image-layers-hills");
 
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.game.aiCreature().newCreature();
     new PreparationView(this.game, this.ctx, this.canvas, gameView).start();
   } else {
     this.game.setScreen("battle");
@@ -761,8 +778,6 @@ module.exports = GameView;
 
 const Game = __webpack_require__(/*! ./game */ "./src/game.js");
 const TutorialView = __webpack_require__(/*! ./tutorialView */ "./src/tutorialView.js");
-// const PreparationView = require('./preparationView/preparationView');
-// const GameView = require('./gameView');
 
 document.addEventListener("DOMContentLoaded", function(){
   const canvas = document.getElementById("myCanvas");
@@ -771,8 +786,6 @@ document.addEventListener("DOMContentLoaded", function(){
   const ctx = canvas.getContext("2d");
 
   let game = new Game();
-  // let gameView = new GameView(game, ctx, canvas);
-  // new PreparationView(game, ctx, canvas, gameView);
   new TutorialView(game, ctx, canvas);
 });
 
@@ -1250,6 +1263,7 @@ module.exports = Equipment;
 /***/ (function(module, exports) {
 
 function OpponentPopUp(game, ctx) {
+  let aiCreature = game.aiCreature();
   ctx.fillStyle = "rgba(77, 77, 77, 1)";
   ctx.fillRect(50, 50, 700, 400);
   ctx.fillStyle = "rgba(246, 241, 198, 1)";
@@ -1259,11 +1273,42 @@ function OpponentPopUp(game, ctx) {
   ctx.font = "italic 20pt Arial";
   ctx.fillText("~~ Next Opponent ~~", 285, 100);
 
+  let aiTiming = Math.floor(aiCreature.animationFrame / 4); 
+
+  let aiSpriteX = 512 * (aiTiming % 6);
+  let aiSpriteY = 0;
+  switch (aiSpriteX) {
+    case 1536:
+      aiSpriteX = 1024;
+      aiSpriteY = 512;
+      break;
+    case 2048:
+      aiSpriteX = 512;
+      aiSpriteY = 512;
+      break;
+    case 2560:
+      aiSpriteX = 0;
+      aiSpriteY = 512;
+      break;
+  }
+
+  ctx.drawImage(
+    game.aiCreature().creatureImage,
+    aiSpriteX, aiSpriteY, 512, 512,
+    75, 100, 200, 200
+  );
+
+  aiCreature.animationFrameStep();
+
   ctx.font = "italic 14pt Arial";
-  ctx.fillText(" * Armors add to your creature's base stats.", 75, 140);
-  ctx.fillText(" * Strength: Increases your damage dealt by 10% each.", 75, 180);
-  ctx.fillText(" * Defense: Reduces your incoming damage by 10% each.", 75, 220);
-  ctx.fillText(" * Agility: Reduces the cooldown between attacks.", 75, 260);
+  ctx.fillText(" * Attacks:", 275, 180);
+  ctx.fillText(`Close: ${aiCreature.attacks.attackClose},
+                Medium: ${aiCreature.attacks.attackMid},
+                Far: ${aiCreature.attacks.attackFar}`, 275, 220);
+  ctx.fillText(" * Stats:", 275, 260);
+  ctx.fillText(`Str: ${aiCreature.str},
+                Def: ${aiCreature.def},
+                Agi: ${aiCreature.agi}`, 275, 300);
 }
 
 module.exports = OpponentPopUp;
@@ -1351,7 +1396,7 @@ PreparationView.prototype.handleClick = function(e) {
   // console.log(this.canvas.layerY);
   // console.log(this.canvas.offsetTop);
 
-  console.log(`${clickX}, ${clickY}`)
+  // console.log(`${clickX}, ${clickY}`)
 
   // If the user clicks on the "left" arrow
   if (clickX > 139 && clickX < 178) {
@@ -1382,8 +1427,8 @@ PreparationView.prototype.handleClick = function(e) {
   }
 
   // If the user clicks the "Next Battle" button
-  if (clickX > 604 && clickX < 778
-      && clickY > 377 && clickY < 402) {
+  if (clickX > 599 && clickX < 786
+      && clickY > 369 && clickY < 411) {
         document.removeEventListener("click", this.handleClick);
         document.removeEventListener("mousemove", this.handleCursor);
         cancelAnimationFrame(this.animationId);
@@ -1693,7 +1738,6 @@ TutorialView.prototype.handleClick = function(e) {
       this.handleSkip();      
     // If the user clicks the Next button
     } else if (clickX > 224 && clickX < 296) {
-      // console.log('correctNext')
       this.handleNext();
     }
   }
@@ -1755,7 +1799,6 @@ TutorialView.prototype.handleSkip = function(e) {
   this.canvas.classList.add("back-image-layers-hills");
   const backgroundLayerFront = document.getElementById("bg-front");
   backgroundLayerFront.classList.add("front-image-layers-hills");
-  // console.log(this.gameVeiw);
   new PreparationView(this.game, this.ctx, this.canvas, this.gameView).start(); 
 
 };

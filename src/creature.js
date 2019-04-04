@@ -1,6 +1,6 @@
 function Creature(
   position = 200,
-  character = "./docs/creatures/OceanosL.png",
+  character = this.randomizeImage(),
   nextPosition = position,
   strength = 14,
   defense = 13,
@@ -11,9 +11,6 @@ function Creature(
   weapon = null,
   armor = null,
   attacks = {
-    // {rangeMin: 0, rangeMax: 150, damage: 10},
-    // {rangeMin: 151, rangeMax: 400, damage: 10},
-    // {rangeMid: 401, rangeMax: 700, damage: 5},
     attackClose: 4,
     attackMid: 3,
     attackFar: 3,
@@ -64,6 +61,32 @@ function Creature(
 Creature.prototype.resetPos = function(newPos) {
   this.pos = newPos;
 }
+
+Creature.prototype.randomizeImage = function() {
+  let images = [
+    "BigFish",
+    "EarthD",
+    "EldritchOvermind",
+    "OceanosL",
+    "Unibun1_1",
+  ];
+
+  let result = `./docs/creatures/${images[Math.floor(Math.random() * images.length)]}.png`
+  return result;
+}
+
+Creature.prototype.newCreature = function() {
+  this.character = this.randomizeImage();
+  let str = Math.floor(Math.random() * 10);
+  let def = Math.floor(Math.random() * (10 - str))
+  let agi = 10 - str - def;
+  this.str = 10 + str;
+  this.def = 10 + def;
+  this.agi = 10 + agi;
+  this.attacks.attackClose = Math.floor(Math.random() * 8);
+  this.attacks.attackFar = Math.max(Math.floor(Math.random() * (9 - this.attacks.attackClose)), 1);
+  this.attacks.attackMid = Math.max(10 - this.attacks.attackClose - this.attacks.attackFar, 1);
+};
 
 Creature.prototype.updateStats = function(armor) {
   this.str = 10 + armor.str;
