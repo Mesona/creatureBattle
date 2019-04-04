@@ -14,7 +14,7 @@ function Combat(game) {
   
   if (playerCreature.attackTimer < 0) {
     playerCreature.attackTimer += 25;
-    if (creatureDistance < 151) {
+    if (creatureDistance < 201) {
       aiCreature.currentHP -= (playerCreature.attack('close') * playerCreatureDamageModifier / aiCreatureDefenseModifier);
     } else if (creatureDistance < 401) {
       aiCreature.currentHP -= (playerCreature.attack('mid') * playerCreatureDamageModifier / aiCreatureDefenseModifier);

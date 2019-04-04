@@ -12,6 +12,20 @@ function DescriptionBox(game, ctx, canvas) {
   ctx.fillText(getLines(ctx, this.game.armorDescription(), 350), 425, 146);
   ctx.fillText(getLines(ctx, this.game.getArmorStats(), 350), 425, 165);
   ctx.fillText(getLines(ctx, this.game.getBehaviorDescription(), 350), 425, 240);
+  
+  ctx.beginPath();
+  ctx.arc(771, 53, 15, 0, 2 * Math.PI, false);
+  ctx.fillStyle = "rgba(255, 0, 0, 1)";
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.arc(771, 147, 15, 0, 2 * Math.PI, false);
+  ctx.fill();
+
+  ctx.fillStyle = "rgb(241, 242, 216)";
+  ctx.font = "italic 16pt Arial";
+  ctx.fillText(getLines(ctx, '?', 350), 765, 60);
+  ctx.fillText(getLines(ctx, '?', 350), 765, 154);
 }
 
 function getLines(ctx, text, maxWidth) {

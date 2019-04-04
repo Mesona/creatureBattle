@@ -4,17 +4,10 @@ function CreatureBox(game, ctx, canvas) {
   this.canvas = canvas;
   let playerCreature = this.game.playerCreature();
 
-  // Box border to see where it lies on the canvas
-  // ctx.fillStyle = "purple";
-  // ctx.fillRect(0, 300, canvas.width, 200);
-  // ctx.clearRect(10, 310, (canvas.width - 20), 180);
-
   ctx.clearRect(350, 290, 200, 200);
 
   let timing = Math.floor(playerCreature.animationFrame / 4); 
 
-  // WORKING< FOR TESTINGS SMALLER IDLE ANIMATION
-  // let playerSpriteY = 512 * (Math.floor(timing / 9) % 2);
   let playerSpriteX = 512 * (timing % 6);
   let playerSpriteY = 0;
   switch (playerSpriteX) {
@@ -46,6 +39,10 @@ function CreatureBox(game, ctx, canvas) {
   ctx.fillStyle = "rgba(255, 0, 0, 1)";
   ctx.font = "italic 26pt Arial";
   ctx.fillText("Next battle: ", 600, 400);
+
+  ctx.fillStyle = "rgb(255, 0, 50)";
+  ctx.font = "italic 18pt Arial";
+  ctx.fillText("View opponent", 600, 475);
 }
 
 

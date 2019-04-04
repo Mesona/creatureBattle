@@ -1,15 +1,58 @@
 const EquipBox = require('./equipBox');
 const CreatureBox = require('./creatureBox');
 const DescriptionBox = require('./descriptionBox');
+const WeaponPopUp = require('./weaponPopUp');
+const ArmorPopUp = require('./armorPopUp');
+const OpponentPopUp = require('./opponentPopUp');
 
 function PreparationView(game, ctx, canvas, gameView) {
   this.game = game;
   this.canvas = canvas;
   this.ctx = ctx;
   this.gameView = gameView;
+  this.weaponPopUp = false;
+  this.armorPopUp = false;
+  this.opponentPopUp = false;
 
   this.handleClick = this.handleClick.bind(this);
   this.handleCursor = this.handleCursor.bind(this);
+}
+
+PreparationView.prototype.swapValue = function(value) {
+  switch (value) {
+    case 'weapon':
+      if (this.weaponPopUp === true) {
+        this.weaponPopUp = false;
+        this.canvas.width = this.canvas.width; // Clears the canvas
+      } else {
+        this.armorPopUp = false;
+        this.opponentPopUp = false;
+        this.weaponPopUp = true;
+      }
+      break;
+    case 'armor':
+      if (this.armorPopUp === true) {
+        this.armorPopUp = false;
+        this.canvas.width = this.canvas.width; // Clears the canvas
+      } else {
+        this.weaponPopUp = false;
+        this.opponentPopUp = false;
+        this.armorPopUp = true;
+      }
+      break;
+    case 'opponent':
+      if (this.opponentPopUp === true) {
+        this.opponentPopUp = false;
+        this.canvas.width = this.canvas.width; // Clears the canvas
+      } else {
+        this.weaponPopUp = false;
+        this.armorPopUp = false;
+        this.opponentPopUp = true;
+      }
+      break;
+    default:
+      return null;
+  }
 }
 
 PreparationView.prototype.start = function start() {
@@ -23,14 +66,13 @@ PreparationView.prototype.start = function start() {
 PreparationView.prototype.handleClick = function(e) {
   let clickX = e.pageX - this.canvas.offsetLeft;
   let clickY = e.pageY - (document.getElementById('height-test').offsetTop);
-  // console.log('-----')
-  // console.log(document.getElementById('height-test').offsetTop)
+  // X-Y value modifiers in case I need to update things in the future
   // console.log(this.ctx);
   // console.log(this.canvas.pageY);
   // console.log(this.canvas.layerY);
   // console.log(this.canvas.offsetTop);
-  // console.log('-----)
-  // console.log(`${clickX}, ${clickY}`)
+
+  console.log(`${clickX}, ${clickY}`)
 
   // If the user clicks on the "left" arrow
   if (clickX > 139 && clickX < 178) {
@@ -40,6 +82,7 @@ PreparationView.prototype.handleClick = function(e) {
     // of the armors select
     } else if (clickY > 122 && clickY < 159) {
       this.game.rotateArmors("left");
+    // of the behavior select
     } else if (clickY > 219 && clickY < 262) {
       this.game.rotateBehavior("left");
     }
@@ -67,12 +110,24 @@ PreparationView.prototype.handleClick = function(e) {
         cancelAnimationFrame(this.animationId);
         this.finishPreparation();
   }    
+
+  // If the user clicks of the "?" near Weapon
+  if (clickX > 757 && clickX <  791 && clickY > 39 && clickY < 72) {
+    this.swapValue('weapon');
+  // If the user clicks of the "?" near Armor
+  } else if (clickX > 757 && clickX <  791 && clickY > 134 && clickY < 169) {
+    this.swapValue('armor');
+  }
+
+  // If the user clicks the "View Opponent" button
+  if (clickX > 599 && clickX < 770 && clickY > 457 && clickY < 491) {
+    this.swapValue('opponent');
+  }
 }
 
 PreparationView.prototype.handleCursor = function(e) {
   let mouseX = e.pageX - this.canvas.offsetLeft;
   let mouseY = e.pageY - (document.getElementById('height-test').offsetTop);
-  // console.log(`${mouseX}, ${mouseY}`)
 
   // If the user hovers over the X axis of the left arrow buttons 
   if (mouseX > 139 && mouseX < 178) {
@@ -114,8 +169,23 @@ PreparationView.prototype.handleCursor = function(e) {
     } else {
       this.canvas.classList.remove('cursor-pointer');
     }
-  // If the user hovers of the "Next Battle" button
+  // If the user hovers over the "Next Battle" button
   } else if (mouseX > 599 && mouseX < 786 && mouseY > 369 && mouseY < 411) {
+    if (!this.canvas.classList.contains('cursor-pointer')) {
+      this.canvas.classList.add('cursor-pointer');
+    } 
+  // If the user hovers over the "?" near Weapon
+  } else if (mouseX > 757 && mouseX <  791 && mouseY > 39 && mouseY < 72) {
+    if (!this.canvas.classList.contains('cursor-pointer')) {
+      this.canvas.classList.add('cursor-pointer');
+    } 
+  // If the user hovers over the "?" near Armor
+  } else if (mouseX > 757 && mouseX <  791 && mouseY > 134 && mouseY < 169) {
+    if (!this.canvas.classList.contains('cursor-pointer')) {
+      this.canvas.classList.add('cursor-pointer');
+    } 
+  // If the user hovers over the "View Opponent" button
+  } else if (mouseX > 599 && mouseX < 770 && mouseY > 457 && mouseY < 491) {
     if (!this.canvas.classList.contains('cursor-pointer')) {
       this.canvas.classList.add('cursor-pointer');
     } 
@@ -136,9 +206,17 @@ PreparationView.prototype.animate = function animate(time) {
 
 PreparationView.prototype.step = function step(timeDelta) {
   if (this.game.getGameSpeed() % 4 === 0) {
-    EquipBox(this.game, this.ctx, this.canvas);
-    CreatureBox(this.game, this.ctx, this.canvas);
-    DescriptionBox(this.game, this.ctx, this.canvas);
+    if (this.weaponPopUp === true) {
+      WeaponPopUp(this.ctx);
+    } else if (this.armorPopUp === true) {
+      ArmorPopUp(this.ctx);
+    } else if (this.opponentPopUp === true) {
+      OpponentPopUp(this.game, this.ctx);
+    } else {
+      EquipBox(this.game, this.ctx, this.canvas);
+      CreatureBox(this.game, this.ctx, this.canvas);
+      DescriptionBox(this.game, this.ctx, this.canvas);
+    }
     this.game.gameSpeedStep();
   } else {
     this.game.gameSpeedStep();

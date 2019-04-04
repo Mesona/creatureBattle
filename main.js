@@ -222,7 +222,7 @@ function Combat(game) {
   
   if (playerCreature.attackTimer < 0) {
     playerCreature.attackTimer += 25;
-    if (creatureDistance < 151) {
+    if (creatureDistance < 201) {
       aiCreature.currentHP -= (playerCreature.attack('close') * playerCreatureDamageModifier / aiCreatureDefenseModifier);
     } else if (creatureDistance < 401) {
       aiCreature.currentHP -= (playerCreature.attack('mid') * playerCreatureDamageModifier / aiCreatureDefenseModifier);
@@ -861,6 +861,34 @@ module.exports = Armor;
 
 /***/ }),
 
+/***/ "./src/preparationView/armorPopUp.js":
+/*!*******************************************!*\
+  !*** ./src/preparationView/armorPopUp.js ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function ArmorPopUp(ctx) {
+  ctx.fillStyle = "rgba(77, 77, 77, 1)";
+  ctx.fillRect(50, 50, 700, 400);
+  ctx.fillStyle = "rgba(246, 241, 198, 1)";
+  ctx.fillRect(55, 55, 690, 390);
+
+  ctx.fillStyle = "rgba(255, 0, 0, 1)";
+  ctx.font = "italic 20pt Arial";
+  ctx.fillText("~~ Armors ~~", 315, 100);
+
+  ctx.font = "italic 14pt Arial";
+  ctx.fillText(" * Armors add to your creature's base stats.", 75, 140);
+  ctx.fillText(" * Strength: Increases your damage dealt by 10% each.", 75, 180);
+  ctx.fillText(" * Defense: Reduces your incoming damage by 10% each.", 75, 220);
+  ctx.fillText(" * Agility: Reduces the cooldown between attacks.", 75, 260);
+}
+
+module.exports = ArmorPopUp;
+
+/***/ }),
+
 /***/ "./src/preparationView/creatureBox.js":
 /*!********************************************!*\
   !*** ./src/preparationView/creatureBox.js ***!
@@ -874,17 +902,10 @@ function CreatureBox(game, ctx, canvas) {
   this.canvas = canvas;
   let playerCreature = this.game.playerCreature();
 
-  // Box border to see where it lies on the canvas
-  // ctx.fillStyle = "purple";
-  // ctx.fillRect(0, 300, canvas.width, 200);
-  // ctx.clearRect(10, 310, (canvas.width - 20), 180);
-
   ctx.clearRect(350, 290, 200, 200);
 
   let timing = Math.floor(playerCreature.animationFrame / 4); 
 
-  // WORKING< FOR TESTINGS SMALLER IDLE ANIMATION
-  // let playerSpriteY = 512 * (Math.floor(timing / 9) % 2);
   let playerSpriteX = 512 * (timing % 6);
   let playerSpriteY = 0;
   switch (playerSpriteX) {
@@ -916,6 +937,10 @@ function CreatureBox(game, ctx, canvas) {
   ctx.fillStyle = "rgba(255, 0, 0, 1)";
   ctx.font = "italic 26pt Arial";
   ctx.fillText("Next battle: ", 600, 400);
+
+  ctx.fillStyle = "rgb(255, 0, 50)";
+  ctx.font = "italic 18pt Arial";
+  ctx.fillText("View opponent", 600, 475);
 }
 
 
@@ -946,6 +971,20 @@ function DescriptionBox(game, ctx, canvas) {
   ctx.fillText(getLines(ctx, this.game.armorDescription(), 350), 425, 146);
   ctx.fillText(getLines(ctx, this.game.getArmorStats(), 350), 425, 165);
   ctx.fillText(getLines(ctx, this.game.getBehaviorDescription(), 350), 425, 240);
+  
+  ctx.beginPath();
+  ctx.arc(771, 53, 15, 0, 2 * Math.PI, false);
+  ctx.fillStyle = "rgba(255, 0, 0, 1)";
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.arc(771, 147, 15, 0, 2 * Math.PI, false);
+  ctx.fill();
+
+  ctx.fillStyle = "rgb(241, 242, 216)";
+  ctx.font = "italic 16pt Arial";
+  ctx.fillText(getLines(ctx, '?', 350), 765, 60);
+  ctx.fillText(getLines(ctx, '?', 350), 765, 154);
 }
 
 function getLines(ctx, text, maxWidth) {
@@ -1203,6 +1242,34 @@ module.exports = Equipment;
 
 /***/ }),
 
+/***/ "./src/preparationView/opponentPopUp.js":
+/*!**********************************************!*\
+  !*** ./src/preparationView/opponentPopUp.js ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function OpponentPopUp(game, ctx) {
+  ctx.fillStyle = "rgba(77, 77, 77, 1)";
+  ctx.fillRect(50, 50, 700, 400);
+  ctx.fillStyle = "rgba(246, 241, 198, 1)";
+  ctx.fillRect(55, 55, 690, 390);
+
+  ctx.fillStyle = "rgba(255, 0, 0, 1)";
+  ctx.font = "italic 20pt Arial";
+  ctx.fillText("~~ Next Opponent ~~", 285, 100);
+
+  ctx.font = "italic 14pt Arial";
+  ctx.fillText(" * Armors add to your creature's base stats.", 75, 140);
+  ctx.fillText(" * Strength: Increases your damage dealt by 10% each.", 75, 180);
+  ctx.fillText(" * Defense: Reduces your incoming damage by 10% each.", 75, 220);
+  ctx.fillText(" * Agility: Reduces the cooldown between attacks.", 75, 260);
+}
+
+module.exports = OpponentPopUp;
+
+/***/ }),
+
 /***/ "./src/preparationView/preparationView.js":
 /*!************************************************!*\
   !*** ./src/preparationView/preparationView.js ***!
@@ -1213,15 +1280,58 @@ module.exports = Equipment;
 const EquipBox = __webpack_require__(/*! ./equipBox */ "./src/preparationView/equipBox.js");
 const CreatureBox = __webpack_require__(/*! ./creatureBox */ "./src/preparationView/creatureBox.js");
 const DescriptionBox = __webpack_require__(/*! ./descriptionBox */ "./src/preparationView/descriptionBox.js");
+const WeaponPopUp = __webpack_require__(/*! ./weaponPopUp */ "./src/preparationView/weaponPopUp.js");
+const ArmorPopUp = __webpack_require__(/*! ./armorPopUp */ "./src/preparationView/armorPopUp.js");
+const OpponentPopUp = __webpack_require__(/*! ./opponentPopUp */ "./src/preparationView/opponentPopUp.js");
 
 function PreparationView(game, ctx, canvas, gameView) {
   this.game = game;
   this.canvas = canvas;
   this.ctx = ctx;
   this.gameView = gameView;
+  this.weaponPopUp = false;
+  this.armorPopUp = false;
+  this.opponentPopUp = false;
 
   this.handleClick = this.handleClick.bind(this);
   this.handleCursor = this.handleCursor.bind(this);
+}
+
+PreparationView.prototype.swapValue = function(value) {
+  switch (value) {
+    case 'weapon':
+      if (this.weaponPopUp === true) {
+        this.weaponPopUp = false;
+        this.canvas.width = this.canvas.width; // Clears the canvas
+      } else {
+        this.armorPopUp = false;
+        this.opponentPopUp = false;
+        this.weaponPopUp = true;
+      }
+      break;
+    case 'armor':
+      if (this.armorPopUp === true) {
+        this.armorPopUp = false;
+        this.canvas.width = this.canvas.width; // Clears the canvas
+      } else {
+        this.weaponPopUp = false;
+        this.opponentPopUp = false;
+        this.armorPopUp = true;
+      }
+      break;
+    case 'opponent':
+      if (this.opponentPopUp === true) {
+        this.opponentPopUp = false;
+        this.canvas.width = this.canvas.width; // Clears the canvas
+      } else {
+        this.weaponPopUp = false;
+        this.armorPopUp = false;
+        this.opponentPopUp = true;
+      }
+      break;
+    default:
+      return null;
+  }
 }
 
 PreparationView.prototype.start = function start() {
@@ -1235,14 +1345,13 @@ PreparationView.prototype.start = function start() {
 PreparationView.prototype.handleClick = function(e) {
   let clickX = e.pageX - this.canvas.offsetLeft;
   let clickY = e.pageY - (document.getElementById('height-test').offsetTop);
-  // console.log('-----')
-  // console.log(document.getElementById('height-test').offsetTop)
+  // X-Y value modifiers in case I need to update things in the future
   // console.log(this.ctx);
   // console.log(this.canvas.pageY);
   // console.log(this.canvas.layerY);
   // console.log(this.canvas.offsetTop);
-  // console.log('-----)
-  // console.log(`${clickX}, ${clickY}`)
+
+  console.log(`${clickX}, ${clickY}`)
 
   // If the user clicks on the "left" arrow
   if (clickX > 139 && clickX < 178) {
@@ -1252,6 +1361,7 @@ PreparationView.prototype.handleClick = function(e) {
     // of the armors select
     } else if (clickY > 122 && clickY < 159) {
       this.game.rotateArmors("left");
+    // of the behavior select
     } else if (clickY > 219 && clickY < 262) {
       this.game.rotateBehavior("left");
     }
@@ -1279,12 +1389,24 @@ PreparationView.prototype.handleClick = function(e) {
         cancelAnimationFrame(this.animationId);
         this.finishPreparation();
   }    
+
+  // If the user clicks of the "?" near Weapon
+  if (clickX > 757 && clickX <  791 && clickY > 39 && clickY < 72) {
+    this.swapValue('weapon');
+  // If the user clicks of the "?" near Armor
+  } else if (clickX > 757 && clickX <  791 && clickY > 134 && clickY < 169) {
+    this.swapValue('armor');
+  }
+
+  // If the user clicks the "View Opponent" button
+  if (clickX > 599 && clickX < 770 && clickY > 457 && clickY < 491) {
+    this.swapValue('opponent');
+  }
 }
 
 PreparationView.prototype.handleCursor = function(e) {
   let mouseX = e.pageX - this.canvas.offsetLeft;
   let mouseY = e.pageY - (document.getElementById('height-test').offsetTop);
-  // console.log(`${mouseX}, ${mouseY}`)
 
   // If the user hovers over the X axis of the left arrow buttons 
   if (mouseX > 139 && mouseX < 178) {
@@ -1326,8 +1448,23 @@ PreparationView.prototype.handleCursor = function(e) {
     } else {
       this.canvas.classList.remove('cursor-pointer');
     }
-  // If the user hovers of the "Next Battle" button
+  // If the user hovers over the "Next Battle" button
   } else if (mouseX > 599 && mouseX < 786 && mouseY > 369 && mouseY < 411) {
+    if (!this.canvas.classList.contains('cursor-pointer')) {
+      this.canvas.classList.add('cursor-pointer');
+    } 
+  // If the user hovers over the "?" near Weapon
+  } else if (mouseX > 757 && mouseX <  791 && mouseY > 39 && mouseY < 72) {
+    if (!this.canvas.classList.contains('cursor-pointer')) {
+      this.canvas.classList.add('cursor-pointer');
+    } 
+  // If the user hovers over the "?" near Armor
+  } else if (mouseX > 757 && mouseX <  791 && mouseY > 134 && mouseY < 169) {
+    if (!this.canvas.classList.contains('cursor-pointer')) {
+      this.canvas.classList.add('cursor-pointer');
+    } 
+  // If the user hovers over the "View Opponent" button
+  } else if (mouseX > 599 && mouseX < 770 && mouseY > 457 && mouseY < 491) {
     if (!this.canvas.classList.contains('cursor-pointer')) {
       this.canvas.classList.add('cursor-pointer');
     } 
@@ -1348,9 +1485,17 @@ PreparationView.prototype.animate = function animate(time) {
 
 PreparationView.prototype.step = function step(timeDelta) {
   if (this.game.getGameSpeed() % 4 === 0) {
-    EquipBox(this.game, this.ctx, this.canvas);
-    CreatureBox(this.game, this.ctx, this.canvas);
-    DescriptionBox(this.game, this.ctx, this.canvas);
+    if (this.weaponPopUp === true) {
+      WeaponPopUp(this.ctx);
+    } else if (this.armorPopUp === true) {
+      ArmorPopUp(this.ctx);
+    } else if (this.opponentPopUp === true) {
+      OpponentPopUp(this.game, this.ctx);
+    } else {
+      EquipBox(this.game, this.ctx, this.canvas);
+      CreatureBox(this.game, this.ctx, this.canvas);
+      DescriptionBox(this.game, this.ctx, this.canvas);
+    }
     this.game.gameSpeedStep();
   } else {
     this.game.gameSpeedStep();
@@ -1465,6 +1610,35 @@ generateWeaponDescription = function() {
 
 
 module.exports = Weapon;
+
+/***/ }),
+
+/***/ "./src/preparationView/weaponPopUp.js":
+/*!********************************************!*\
+  !*** ./src/preparationView/weaponPopUp.js ***!
+  \********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function WeaponPopUp(ctx) {
+  ctx.fillStyle = "rgba(77, 77, 77, 1)";
+  ctx.fillRect(50, 50, 700, 400);
+  ctx.fillStyle = "rgba(246, 241, 198, 1)";
+  ctx.fillRect(55, 55, 690, 390);
+
+  ctx.fillStyle = "rgba(255, 0, 0, 1)";
+  ctx.font = "italic 20pt Arial";
+  ctx.fillText("~~ Weapons ~~", 315, 100);
+
+  ctx.font = "italic 14pt Arial";
+  ctx.fillText(" * Weapons deal a range of damage, from 1 to their value.", 75, 140);
+  ctx.fillText(" * Range is decided by the distance between your creature and your opponent.", 75, 180);
+  ctx.fillText(" * Close Range: If the creatures are within 200 pixels of each other.", 75, 220);
+  ctx.fillText(" * Medium Range: If the creatures are between 201 and 400 pixels of each other.", 75, 260);
+  ctx.fillText(" * Far Range: If the creatures are over 400 pixels from each other.", 75, 300);
+}
+
+module.exports = WeaponPopUp;
 
 /***/ }),
 
