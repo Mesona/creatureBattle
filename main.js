@@ -861,7 +861,7 @@ generateArmorDescription = function() {
   const possibilities = [
     "This shifts sizes to adjust to its wearer",
     "Provides a modicrum of protection",
-    "Stlyish AND functional!",
+    "Stylish AND functional!",
     "Smells faintly of apples",
   ]
 
@@ -1338,8 +1338,10 @@ function PreparationView(game, ctx, canvas, gameView) {
   this.armorPopUp = false;
   this.opponentPopUp = false;
 
-  this.handleClick = this.handleClick.bind(this);
+  this.prepClick = this.prepClick.bind(this);
   this.handleCursor = this.handleCursor.bind(this);
+  this.popupClick = this.popupClick.bind(this);
+  this.popupCursor = this.popupCursor.bind(this);
 }
 
 PreparationView.prototype.swapValue = function(value) {
@@ -1348,6 +1350,8 @@ PreparationView.prototype.swapValue = function(value) {
       if (this.weaponPopUp === true) {
         this.weaponPopUp = false;
         this.canvas.width = this.canvas.width; // Clears the canvas
+        document.addEventListener('click', this.prepClick, false);
+        document.addEventListener('mousemove', this.handleCursor, false);
       } else {
         this.armorPopUp = false;
         this.opponentPopUp = false;
@@ -1358,6 +1362,8 @@ PreparationView.prototype.swapValue = function(value) {
       if (this.armorPopUp === true) {
         this.armorPopUp = false;
         this.canvas.width = this.canvas.width; // Clears the canvas
+        document.addEventListener('click', this.prepClick, false);
+        document.addEventListener('mousemove', this.handleCursor, false);
       } else {
         this.weaponPopUp = false;
         this.opponentPopUp = false;
@@ -1368,6 +1374,8 @@ PreparationView.prototype.swapValue = function(value) {
       if (this.opponentPopUp === true) {
         this.opponentPopUp = false;
         this.canvas.width = this.canvas.width; // Clears the canvas
+        document.addEventListener('click', this.prepClick, false);
+        document.addEventListener('mousemove', this.handleCursor, false);
       } else {
         this.weaponPopUp = false;
         this.armorPopUp = false;
@@ -1377,77 +1385,99 @@ PreparationView.prototype.swapValue = function(value) {
     default:
       return null;
   }
+  document.removeEventListener("click", this.prepClick);
+  document.removeEventListener("mousemove", this.handleCursor);
+  // document.addEventListener("click", this.popupClick);
+  // document.addEventListener("mousemove", this.popupCursor);
 }
+
 
 PreparationView.prototype.start = function start() {
   this.lastTime = 0;
 
-  document.addEventListener('click', this.handleClick, false);
+  document.addEventListener('click', this.prepClick, false);
   document.addEventListener('mousemove', this.handleCursor, false);
   requestAnimationFrame(this.animate.bind(this));
 };
 
-PreparationView.prototype.handleClick = function(e) {
-  let clickX = e.pageX - this.canvas.offsetLeft;
-  let clickY = e.pageY - (document.getElementById('height-test').offsetTop);
+
+PreparationView.prototype.prepClick = function(e) {
+  let mouseX = e.pageX - this.canvas.offsetLeft;
+  let mouseY = e.pageY - (document.getElementById('height-test').offsetTop);
   // X-Y value modifiers in case I need to update things in the future
   // console.log(this.ctx);
   // console.log(this.canvas.pageY);
   // console.log(this.canvas.layerY);
   // console.log(this.canvas.offsetTop);
 
-  // console.log(`${clickX}, ${clickY}`)
+  // console.log(`${mouseX}, ${mouseY}`)
 
   // If the user clicks on the "left" arrow
-  if (clickX > 139 && clickX < 178) {
+  if (mouseX > 139 && mouseX < 178) {
     // of the weapons select
-    if (clickY > 27 && clickY < 66) {
+    if (mouseY > 27 && mouseY < 66) {
       this.game.rotateWeapons("left");
     // of the armors select
-    } else if (clickY > 122 && clickY < 159) {
+    } else if (mouseY > 122 && mouseY < 159) {
       this.game.rotateArmors("left");
     // of the behavior select
-    } else if (clickY > 219 && clickY < 262) {
+    } else if (mouseY > 219 && mouseY < 262) {
       this.game.rotateBehavior("left");
     }
   }
 
   // If the user clicks on the "right" arrow
-  if (clickX > 338 && clickX < 378) {
+  if (mouseX > 338 && mouseX < 378) {
     // of the weapons select
-    if (clickY > 27 && clickY < 66) {
+    if (mouseY > 27 && mouseY < 66) {
       this.game.rotateWeapons("right");
     // of the armors select
-    } else if (clickY > 122 && clickY < 162) {
+    } else if (mouseY > 122 && mouseY < 162) {
       this.game.rotateArmors("right");
     // of the behavior select
-    } else if (clickY > 219 && clickY < 262) {
+    } else if (mouseY > 219 && mouseY < 262) {
       this.game.rotateBehavior("right");
     }
   }
 
   // If the user clicks the "Next Battle" button
-  if (clickX > 599 && clickX < 786
-      && clickY > 369 && clickY < 411) {
-        document.removeEventListener("click", this.handleClick);
+  if (mouseX > 599 && mouseX < 786
+      && mouseY > 369 && mouseY < 411) {
+        document.removeEventListener("click", this.prepClick);
         document.removeEventListener("mousemove", this.handleCursor);
         cancelAnimationFrame(this.animationId);
         this.finishPreparation();
   }    
 
-  // If the user clicks of the "?" near Weapon
-  if (clickX > 757 && clickX <  791 && clickY > 39 && clickY < 72) {
+  // If the user clicks on the "?" near Weapon
+  if (mouseX > 757 && mouseX <  791 && mouseY > 39 && mouseY < 72) {
     this.swapValue('weapon');
-  // If the user clicks of the "?" near Armor
-  } else if (clickX > 757 && clickX <  791 && clickY > 134 && clickY < 169) {
+  // If the user clicks on the "?" near Armor
+  } else if (mouseX > 757 && mouseX <  791 && mouseY > 134 && mouseY < 169) {
     this.swapValue('armor');
   }
 
-  // If the user clicks the "View Opponent" button
-  if (clickX > 599 && clickX < 770 && clickY > 457 && clickY < 491) {
+  // If the user clicks on the "View Opponent" button
+  if (mouseX > 599 && mouseX < 770 && mouseY > 457 && mouseY < 491) {
     this.swapValue('opponent');
   }
 }
+
+PreparationView.prototype.popupClick = function(e) {
+  let mouseX = e.pageX - this.canvas.offsetLeft;
+  let mouseY = e.pageY - (document.getElementById('height-test').offsetTop);
+
+   // If the user clicks on the "?" near Weapon
+   if (mouseX > 757 && mouseX <  791 && mouseY > 39 && mouseY < 72) {
+    this.swapValue('weapon');
+  // If the user clicks on the "?" near Armor
+  } else if (mouseX > 757 && mouseX <  791 && mouseY > 134 && mouseY < 169) {
+    this.swapValue('armor');
+  // If the user clicks the "View Opponent" button
+  } else if (mouseX > 599 && mouseX < 770 && mouseY > 457 && mouseY < 491) {
+      this.swapValue('opponent');
+  }
+};
 
 PreparationView.prototype.handleCursor = function(e) {
   let mouseX = e.pageX - this.canvas.offsetLeft;
@@ -1515,6 +1545,28 @@ PreparationView.prototype.handleCursor = function(e) {
     } 
   } else {
     this.canvas.classList.remove('cursor-pointer');
+  }
+}
+
+PreparationView.prototype.popupCursor = function(e) {
+  let mouseX = e.pageX - this.canvas.offsetLeft;
+  let mouseY = e.pageY - (document.getElementById('height-test').offsetTop);
+
+  // If the user hovers over the "?" near Weapon
+  if (mouseX > 757 && mouseX <  791 && mouseY > 39 && mouseY < 72) {
+    if (!this.canvas.classList.contains('cursor-pointer')) {
+      this.canvas.classList.add('cursor-pointer');
+    } 
+  // If the user hovers over the "?" near Armor
+  } else if (mouseX > 757 && mouseX <  791 && mouseY > 134 && mouseY < 169) {
+    if (!this.canvas.classList.contains('cursor-pointer')) {
+      this.canvas.classList.add('cursor-pointer');
+    } 
+  // If the user hovers over the "View Opponent" button
+  } else if (mouseX > 599 && mouseX < 770 && mouseY > 457 && mouseY < 491) {
+    if (!this.canvas.classList.contains('cursor-pointer')) {
+      this.canvas.classList.add('cursor-pointer');
+    } 
   }
 }
 

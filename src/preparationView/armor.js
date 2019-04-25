@@ -48,7 +48,7 @@ generateArmorDescription = function() {
   const possibilities = [
     "This shifts sizes to adjust to its wearer",
     "Provides a modicrum of protection",
-    "Stlyish AND functional!",
+    "Stylish AND functional!",
     "Smells faintly of apples",
   ]
 
