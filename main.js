@@ -896,6 +896,10 @@ function ArmorPopUp(ctx) {
   ctx.fillText(" * Strength: Increases your damage dealt by 10% each.", 75, 180);
   ctx.fillText(" * Defense: Reduces your incoming damage by 10% each.", 75, 220);
   ctx.fillText(" * Agility: Reduces the cooldown between attacks.", 75, 260);
+
+  ctx.fillStyle = "rgba(0, 0, 0, 1)";
+  ctx.font = "italic 14pt Arial";
+  ctx.fillText("X", 718, 84); 
 }
 
 module.exports = ArmorPopUp;
@@ -1309,6 +1313,10 @@ function OpponentPopUp(game, ctx) {
   ctx.fillText(`Str: ${aiCreature.str},
                 Def: ${aiCreature.def},
                 Agi: ${aiCreature.agi}`, 275, 300);
+
+  ctx.fillStyle = "rgba(0, 0, 0, 1)";
+  ctx.font = "italic 14pt Arial";
+  ctx.fillText("X", 718, 84); 
 }
 
 module.exports = OpponentPopUp;
@@ -1339,9 +1347,21 @@ function PreparationView(game, ctx, canvas, gameView) {
   this.opponentPopUp = false;
 
   this.prepClick = this.prepClick.bind(this);
-  this.handleCursor = this.handleCursor.bind(this);
+  this.prepCursor = this.prepCursor.bind(this);
   this.popupClick = this.popupClick.bind(this);
   this.popupCursor = this.popupCursor.bind(this);
+  this.xClick = this.xClick.bind(this);
+  this.xCursor = this.xCursor.bind(this);
+  this.restoreEvents = this.restoreEvents.bind(this);
+}
+
+PreparationView.prototype.restoreEvents = function() {
+  document.addEventListener("click", this.prepClick);
+  document.addEventListener("mousemove", this.prepCursor);
+  document.removeEventListener("click", this.xClick);
+  document.removeEventListener("mousemove", this.xCursor);
+  document.addEventListener("click", this.popupClick);
+  document.addEventListener("mousemove", this.popupCursor);
 }
 
 PreparationView.prototype.swapValue = function(value) {
@@ -1350,9 +1370,10 @@ PreparationView.prototype.swapValue = function(value) {
       if (this.weaponPopUp === true) {
         this.weaponPopUp = false;
         this.canvas.width = this.canvas.width; // Clears the canvas
-        document.addEventListener('click', this.prepClick, false);
-        document.addEventListener('mousemove', this.handleCursor, false);
+        this.restoreEvents();
       } else {
+        document.addEventListener("click", this.xClick);
+        document.addEventListener("mousemove", this.xCursor);
         this.armorPopUp = false;
         this.opponentPopUp = false;
         this.weaponPopUp = true;
@@ -1362,9 +1383,10 @@ PreparationView.prototype.swapValue = function(value) {
       if (this.armorPopUp === true) {
         this.armorPopUp = false;
         this.canvas.width = this.canvas.width; // Clears the canvas
-        document.addEventListener('click', this.prepClick, false);
-        document.addEventListener('mousemove', this.handleCursor, false);
+        this.restoreEvents();
       } else {
+        document.addEventListener("click", this.xClick);
+        document.addEventListener("mousemove", this.xCursor);
         this.weaponPopUp = false;
         this.opponentPopUp = false;
         this.armorPopUp = true;
@@ -1374,31 +1396,51 @@ PreparationView.prototype.swapValue = function(value) {
       if (this.opponentPopUp === true) {
         this.opponentPopUp = false;
         this.canvas.width = this.canvas.width; // Clears the canvas
-        document.addEventListener('click', this.prepClick, false);
-        document.addEventListener('mousemove', this.handleCursor, false);
+        this.restoreEvents();
       } else {
+        document.addEventListener("click", this.xClick);
+        document.addEventListener("mousemove", this.xCursor);
         this.weaponPopUp = false;
         this.armorPopUp = false;
         this.opponentPopUp = true;
       }
       break;
     default:
-      return null;
+      this.restoreEvents();
+      this.canvas.width = this.canvas.width; // Clears the canvas
+      this.weaponPopUp = false;
+      this.armorPopUp = false;
+      this.opponentPopUp = false;
   }
-  document.removeEventListener("click", this.prepClick);
-  document.removeEventListener("mousemove", this.handleCursor);
-  // document.addEventListener("click", this.popupClick);
-  // document.addEventListener("mousemove", this.popupCursor);
 }
 
 
 PreparationView.prototype.start = function start() {
   this.lastTime = 0;
 
-  document.addEventListener('click', this.prepClick, false);
-  document.addEventListener('mousemove', this.handleCursor, false);
+  this.restoreEvents();
   requestAnimationFrame(this.animate.bind(this));
 };
+
+PreparationView.prototype.xClick = function(e) {
+  let mouseX = e.pageX - this.canvas.offsetLeft;
+  let mouseY = e.pageY - (document.getElementById('height-test').offsetTop);
+
+  if (mouseX > 719 && mouseX < 736 && mouseY > 70 && mouseY < 89) {
+    this.swapValue('');
+  }
+}
+
+PreparationView.prototype.xCursor = function(e) {
+  let mouseX = e.pageX - this.canvas.offsetLeft;
+  let mouseY = e.pageY - (document.getElementById('height-test').offsetTop);
+
+  if (mouseX > 719 && mouseX < 736 && mouseY > 70 && mouseY < 89) {
+    if (!this.canvas.classList.contains('cursor-pointer')) {
+      this.canvas.classList.add('cursor-pointer');
+    }
+  }
+}
 
 
 PreparationView.prototype.prepClick = function(e) {
@@ -1444,23 +1486,10 @@ PreparationView.prototype.prepClick = function(e) {
   if (mouseX > 599 && mouseX < 786
       && mouseY > 369 && mouseY < 411) {
         document.removeEventListener("click", this.prepClick);
-        document.removeEventListener("mousemove", this.handleCursor);
+        document.removeEventListener("mousemove", this.prepCursor);
         cancelAnimationFrame(this.animationId);
         this.finishPreparation();
   }    
-
-  // If the user clicks on the "?" near Weapon
-  if (mouseX > 757 && mouseX <  791 && mouseY > 39 && mouseY < 72) {
-    this.swapValue('weapon');
-  // If the user clicks on the "?" near Armor
-  } else if (mouseX > 757 && mouseX <  791 && mouseY > 134 && mouseY < 169) {
-    this.swapValue('armor');
-  }
-
-  // If the user clicks on the "View Opponent" button
-  if (mouseX > 599 && mouseX < 770 && mouseY > 457 && mouseY < 491) {
-    this.swapValue('opponent');
-  }
 }
 
 PreparationView.prototype.popupClick = function(e) {
@@ -1479,7 +1508,7 @@ PreparationView.prototype.popupClick = function(e) {
   }
 };
 
-PreparationView.prototype.handleCursor = function(e) {
+PreparationView.prototype.prepCursor = function(e) {
   let mouseX = e.pageX - this.canvas.offsetLeft;
   let mouseY = e.pageY - (document.getElementById('height-test').offsetTop);
 
@@ -1525,21 +1554,6 @@ PreparationView.prototype.handleCursor = function(e) {
     }
   // If the user hovers over the "Next Battle" button
   } else if (mouseX > 599 && mouseX < 786 && mouseY > 369 && mouseY < 411) {
-    if (!this.canvas.classList.contains('cursor-pointer')) {
-      this.canvas.classList.add('cursor-pointer');
-    } 
-  // If the user hovers over the "?" near Weapon
-  } else if (mouseX > 757 && mouseX <  791 && mouseY > 39 && mouseY < 72) {
-    if (!this.canvas.classList.contains('cursor-pointer')) {
-      this.canvas.classList.add('cursor-pointer');
-    } 
-  // If the user hovers over the "?" near Armor
-  } else if (mouseX > 757 && mouseX <  791 && mouseY > 134 && mouseY < 169) {
-    if (!this.canvas.classList.contains('cursor-pointer')) {
-      this.canvas.classList.add('cursor-pointer');
-    } 
-  // If the user hovers over the "View Opponent" button
-  } else if (mouseX > 599 && mouseX < 770 && mouseY > 457 && mouseY < 491) {
     if (!this.canvas.classList.contains('cursor-pointer')) {
       this.canvas.classList.add('cursor-pointer');
     } 
@@ -1733,6 +1747,10 @@ function WeaponPopUp(ctx) {
   ctx.fillText(" * Close Range: If the creatures are within 200 pixels of each other.", 75, 220);
   ctx.fillText(" * Medium Range: If the creatures are between 201 and 400 pixels of each other.", 75, 260);
   ctx.fillText(" * Far Range: If the creatures are over 400 pixels from each other.", 75, 300);
+
+  ctx.fillStyle = "rgba(0, 0, 0, 1)";
+  ctx.font = "italic 14pt Arial";
+  ctx.fillText("X", 718, 84); 
 }
 
 module.exports = WeaponPopUp;

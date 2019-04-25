@@ -13,6 +13,10 @@ function ArmorPopUp(ctx) {
   ctx.fillText(" * Strength: Increases your damage dealt by 10% each.", 75, 180);
   ctx.fillText(" * Defense: Reduces your incoming damage by 10% each.", 75, 220);
   ctx.fillText(" * Agility: Reduces the cooldown between attacks.", 75, 260);
+
+  ctx.fillStyle = "rgba(0, 0, 0, 1)";
+  ctx.font = "italic 14pt Arial";
+  ctx.fillText("X", 718, 84); 
 }
 
 module.exports = ArmorPopUp;

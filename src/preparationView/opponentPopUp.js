@@ -45,6 +45,10 @@ function OpponentPopUp(game, ctx) {
   ctx.fillText(`Str: ${aiCreature.str},
                 Def: ${aiCreature.def},
                 Agi: ${aiCreature.agi}`, 275, 300);
+
+  ctx.fillStyle = "rgba(0, 0, 0, 1)";
+  ctx.font = "italic 14pt Arial";
+  ctx.fillText("X", 718, 84); 
 }
 
 module.exports = OpponentPopUp;

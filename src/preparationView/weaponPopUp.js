@@ -14,6 +14,10 @@ function WeaponPopUp(ctx) {
   ctx.fillText(" * Close Range: If the creatures are within 200 pixels of each other.", 75, 220);
   ctx.fillText(" * Medium Range: If the creatures are between 201 and 400 pixels of each other.", 75, 260);
   ctx.fillText(" * Far Range: If the creatures are over 400 pixels from each other.", 75, 300);
+
+  ctx.fillStyle = "rgba(0, 0, 0, 1)";
+  ctx.font = "italic 14pt Arial";
+  ctx.fillText("X", 718, 84); 
 }
 
 module.exports = WeaponPopUp;
