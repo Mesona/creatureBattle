@@ -314,6 +314,12 @@ function HealthBar(game, ctx, canvas) {
 
   ctx.clearRect(0,70,canvas.width,30);
 
+  // ctx.clearRect(0, 0, canvas.width, 280);
+  ctx.fillStyle = "rgba(255, 0, 0, 1)";
+  ctx.font = "italic 20pt Arial";
+  ctx.fillText("HP", 20, 68);
+  ctx.fillText("HP", 530, 68);
+
   // Player creature's health 
   pos = 20 + (250 - (250 * playerPercentHealth));
   ctx.strokeStyle = "red";
@@ -1451,8 +1457,6 @@ PreparationView.prototype.prepClick = function(e) {
   // console.log(this.canvas.pageY);
   // console.log(this.canvas.layerY);
   // console.log(this.canvas.offsetTop);
-
-  // console.log(`${mouseX}, ${mouseY}`)
 
   // If the user clicks on the "left" arrow
   if (mouseX > 139 && mouseX < 178) {

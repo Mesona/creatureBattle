@@ -120,8 +120,6 @@ PreparationView.prototype.prepClick = function(e) {
   // console.log(this.canvas.layerY);
   // console.log(this.canvas.offsetTop);
 
-  // console.log(`${mouseX}, ${mouseY}`)
-
   // If the user clicks on the "left" arrow
   if (mouseX > 139 && mouseX < 178) {
     // of the weapons select
