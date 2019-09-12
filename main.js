@@ -94,7 +94,7 @@
 /***/ (function(module, exports, __webpack_require__) {
 
 const HealthBar = __webpack_require__(/*! ./healthBar */ "./src/battleView/healthBar.js");
-const DistanceBar = __webpack_require__(/*! ./distanceBar */ "./src/battleView/distanceBar.js");
+// const DistanceBar = require('./distanceBar');
 const MoveCreatures = __webpack_require__(/*! ./moveCreature */ "./src/battleView/moveCreature.js");
 const Combat= __webpack_require__(/*! ./combat */ "./src/battleView/combat.js");
 
@@ -134,7 +134,7 @@ BattleView.prototype.animate = function animate(time) {
 
 BattleView.prototype.step = function step(timeDelta) {
   if (this.game.getGameSpeed() % 4 === 0) {
-    DistanceBar(this.game, this.ctx, this.canvas);
+    // DistanceBar(this.game, this.ctx, this.canvas);
     HealthBar(this.game, this.ctx, this.canvas);
     MoveCreatures(this.game, this.ctx, this.canvas, timeDelta);
     Combat(this.game, this.animationId);
@@ -260,41 +260,6 @@ function Combat(game) {
 
 
 module.exports = Combat;
-
-/***/ }),
-
-/***/ "./src/battleView/distanceBar.js":
-/*!***************************************!*\
-  !*** ./src/battleView/distanceBar.js ***!
-  \***************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-function DistanceBar(game, ctx, canvas) {
-  let playerCreature = game.playerCreature();
-  let aiCreature = game.aiCreature();
-
-  // distance bar
-  ctx.clearRect(0, 0, canvas.width, 50);
-  ctx.strokeStyle = "purple";
-  ctx.beginPath();
-  ctx.moveTo(20,20);
-  ctx.lineTo(780,20);
-  ctx.stroke();
-
-  // animate creatures on distance bar
-  ctx.beginPath();
-  ctx.arc(playerCreature.pos + 80, 20, 10, 0, 2*Math.PI, true);
-  ctx.fillStyle = "green";
-  ctx.fill();
-
-  ctx.beginPath();
-  ctx.arc(aiCreature.pos + 20, 20, 10, 0, 2*Math.PI, true);
-  ctx.fillStyle = "blue";
-  ctx.fill();
-}
-
-module.exports = DistanceBar;
 
 /***/ }),
 

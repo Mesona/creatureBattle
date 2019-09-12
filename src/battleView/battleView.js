@@ -1,5 +1,5 @@
 const HealthBar = require('./healthBar');
-const DistanceBar = require('./distanceBar');
+// const DistanceBar = require('./distanceBar');
 const MoveCreatures = require('./moveCreature');
 const Combat= require('./combat');
 
@@ -39,7 +39,7 @@ BattleView.prototype.animate = function animate(time) {
 
 BattleView.prototype.step = function step(timeDelta) {
   if (this.game.getGameSpeed() % 4 === 0) {
-    DistanceBar(this.game, this.ctx, this.canvas);
+    // DistanceBar(this.game, this.ctx, this.canvas);
     HealthBar(this.game, this.ctx, this.canvas);
     MoveCreatures(this.game, this.ctx, this.canvas, timeDelta);
     Combat(this.game, this.animationId);
