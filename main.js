@@ -189,7 +189,6 @@ BattleView.prototype.textFadeOut = function(text, xloc) {
       }
   }, 50);
 
-  this.game.randomizeAI();
 
   setTimeout(() => this.gameView.switchScreen(this.gameView), 1000);
 };
@@ -592,7 +591,7 @@ function Game() {
   let gameSpeed = 0;
   let gameScreen = "prep";
 
-  Game.prototype.randomizeAI = () => {
+  Game.prototype.randomizeAISprite = () => {
     aiCreature = new Creature(pos = 500);
   }
 
@@ -605,7 +604,7 @@ function Game() {
   }
 
   Game.prototype.resetGameSpeed = () => {
-    this.gameSpeed = 0;
+    gameSpeed = 0;
   }
 
   Game.prototype.getGameSpeed = () => {
@@ -721,6 +720,7 @@ GameView.prototype.switchScreen = function switchScreen(gameView) {
     this.canvas.classList.add("back-image-layers-hills");
 
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.game.randomizeAISprite();
     this.game.aiCreature().newCreature();
     new PreparationView(this.game, this.ctx, this.canvas, gameView).start();
   } else {
@@ -771,7 +771,11 @@ document.addEventListener("DOMContentLoaded", function(){
 // Backgrounds from:
 // https://edermunizz.itch.io/
 
-// TODO
+// TODO: IMMEDIATE
+// intro page
+// add link to portfolio, angelist, and footer with name and copyright blah blah
+
+// TODO: NICE TO HAVE
 // Fix creatures to use hashmap, so custom assignments and stat management are easier
 // More involved animation, if possible
 // Damage numbers
@@ -1321,6 +1325,7 @@ function PreparationView(game, ctx, canvas, gameView) {
   this.weaponPopUp = false;
   this.armorPopUp = false;
   this.opponentPopUp = false;
+  this.switching = false;
 
   this.prepClick = this.prepClick.bind(this);
   this.prepCursor = this.prepCursor.bind(this);
@@ -1329,6 +1334,8 @@ function PreparationView(game, ctx, canvas, gameView) {
   this.xClick = this.xClick.bind(this);
   this.xCursor = this.xCursor.bind(this);
   this.restoreEvents = this.restoreEvents.bind(this);
+  this.removeEvents = this.removeEvents.bind(this);
+  this.handlePopups = this.handlePopups.bind(this);
 }
 
 PreparationView.prototype.restoreEvents = function() {
@@ -1340,6 +1347,15 @@ PreparationView.prototype.restoreEvents = function() {
   document.addEventListener("mousemove", this.popupCursor);
 }
 
+PreparationView.prototype.removeEvents = function() {
+  document.removeEventListener("click", this.prepClick);
+  document.removeEventListener("mousemove", this.prepCursor);
+  document.addEventListener("click", this.xClick);
+  document.addEventListener("mousemove", this.xCursor);
+  document.removeEventListener("click", this.popupClick);
+  document.removeEventListener("mousemove", this.popupCursor);
+}
+
 PreparationView.prototype.swapValue = function(value) {
   switch (value) {
     case 'weapon':
@@ -1348,8 +1364,7 @@ PreparationView.prototype.swapValue = function(value) {
         this.canvas.width = this.canvas.width; // Clears the canvas
         this.restoreEvents();
       } else {
-        document.addEventListener("click", this.xClick);
-        document.addEventListener("mousemove", this.xCursor);
+        this.removeEvents();
         this.armorPopUp = false;
         this.opponentPopUp = false;
         this.weaponPopUp = true;
@@ -1361,8 +1376,7 @@ PreparationView.prototype.swapValue = function(value) {
         this.canvas.width = this.canvas.width; // Clears the canvas
         this.restoreEvents();
       } else {
-        document.addEventListener("click", this.xClick);
-        document.addEventListener("mousemove", this.xCursor);
+        this.removeEvents();
         this.weaponPopUp = false;
         this.opponentPopUp = false;
         this.armorPopUp = true;
@@ -1374,8 +1388,7 @@ PreparationView.prototype.swapValue = function(value) {
         this.canvas.width = this.canvas.width; // Clears the canvas
         this.restoreEvents();
       } else {
-        document.addEventListener("click", this.xClick);
-        document.addEventListener("mousemove", this.xCursor);
+        this.removeEvents();
         this.weaponPopUp = false;
         this.armorPopUp = false;
         this.opponentPopUp = true;
@@ -1568,22 +1581,25 @@ PreparationView.prototype.animate = function animate(time) {
   this.animationId = requestAnimationFrame(this.animate.bind(this)); 
 }
 
-PreparationView.prototype.step = function step(timeDelta) {
+PreparationView.prototype.step = function step() {
   if (this.game.getGameSpeed() % 4 === 0) {
-    if (this.weaponPopUp === true) {
-      WeaponPopUp(this.ctx);
-    } else if (this.armorPopUp === true) {
-      ArmorPopUp(this.ctx);
-    } else if (this.opponentPopUp === true) {
-      OpponentPopUp(this.game, this.ctx);
-    } else {
-      EquipBox(this.game, this.ctx, this.canvas);
-      CreatureBox(this.game, this.ctx, this.canvas);
-      DescriptionBox(this.game, this.ctx, this.canvas);
-    }
-    this.game.gameSpeedStep();
+    this.handlePopups();
+  }
+
+  this.game.gameSpeedStep();
+}
+
+PreparationView.prototype.handlePopups = function() {
+  if (this.weaponPopUp === true) {
+    WeaponPopUp(this.ctx);
+  } else if (this.armorPopUp === true) {
+    ArmorPopUp(this.ctx);
+  } else if (this.opponentPopUp === true) {
+    OpponentPopUp(this.game, this.ctx);
   } else {
-    this.game.gameSpeedStep();
+    EquipBox(this.game, this.ctx, this.canvas);
+    CreatureBox(this.game, this.ctx, this.canvas);
+    DescriptionBox(this.game, this.ctx, this.canvas);
   }
 }
 
@@ -1592,12 +1608,21 @@ PreparationView.prototype.finishPreparation = function() {
 }
 
 PreparationView.prototype.textFadeIn = function(text) {
-  this.ctx.clearRect(0, 0, this.canvas.width, 280);
-  this.ctx.fillStyle = "rgba(255, 0, 0, 1)";
-  this.ctx.font = "italic 40pt Arial";
-  let xloc = 300;
-  this.ctx.fillText(text, xloc, 250);
-  setTimeout(this.textFadeOut(text, xloc), 5000);
+  // this.switching is a hack to get around a bug I couldn't easily solve.
+  // If it is removed, then if any of the popup buttons on the prepscreen are
+  // clicked on any battle AFTER the first, all subsequent battles will freak out
+  // and either not run at all, run simultaneously, or run one after another.
+  // I could not find the root cause, but this toggle prevents whatever it was from
+  // triggering.
+  if (this.switching === false) {
+    this.ctx.clearRect(0, 0, this.canvas.width, 280);
+    this.ctx.fillStyle = "rgba(255, 0, 0, 1)";
+    this.ctx.font = "italic 40pt Arial";
+    let xloc = 300;
+    this.ctx.fillText(text, xloc, 250);
+    setTimeout(this.textFadeOut(text, xloc), 5000);
+    this.switching = true;
+  }
 }
 
 PreparationView.prototype.textFadeOut = function(text, xloc) {
@@ -1615,6 +1640,7 @@ PreparationView.prototype.textFadeOut = function(text, xloc) {
     }
   }, 50);
 
+  this.switching = false;
   setTimeout(() => this.gameView.switchScreen(this.gameView), 1000);
 };
 

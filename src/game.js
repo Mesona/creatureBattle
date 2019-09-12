@@ -16,7 +16,7 @@ function Game() {
   let gameSpeed = 0;
   let gameScreen = "prep";
 
-  Game.prototype.randomizeAI = () => {
+  Game.prototype.randomizeAISprite = () => {
     aiCreature = new Creature(pos = 500);
   }
 
@@ -29,7 +29,7 @@ function Game() {
   }
 
   Game.prototype.resetGameSpeed = () => {
-    this.gameSpeed = 0;
+    gameSpeed = 0;
   }
 
   Game.prototype.getGameSpeed = () => {

@@ -22,6 +22,7 @@ GameView.prototype.switchScreen = function switchScreen(gameView) {
     this.canvas.classList.add("back-image-layers-hills");
 
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.game.randomizeAISprite();
     this.game.aiCreature().newCreature();
     new PreparationView(this.game, this.ctx, this.canvas, gameView).start();
   } else {

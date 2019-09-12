@@ -17,7 +17,11 @@ document.addEventListener("DOMContentLoaded", function(){
 // Backgrounds from:
 // https://edermunizz.itch.io/
 
-// TODO
+// TODO: IMMEDIATE
+// intro page
+// add link to portfolio, angelist, and footer with name and copyright blah blah
+
+// TODO: NICE TO HAVE
 // Fix creatures to use hashmap, so custom assignments and stat management are easier
 // More involved animation, if possible
 // Damage numbers
