@@ -16,6 +16,9 @@ function Game() {
   let gameSpeed = 0;
   let gameScreen = "prep";
 
+  Game.prototype.randomizeAI = () => {
+    aiCreature = new Creature(pos = 500);
+  }
 
   Game.prototype.playerCreature = () => {
     return playerCreature;

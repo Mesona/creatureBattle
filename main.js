@@ -189,6 +189,8 @@ BattleView.prototype.textFadeOut = function(text, xloc) {
       }
   }, 50);
 
+  this.game.randomizeAI();
+
   setTimeout(() => this.gameView.switchScreen(this.gameView), 1000);
 };
 
@@ -590,6 +592,9 @@ function Game() {
   let gameSpeed = 0;
   let gameScreen = "prep";
 
+  Game.prototype.randomizeAI = () => {
+    aiCreature = new Creature(pos = 500);
+  }
 
   Game.prototype.playerCreature = () => {
     return playerCreature;

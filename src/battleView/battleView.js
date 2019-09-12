@@ -94,6 +94,8 @@ BattleView.prototype.textFadeOut = function(text, xloc) {
       }
   }, 50);
 
+  this.game.randomizeAI();
+
   setTimeout(() => this.gameView.switchScreen(this.gameView), 1000);
 };
 
