@@ -772,12 +772,10 @@ document.addEventListener("DOMContentLoaded", function(){
 // https://edermunizz.itch.io/
 
 // TODO: IMMEDIATE
-// intro page
-// add link to portfolio, angelist, and footer with name and copyright blah blah
 
 // TODO: NICE TO HAVE
 // Fix creatures to use hashmap, so custom assignments and stat management are easier
-// More involved animation, if possible
+// More involved animation, by moving the animation process to the creature itself
 // Damage numbers
 // Pause movement and attack animation while attacking
 // projectile animation for mid/far ranged attacks
