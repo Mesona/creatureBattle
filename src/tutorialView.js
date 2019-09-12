@@ -10,12 +10,13 @@ function TutorialView(game, ctx, canvas) {
 
   this.offsetLeft = this.canvas.offsetLeft;
   this.offsetTop = document.getElementById('height-test').offsetTop; 
-  this.currentHighlight = ["creature", "showWeapon", "showArmor", "showBehavior", "showNext"];
+  this.currentHighlight = ["intro", "creature", "showWeapon", "showArmor", "showBehavior", "showNext"];
 
   this.handleClick = this.handleClick.bind(this);
   this.handleCursor = this.handleCursor.bind(this);
   this.handleNext = this.handleNext.bind(this);
   this.handleSkip = this.handleSkip.bind(this);
+  this.showIntro = this.showIntro.bind(this);
   this.showCreature = this.showCreature.bind(this);
   this.showWeapon = this.showWeapon.bind(this);
   this.showArmor = this.showArmor.bind(this);
@@ -25,10 +26,12 @@ function TutorialView(game, ctx, canvas) {
   this.writeTutorialNext = this.writeTutorialNext.bind(this);
   this.writeTutorialSkip = this.writeTutorialSkip.bind(this);
 
+
   document.addEventListener('click', this.handleClick, false);
   document.addEventListener('mousemove', this.handleCursor, false);
 
-  this.showCreature();
+  // this.showCreature();
+  this.showIntro();
 }
 
 TutorialView.prototype.handleClick = function(e) {
@@ -75,6 +78,9 @@ TutorialView.prototype.handleCursor = function(e) {
 TutorialView.prototype.handleNext = function(e) {
   this.currentHighlight.shift();
   switch (this.currentHighlight[0]) {
+    case "creature":
+      this.showCreature();
+      break;
     case "showWeapon":
       this.showWeapon();
       break;
@@ -90,8 +96,6 @@ TutorialView.prototype.handleNext = function(e) {
     default:
       this.handleSkip();
       break;
-
-
   }
 }
 
@@ -107,7 +111,34 @@ TutorialView.prototype.handleSkip = function(e) {
 
 };
 
+TutorialView.prototype.showIntro = function() {
+  this.ctx.fillStyle = "rgba(0, 0, 0, 0.9)";
+  this.ctx.fillRect(0, 0, 800, 500)
+
+  // this.ctx.clearRect(340, 280, 220, 200);
+  // this.ctx.fillStyle = "rgba(255, 91, 1, 1)";
+
+  this.writeTutorialNext();
+  this.writeTutorialSkip();
+
+  this.ctx.font = "italic 25pt Arial";
+  let lines = "This is a game about sending a creature to battle.";
+  this.ctx.fillText(lines, 20, 75);
+  lines = "You will choose the creature's weapons and armor.";
+  this.ctx.fillText(lines, 20, 115);
+  lines = "You will tell the creature how to act.";
+  this.ctx.fillText(lines, 20, 155);
+  lines = "And then you will send it to fight.";
+  this.ctx.fillText(lines, 20, 195);
+  lines = "It will either return a glorious victor,";
+  this.ctx.fillText(lines, 20, 280);
+  lines = "or it will die a noble death.";
+  this.ctx.fillText(lines, 20, 320);
+}
+
 TutorialView.prototype.showCreature = function() {
+  this.canvas.width = this.canvas.width; // Clears the canvas
+
   this.ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
   this.ctx.fillRect(0, 0, 800, 500)
 

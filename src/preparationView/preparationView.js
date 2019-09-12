@@ -316,7 +316,7 @@ PreparationView.prototype.textFadeIn = function(text) {
 PreparationView.prototype.textFadeOut = function(text, xloc) {
   let alpha = 1.0,   // full opacity
   interval = setInterval(() => {
-    // this.canvas.width = this.canvas.width; // Clears the canvas
+    this.canvas.width = this.canvas.width; // Clears the canvas
     this.ctx.clearRect(0, 200, this.canvas.width, 70);
     this.ctx.fillStyle = "rgba(255, 0, 0, " + alpha + ")";
     this.ctx.font = "italic 40pt Arial";
